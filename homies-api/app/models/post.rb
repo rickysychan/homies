@@ -1,5 +1,5 @@
 class Post < ApplicationRecord
-  belongs_to :users
-  belongs_to :circles
+  belongs_to :user
+  belongs_to :circle
   has_many :post_comments
 end

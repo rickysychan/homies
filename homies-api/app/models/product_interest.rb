@@ -1,3 +1,3 @@
 class ProductInterest < ApplicationRecord
-  belongs_to :users
+  belongs_to :user
 end
