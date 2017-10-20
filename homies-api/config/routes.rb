@@ -6,16 +6,25 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :create, :show]
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
+
       resources :circles, only: [:create, :show, :update, :destroy] do
         resources :circle_users, except: [:update]
-        resources :posts do
-          resources :post_comments
+        resources :posts, except: [:update] do
+          resources :post_comments, except: [:update]
         end
       end
-      get 'product/:product_id/interests', to: 'products#interest_number'
+
+      scope '/products/:product_id', as: 'products' do
+        get '/interests', to: 'products#interest_number'
+        post '/interests', to: 'products#interest_create'
+        delete '/interests', to: 'products#interest_destroy'
+      end
+
       scope '/articles/:article_id', as: 'articles' do
-        resources :article_comments
+        resources :article_comments, except: [:update]
         get '/likes', to: 'articles#like_number'
+        post '/likes', to: 'articles#like_create'
+        delete '/likes', to: 'articles#like_destroy'
       end
     end
   end
