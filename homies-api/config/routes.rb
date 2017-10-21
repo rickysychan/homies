@@ -6,7 +6,7 @@ Rails.application.routes.draw do
       resources :users, only: [:index, :create, :show]
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
-        resources :recommendations, only: [:index]
+        get '/users/:id/recommendations', to: 'recommendations#index'
 
       resources :circles, only: [:create, :show, :update, :destroy] do
         resources :circle_users, except: [:update]

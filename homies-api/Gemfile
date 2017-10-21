@@ -21,6 +21,7 @@ gem 'puma', '~> 3.7'
 # gem 'bcrypt', '~> 3.1.7'
 gem 'pg'
 gem 'twitter'
+gem 'themoviedb'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
