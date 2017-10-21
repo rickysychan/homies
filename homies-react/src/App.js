@@ -4,6 +4,8 @@ import React, { Component } from 'react';
 
 import './App.css';
 import NavBar from './NavBar';
+import ArticlesContainer from './components/ArticlesContainer'
+
 
 
 class App extends Component {
@@ -11,6 +13,8 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar />
+        <ArticlesContainer />
+
       </div>
     );
   }
