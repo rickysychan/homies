@@ -8,6 +8,7 @@
     "react": "^16.0.0",
     "react-bootstrap": "^0.31.3",
     "react-dom": "^16.0.0",
+    "react-fontawesome": "^1.6.1",
     "react-scripts": "1.0.14"
   },
   "scripts": {
@@ -17,6 +18,7 @@
     "eject": "react-scripts eject"
   },
   "devDependencies": {
+    "nodemon": "^1.12.1",
     "webpack": "^3.8.1",
     "webpack-dev-server": "^2.9.3"
   }

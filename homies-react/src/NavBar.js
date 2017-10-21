@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
 import './NavBar.css';
+import FontAwesome from 'react-fontawesome';
 
 class NavBar extends Component {
   render() {
@@ -16,9 +17,9 @@ class NavBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem eventKey={1} href="#">Movies</NavItem>
-              <NavItem eventKey={2} href="#">TV Shows</NavItem>
-              <NavItem eventKey={3} href="#">Games</NavItem>
+              <NavItem eventKey={1} href="#">Discover</NavItem>
+              <NavItem eventKey={2} href="#">Stay in the <FontAwesome name="superpowers" /></NavItem>
+              <NavItem eventKey={3} href="#">Circles</NavItem>
             </Nav>
             <Nav pullRight>
               <Navbar.Form pullLeft>
