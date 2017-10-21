@@ -1,0 +1,19 @@
+import React, { Component } from 'react';
+// import logo from './logo.svg';
+// import {Nav, Navbar, NavDropdown, NavItem, MenuItem} from 'react-bootstrap';
+
+import './App.css';
+import NavBar from './NavBar';
+
+
+class App extends Component {
+  render() {
+    return (
+      <div className="App">
+        <NavBar />
+      </div>
+    );
+  }
+}
+
+export default App;
