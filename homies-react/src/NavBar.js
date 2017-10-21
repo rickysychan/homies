@@ -1,9 +1,17 @@
 import React, { Component } from 'react';
 
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
-import './NavBar.css';
+import './styles/NavBar.css';
+import { LinkContainer } from 'react-router-bootstrap';
 
 class NavBar extends Component {
+
+
+  handleClick = (e) => {
+    // e.preventDefault();
+    console.log('The link was clicked.');
+  };
+
   render() {
     return (
       <div>
@@ -16,9 +24,15 @@ class NavBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem eventKey={1} href="#">Movies</NavItem>
-              <NavItem eventKey={2} href="#">TV Shows</NavItem>
-              <NavItem eventKey={3} href="#">Games</NavItem>
+            <LinkContainer to="/">
+              <NavItem eventKey={1}>Movies</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/stayInTheLoop">
+              <NavItem eventKey={2}>TV Shows</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/circles">
+              <NavItem eventKey={3}>Games</NavItem>
+            </LinkContainer>
             </Nav>
             <Nav pullRight>
               <Navbar.Form pullLeft>

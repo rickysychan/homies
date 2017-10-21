@@ -2,9 +2,9 @@ import React, { Component } from 'react';
 // import logo from './logo.svg';
 // import {Nav, Navbar, NavDropdown, NavItem, MenuItem} from 'react-bootstrap';
 
-import './App.css';
+import './styles/App.css';
 import NavBar from './NavBar';
-import ArticlesContainer from './components/ArticlesContainer'
+import Main from './main'
 
 
 
@@ -13,7 +13,7 @@ class App extends Component {
     return (
       <div className="App">
         <NavBar />
-        <ArticlesContainer />
+        <Main />
 
       </div>
     );
