@@ -3,16 +3,12 @@ import React, { Component } from 'react';
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
 import './styles/NavBar.css';
 import { LinkContainer } from 'react-router-bootstrap';
+import { IndexLinkContainer } from 'react-router-bootstrap'
 import FontAwesome from 'react-fontawesome';
 
 
+
 class NavBar extends Component {
-
-
-  handleClick = (e) => {
-    // e.preventDefault();
-    console.log('The link was clicked.');
-  };
 
   render() {
     return (
@@ -26,9 +22,9 @@ class NavBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-            <LinkContainer to="/">
+            <IndexLinkContainer to="/">
               <NavItem eventKey={1}>Discover</NavItem>
-            </LinkContainer>
+            </IndexLinkContainer>
             <LinkContainer to="/stayInTheLoop">
               <NavItem eventKey={2}>Stay in the <FontAwesome name="superpowers"/></NavItem>
             </LinkContainer>
