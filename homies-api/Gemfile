@@ -22,6 +22,7 @@ gem 'puma', '~> 3.7'
 gem 'pg'
 gem 'twitter'
 gem 'themoviedb'
+gem 'giantbomb-api', '~> 1.6.0'
 # Use Capistrano for deployment
 # gem 'capistrano-rails', group: :development
 
