@@ -3,6 +3,7 @@ import { Switch, Route } from 'react-router-dom'
 import ArticlesContainer from './components/ArticlesContainer'
 import inTheLoopContainer from './components/InTheLoopContainer'
 import circle from './components/CircleContainer'
+// import './styles/main.css';
 
 const Main = () => (
   <main>

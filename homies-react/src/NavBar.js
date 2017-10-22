@@ -1,8 +1,8 @@
 import React, { Component } from 'react';
 
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
-import './styles/NavBar.css';
-import { LinkContainer } from 'react-router-bootstrap';
+// import './styles/NavBar.css';
+import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
 
@@ -17,7 +17,7 @@ class NavBar extends Component {
   render() {
     return (
       <div>
-        <Navbar inverse collapseOnSelect>
+        <Navbar inverse collapseOnSelect fixedTop>
           <Navbar.Header>
             <Navbar.Brand>
               <a href="/">Homies</a>
@@ -26,15 +26,15 @@ class NavBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-            <LinkContainer to="/">
-              <NavItem eventKey={1}>Discover</NavItem>
-            </LinkContainer>
-            <LinkContainer to="/stayInTheLoop">
-              <NavItem eventKey={2}>Stay in the <FontAwesome name="superpowers"/></NavItem>
-            </LinkContainer>
-            <LinkContainer to="/circles">
-              <NavItem eventKey={3}>Circles</NavItem>
-            </LinkContainer>
+              <IndexLinkContainer to="/">
+                <NavItem >Discover</NavItem>
+              </IndexLinkContainer>
+              <LinkContainer to="/stayInTheLoop">
+                <NavItem >Stay in the <FontAwesome name="superpowers"/></NavItem>
+              </LinkContainer>
+              <LinkContainer to="/circles">
+                <NavItem >Circles</NavItem>
+              </LinkContainer>
             </Nav>
             <Nav pullRight>
               <Navbar.Form pullLeft>

@@ -13,7 +13,9 @@ class CircleContainer extends Component {
   render() {
     return (
       <div>
+        <button class="btn btn-danger">
         Circles!
+        </button>
       </div>
     )
   }
