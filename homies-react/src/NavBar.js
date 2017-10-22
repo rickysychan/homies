@@ -1,10 +1,19 @@
 import React, { Component } from 'react';
 
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
-import './NavBar.css';
+import './styles/NavBar.css';
+import { LinkContainer } from 'react-router-bootstrap';
 import FontAwesome from 'react-fontawesome';
 
+
 class NavBar extends Component {
+
+
+  handleClick = (e) => {
+    // e.preventDefault();
+    console.log('The link was clicked.');
+  };
+
   render() {
     return (
       <div>
@@ -17,9 +26,15 @@ class NavBar extends Component {
           </Navbar.Header>
           <Navbar.Collapse>
             <Nav>
-              <NavItem eventKey={1} href="#">Discover</NavItem>
-              <NavItem eventKey={2} href="#">Stay in the <FontAwesome name="superpowers" /></NavItem>
-              <NavItem eventKey={3} href="#">Circles</NavItem>
+            <LinkContainer to="/">
+              <NavItem eventKey={1}>Discover</NavItem>
+            </LinkContainer>
+            <LinkContainer to="/stayInTheLoop">
+              <NavItem eventKey={2}>Stay in the <FontAwesome name="superpowers"/></NavItem>
+            </LinkContainer>
+            <LinkContainer to="/circles">
+              <NavItem eventKey={3}>Circles</NavItem>
+            </LinkContainer>
             </Nav>
             <Nav pullRight>
               <Navbar.Form pullLeft>
