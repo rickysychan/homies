@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-
+import {Col} from 'react-bootstrap';
 import axios from 'axios'
 
 class ArticlesContainer extends Component {
@@ -25,7 +25,7 @@ class ArticlesContainer extends Component {
   render() {
     return (
       <div>
-        <Col xs={6} xsOffset={6}>
+        <Col xs={6} xsOffset={2}>
         {this.state.users.map((user) => {
           return(
             <div className="tile" key={user.id} >
