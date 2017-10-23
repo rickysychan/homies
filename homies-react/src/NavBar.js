@@ -3,16 +3,15 @@ import React, { Component } from 'react';
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
 // import './styles/NavBar.css';
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
+import './styles/NavBar.css';
+import { LinkContainer } from 'react-router-bootstrap';
+import { IndexLinkContainer } from 'react-router-bootstrap'
+
 import FontAwesome from 'react-fontawesome';
 
 
+
 class NavBar extends Component {
-
-
-  handleClick = (e) => {
-    // e.preventDefault();
-    console.log('The link was clicked.');
-  };
 
   render() {
     return (
@@ -35,6 +34,7 @@ class NavBar extends Component {
               <LinkContainer to="/circles">
                 <NavItem >Circles</NavItem>
               </LinkContainer>
+
             </Nav>
             <Nav pullRight>
               <Navbar.Form pullLeft>
@@ -49,7 +49,12 @@ class NavBar extends Component {
                 <MenuItem eventKey={4.2}>Cicles</MenuItem>
                 <MenuItem eventKey={4.3}>Favorite</MenuItem>
                 <MenuItem divider />
-                <MenuItem eventKey={4.3}>LogOut</MenuItem>
+                <LinkContainer to="/Login">
+                  <MenuItem eventKey={4.3}>Login</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/Register">
+                <MenuItem eventKey={4.3}>Register</MenuItem>
+                </LinkContainer>
               </NavDropdown> </Nav>
           </Navbar.Collapse>
         </Navbar>
