@@ -3,9 +3,6 @@ import React, { Component } from 'react';
 import {Nav, Navbar, NavDropdown, NavItem, MenuItem, FormGroup, FormControl, Button} from 'react-bootstrap';
 // import './styles/NavBar.css';
 import { IndexLinkContainer, LinkContainer } from 'react-router-bootstrap';
-import './styles/NavBar.css';
-import { LinkContainer } from 'react-router-bootstrap';
-import { IndexLinkContainer } from 'react-router-bootstrap'
 
 import FontAwesome from 'react-fontawesome';
 
