@@ -27,6 +27,7 @@ class App extends Component {
     return (
       <div className="App">
         <div class="page-container">
+        test
         {/* {this.state.loginPage}
         {this.state.uploadScreen} */}
           <NavBar />
