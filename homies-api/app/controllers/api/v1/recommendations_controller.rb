@@ -44,36 +44,19 @@ module Api::V1
     end
 
     def watson
-
-      @body_text = "IBM is an American multinational technology company headquartered in Armonk, New York, United States, with operations in over 170 countries."
-        # "features": {
-        #   "entities": {
-        #     "emotion": true,
-        #     "sentiment": true,
-        #     "limit": 2
-        #   },
-        #   "keywords": {
-        #     "emotion": true,
-        #     "sentiment": true,
-        #     "limit": 2
-        #   }
-        # }
-
-
-       response = Excon.post("https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze",
-         :body => @body_text,
-         :headers => { "Content-Type"     => "text/plain",
-                       "Content-Language" => "en",
-                       "Accept-Language"  => "en" },
+       response = Excon.get("https://watson-api-explorer.mybluemix.net/natural-language-understanding/api/v1/analyze",
+         :headers => { "Accept" => "application/json" },
+         :query => { "version"        => "2017-02-27",
+                     "text"           => "My next task was to take the JSON object this returned and format it into a hash with just the information I needed so I could use it to instantiate an object from another class using mass assignment. To do this I used the OpenStruct gem which made it easier to iterate through the data and pull out only what I needed. Plus, I had worked with hashes before but I had never used Ostruct, so it was another learning opportunity.",
+                     "features"       => "categories",
+                     "language"       => "en",
+                     "concepts.limit" => 8,
+                     "entities.limit" => 50,
+                     "keywords.limit" => 50
+                    },
          :user => ENV["WATSON_USERNAME"],
          :password => ENV["WATSON_PASSWORD"],
-         :query    => {
-               "raw_scores"                => true,
-               "consumption_preferences"   => true,
-               "version"                   => "2017-02-27"
-              }
        )
-
        response.body
     end
 
