@@ -45,7 +45,12 @@ class NavBar extends Component {
                 <MenuItem eventKey={4.2}>Cicles</MenuItem>
                 <MenuItem eventKey={4.3}>Favorite</MenuItem>
                 <MenuItem divider />
-                <MenuItem eventKey={4.3}>LogOut</MenuItem>
+                <LinkContainer to="/Login">
+                  <MenuItem eventKey={4.3}>Login</MenuItem>
+                </LinkContainer>
+                <LinkContainer to="/Register">
+                <MenuItem eventKey={4.3}>Register</MenuItem>
+                </LinkContainer>
               </NavDropdown> </Nav>
           </Navbar.Collapse>
         </Navbar>
