@@ -1,6 +1,8 @@
-import React, { Component } from 'react'
-import {Col, Image} from 'react-bootstrap';
-import axios from 'axios'
+import React, { Component } from 'react';
+import {Image} from 'react-bootstrap';
+import axios from 'axios';
+import SideBarMenu from '../SideBarMenu';
+
 
 class ArticlesContainer extends Component {
 
@@ -37,49 +39,54 @@ class ArticlesContainer extends Component {
 
     ]
     return (
-      <div>
-        <Col xs={6} xsOffset={2}>
+      <div className="row row-offcanvas row-offcanvas-left">
+        <SideBarMenu />
+
+        <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
+
+          <div className="row">
+
+            <div className="col-sm-6 col-sm-offset-1">
         {this.state.users.map((user) => {
           return(
-            <div className="tile" key={user.id} >
-              <h1>Demo</h1>
-              <h4>{user.first_name}</h4>
-              <h4>{user.last_name}</h4>
-              <p>{user.email}</p>
-              <div className="panel panel-default">
-                <div className="panel-heading">
-                  <h4><a href="/">News Articles</a></h4>
+              <div className="tile" key={user.id} >
+                <h1>Demo</h1>
+                <h4>{user.first_name}</h4>
+                <h4>{user.last_name}</h4>
+                <p>{user.email}</p>
+                <div className="panel panel-default">
+                  <div className="panel-heading">
+                    <h4><a href="/">News Articles</a></h4>
+                  </div>
+                  <div className="panel-body">
+                    <Image src={ img[user.id] } responsive />
+                    <p>
+                      <a href="/">Image Description</a>
+                    </p>
+                    <div className="clearfix"></div>
+                    <p>
+                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
+                      Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
+                      dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
+                      Aliquam in felis sit amet augue.
+                    </p>
+                    <hr/>
+                    <div className="list-group pull-left">
+                      <i className="fa fa-comment-o fa-lg"></i>&nbsp;
+                    </div>
+
+                    <div className="list-group pull-right">
+                      <i className="fa fa-heart-o fa-lg" ></i>&nbsp;
+                      <i className="fa fa-bookmark-o fa-lg"></i>
+                    </div>
+                  </div>
                 </div>
-                <div className="panel-body">
-                  <Image src={ img[user.id] } responsive />
-                  <p>
-                    <a href="/">Image Description</a>
-                  </p>
-                  <div className="clearfix"></div>
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                    Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-                    dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                    Aliquam in felis sit amet augue.
-                  </p>
-                  <hr/>
-                  <div className="list-group pull-left">
-                    <i className="fa fa-comment-o fa-lg"></i>&nbsp;
-                  </div>
-
-                  <div className="list-group pull-right">
-                    <i className="fa fa-heart-o fa-lg" ></i>&nbsp;
-                    <i className="fa fa-bookmark-o fa-lg"></i>
-                  </div>
-
-
               </div>
-            </div>
-          </div>
-
           )
         })}
-        </Col>
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

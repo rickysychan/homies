@@ -10,7 +10,6 @@ class SideBarMenu extends Component {
         <div className="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
           <div data-spy="affix" data-offset-top="45" data-offset-bottom="90">
             <ul className="nav" id="sidebar-nav">
-                <li><a href="/">Home</a></li>
                 <li><a href="/">Section 1</a></li>
                 <li><a href="/">Section 2</a></li>
                 <li className="dropdown">

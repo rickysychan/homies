@@ -4,7 +4,6 @@ import React, { Component } from 'react';
 
 import './styles/App.css';
 import NavBar from './NavBar';
-import SideBarMenu from './SideBarMenu';
 import Main from './main'
 
 
@@ -16,15 +15,7 @@ class App extends Component {
         <div class="page-container">
           <NavBar />
 
-          <div class="container-fluid">
-
-              <SideBarMenu />
-
-            <div class="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
-                <Main class="text-center"/>
-            </div>
-
-          </div>
+          <Main class="text-center"/>
 
         </div>
       </div>
