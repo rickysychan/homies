@@ -1,10 +1,15 @@
 require 'twitter'
 require 'themoviedb'
 require 'giantbomb-api'
+require 'excon'
+require 'rubygems'
 
 module Api::V1
 
   class RecommendationsController < ApplicationController
+
+    # API Setup
+
     Tmdb::Api.key(ENV["TMDB_KEY"])
     GiantBomb::Api.key(ENV["GIANT_BOMB_KEY"])
     @@client = Twitter::REST::Client.new do |config|
@@ -15,8 +20,10 @@ module Api::V1
     end
 
 
+    # Index
+
     def index
-      @recommendations = need_for_speed
+      @recommendations = watson
       render json: @recommendations
     end
 
@@ -35,5 +42,19 @@ module Api::V1
     def need_for_speed
       GiantBomb::Search.new().query('Need for Speed').resources('game').fetch
     end
+
+    def watson
+      content = "Hi this is a text with more than 100 unique words"
+
+       response = Excon.post("https://gateway.watsonplatform.net/natural-language-understanding/api",
+         :body => content,
+         :headers => { "Content-Type" => "text/plain" },
+         :user => ENV["WATSON_USERNAME"],
+         :password => ENV["WATSON_PASSWORD"]
+       )
+
+       response.body
+    end
+
   end
 end
