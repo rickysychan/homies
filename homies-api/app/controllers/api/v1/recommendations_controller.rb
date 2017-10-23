@@ -44,13 +44,32 @@ module Api::V1
     end
 
     def watson
-      content = "Hi this is a text with more than 100 unique words"
+      @content = "Hi this is a text with more than 100 unique words"
+      @features = {
+        "entities" => {
+          "emotion" => true,
+          "sentiment" => true,
+          "limit" => 2
+        },
+        "keywords" => {
+          "emotion" => true,
+          "sentiment" => true,
+          "limit" => 2
+        }
+      }
 
-       response = Excon.post("https://gateway.watsonplatform.net/natural-language-understanding/api",
-         :body => content,
-         :headers => { "Content-Type" => "text/plain" },
+       response = Excon.post("https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze",
+         :body => {"text" => @content, "features" => @features }
+         :headers => { "Content-Type"     => "text/plain",
+                       "Content-Language" => "en",
+                       "Accept-Language"  => "en" },
          :user => ENV["WATSON_USERNAME"],
-         :password => ENV["WATSON_PASSWORD"]
+         :password => ENV["WATSON_PASSWORD"],
+         :query    => {
+               "raw_scores"                => true,
+               "consumption_preferences"   => true,
+               "version"                   => "2017-02-27"
+              }
        )
 
        response.body
