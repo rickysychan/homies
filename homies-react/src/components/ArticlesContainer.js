@@ -91,8 +91,4 @@ class ArticlesContainer extends Component {
     )
   }
 }
-
-
-
-
 export default ArticlesContainer
