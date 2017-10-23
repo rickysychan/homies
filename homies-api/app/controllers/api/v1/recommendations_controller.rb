@@ -44,22 +44,24 @@ module Api::V1
     end
 
     def watson
-      @content = "Hi this is a text with more than 100 unique words"
-      @features = {
-        "entities" => {
-          "emotion" => true,
-          "sentiment" => true,
-          "limit" => 2
-        },
-        "keywords" => {
-          "emotion" => true,
-          "sentiment" => true,
-          "limit" => 2
-        }
-      }
+
+      @body_text = "IBM is an American multinational technology company headquartered in Armonk, New York, United States, with operations in over 170 countries."
+        # "features": {
+        #   "entities": {
+        #     "emotion": true,
+        #     "sentiment": true,
+        #     "limit": 2
+        #   },
+        #   "keywords": {
+        #     "emotion": true,
+        #     "sentiment": true,
+        #     "limit": 2
+        #   }
+        # }
+
 
        response = Excon.post("https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze",
-         :body => {"text" => @content, "features" => @features }
+         :body => @body_text,
          :headers => { "Content-Type"     => "text/plain",
                        "Content-Language" => "en",
                        "Accept-Language"  => "en" },
