@@ -34,11 +34,11 @@ class NavBar extends Component {
             </Nav>
             <Nav pullRight>
               <Navbar.Form pullLeft>
-              <FormGroup>
-                <FormControl type="text" placeholder="Search" />
-              </FormGroup>
-                {' '}
-                <Button type="submit" bsStyle="success">Search</Button>
+                <FormGroup>
+                  <FormControl type="text" placeholder="Search" />
+                </FormGroup>
+                  {' '}
+                  <Button type="submit" bsStyle="success">Search</Button>
               </Navbar.Form>
               <NavDropdown eventKey={4} title="User" id="basic-nav-dropdown">
                 <MenuItem eventKey={4.1}>Profile</MenuItem>

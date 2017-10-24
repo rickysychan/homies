@@ -47,6 +47,7 @@ class ArticlesContainer extends Component {
           <div className="row">
 
             <div className="col-sm-6 col-sm-offset-1">
+
         {this.state.users.map((user) => {
           return(
               <div className="tile" key={user.id} >

@@ -6,6 +6,7 @@ import circle from './components/CircleContainer'
 // import './styles/main.css';
 import login from './components/Login'
 import register from './components/Register'
+import news from './components/GoogleAPI'
 
 const Main = () => (
   <main>
@@ -15,6 +16,7 @@ const Main = () => (
       <Route path='/circles' component={circle}/>
       <Route path='/login' component={login}/>
       <Route path='/Register' component={register}/>
+      <Route path='/api' component={news}/>
     </Switch>
   </main>
 )

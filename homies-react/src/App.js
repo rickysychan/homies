@@ -26,12 +26,12 @@ class App extends Component {
   render() {
     return (
       <div className="App">
-        <div class="page-container">
+        <div className="page-container">
         {/* {this.state.loginPage}
         {this.state.uploadScreen} */}
           <NavBar />
 
-          <Main class="text-center"/>
+          <Main className="text-center"/>
 
         </div>
       </div>
