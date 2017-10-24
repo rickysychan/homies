@@ -1,10 +1,14 @@
 {
-  "name": "homies-react",
+  "name": "Homies react server v2",
   "version": "1.0.0",
-  "description": "Front-end of homies project",
+  "description": "Using Simple and lightweight Boilerplate for ReactJS projects",
   "scripts": {
     "lint": "eslint --ext .jsx,.js src",
     "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rickysychan/homies"
   },
   "keywords": [
     "react",
@@ -19,6 +23,10 @@
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/noahlotzer/react-simple-boilerplate/issues"
+  },
+  "homepage": "https://github.com/noahlotzer/react-simple-boilerplate",
+  "engines": {
+    "node": ">=6.0.0"
   },
   "devDependencies": {
     "babel-core": "6.23.1",
