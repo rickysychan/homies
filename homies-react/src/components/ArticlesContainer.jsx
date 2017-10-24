@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import {Image} from 'react-bootstrap';
 import axios from 'axios';
-import SideBarMenu from '../SideBarMenu';
+import SideBar from './SideBar.jsx';
 
 
 class ArticlesContainer extends Component {
@@ -40,7 +39,7 @@ class ArticlesContainer extends Component {
     ]
     return (
       <div className="row row-offcanvas row-offcanvas-left">
-        <SideBarMenu />
+        <SideBar />
 
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
 
@@ -59,7 +58,7 @@ class ArticlesContainer extends Component {
                     <h4><a href="/">News Articles</a></h4>
                   </div>
                   <div className="panel-body">
-                    <Image src={ img[user.id] } responsive />
+                    <img src={ img[user.id] } className="img-responsive" />
                     <p>
                       <a href="/">Image Description</a>
                     </p>

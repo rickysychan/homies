@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 
-class CircleContainer extends Component {
+class StayInTheLoopContainer extends Component {
 
   constructor(props) {
     super(props)
@@ -13,12 +13,10 @@ class CircleContainer extends Component {
   render() {
     return (
       <div>
-        <button class="btn btn-danger">
-        Circles!
-        </button>
+        In the Loop articles
       </div>
     )
   }
 }
 
-export default CircleContainer
+export default StayInTheLoopContainer
