@@ -12,40 +12,20 @@ class ArticlesContainer extends Component {
     }
   }
 
-  componentDidMount() {
-    axios.get('http://localhost:3001/api/v1/users.json')
-    .then(response => {
-      console.log(response)
-      this.setState({articles: response.data})
-    })
-    .catch(error => console.log(error))
-  }
 
   componentDidMount() {
     fetch(`https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13`)
-    .then(res => res.json())  
-    .then(res => {
+      .then(res => res.json())
+      .then(res => {
         console.log(res)
         this.setState({ articles: res.articles });
-        console.log(this.state.posts)
+        console.log(this.state.articles)
       })
       .catch(error => console.log(error))
   }
 
   render() {
-    let img = ["",
-    "http://cdn5.thr.com/sites/default/files/imagecache/card_landscape_930_524/2017/10/gettyimages-864789994.jpg",
-    "https://static.gamespot.com/uploads/screen_kubrick/1579/15795667/3305470-dmmlmzaxcae8okp.jpg",
-    "http://cdn5.thr.com/sites/default/files/imagecache/card_landscape_930_524/2017/10/geo-trlr2-0067_-_h_2017.jpg",
-    "http://cdn4.thr.com/sites/default/files/imagecache/list_landscape_960x541/2015/09/thewalkingdead_h_2015_0.jpg",
-    "https://static.gamespot.com/uploads/screen_kubrick/1197/11970954/3245617-swbfii_reveal_screenshot_7.jpg",
-    "https://i.ndtvimg.com/i/2017-10/ajay-devgn-instagram_650x400_61508673492.jpg",
-    "https://images-na.ssl-images-amazon.com/images/M/MV5BMTA3MjA1NDkxMTReQTJeQWpwZ15BbWU4MDU2Njg3NDMy._V1_SY1000_CR0,0,639,1000_AL_.jpg",
-    "https://images-na.ssl-images-amazon.com/images/M/MV5BZWYxODViMGYtMGE2ZC00ZGQ3LThhMWUtYTVkNGE3OWU4NWRkL2ltYWdlL2ltYWdlXkEyXkFqcGdeQXVyMjYwNDA2MDE@._V1_SY1000_CR0,0,666,1000_AL_.jpg",
-    "http://mms.businesswire.com/media/20170613006236/en/592427/5/Switch_SuperMarioOdyssey_illustration_02_FINAL.jpg",
-    "https://images-na.ssl-images-amazon.com/images/M/MV5BNDNmYTQzMDEtMmY0MS00OTNjLTk4MjItMDZhMzkzOGI3MzA0XkEyXkFqcGdeQXVyNjk5NDA3OTk@._V1_.jpg"
 
-    ]
     return (
       <div className="row row-offcanvas row-offcanvas-left">
         <SideBar />
@@ -56,9 +36,9 @@ class ArticlesContainer extends Component {
 
             <div className="col-sm-6 col-sm-offset-1">
 
-        {this.state.users.map((user) => {
+        {this.state.articles.map((article) => {
           return(
-              <div className="tile" key={user.id} >
+              <div className="tile" key={article.id} >
                 <h1>Demo</h1>
                 <h4>{user.first_name}</h4>
                 <h4>{user.last_name}</h4>
