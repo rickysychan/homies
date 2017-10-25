@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171019155644) do
+ActiveRecord::Schema.define(version: 20171025205019) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
 
   create_table "article_comments", force: :cascade do |t|
     t.string "api_id"
+    t.string "api_type"
     t.integer "user_id"
     t.text "content"
     t.datetime "created_at", null: false
@@ -25,7 +26,15 @@ ActiveRecord::Schema.define(version: 20171019155644) do
 
   create_table "article_likes", force: :cascade do |t|
     t.string "api_id"
+    t.string "api_type"
     t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "articles", force: :cascade do |t|
+    t.text "article_url"
+    t.text "article_json"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

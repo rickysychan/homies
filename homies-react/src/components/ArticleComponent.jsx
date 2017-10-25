@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import axios from 'axios';
+
 
 class ArticleComponent extends Component {
 
@@ -6,7 +8,7 @@ class ArticleComponent extends Component {
     super(props);
     this.state = {
       show: false,
-      like: false
+      like: false,
     }
 
     this.toggleComments = this.toggleComments.bind(this);
@@ -56,21 +58,54 @@ class ArticleComponent extends Component {
               <i className="fa fa-bookmark-o fa-lg"></i>
             </div>
           </div>
-          { this.state.show && <Comment /> }
+          { this.state.show && <Comment url={ url }/> }
         </div>
       </div>
     )
   }
 }
 
-class Comment extends Component{
+class Comment extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      content: ''
+    }
+
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleChange = this.handleChange.bind(this);
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    axios.post(`http://localhost:3001/api/v1/articles/${this.props.url}/article_comments`, {
+      api_id: this.props.url,
+      user_id: 1,
+      content: this.state.content
+    })
+    .then(function (response) {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+
+    alert(JSON.stringify(this.props));
+  }
+
+  handleChange(event) {
+    this.setState({content: event.target.value});
+  }
+
+
   render() {
     return(
       <div className="article-commnet">
-        <form>
+        <form onSubmit={this.handleSubmit}>
           <div className="form-group">
             <label htmlFor="comment">Comment:</label>
-            <textarea className="form-control" rows="5" id="comment"></textarea>
+            <textarea className="form-control" rows="5" id="comment"
+                    value={this.state.content} onChange={this.handleChange}></textarea>
           </div>
           <button className="btn btn-primary">Comment</button>
         </form>
