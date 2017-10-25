@@ -2,26 +2,51 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import SideBar from './SideBar.jsx';
 
+import ArticleComponent from './ArticleComponent.jsx'
 
 class ArticlesContainer extends Component {
 
   constructor(props) {
-    super(props)
-    this.state = {
-      articles: [],
-    }
+    super(props);
+    this.state = { articles: []};
+
   }
 
-
   componentDidMount() {
-    fetch(`https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13`)
+
+    let apiUrls = [
+    "http://beta.newsapi.org/v2/top-headlines?sources=ign,polygon,entertainment-weekly&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+    "http://beta.newsapi.org/v2/everything?q=movies&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+    "http://beta.newsapi.org/v2/everything?q=xbox&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+    "http://beta.newsapi.org/v2/everything?q=boxoffice&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+    "http://beta.newsapi.org/v2/everything?q=comedy&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+
+      // "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+      // "https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+      // "https://newsapi.org/v1/articles?source=entertainment-weekly&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
+    ];
+
+    Promise.all(apiUrls.map(
+      (url) => fetch(url)
       .then(res => res.json())
       .then(res => {
-        console.log(res)
-        this.setState({ articles: res.articles });
-        console.log(this.state.articles)
+        const articles = this.state.articles.concat(res.articles);
+
+        this.setState({ articles: articles });
+      })
+      .then(() => {
+        this.setState( (currentState) => {
+          let sorted = currentState.articles.sort((a,b) => {
+            a = new Date(a.publishedAt).getTime()
+            b = new Date(b.publishedAt).getTime()
+            return b - a;
+          })
+          console.log(sorted);
+          return {articles: sorted}
+        })
       })
       .catch(error => console.log(error))
+    ))
   }
 
   render() {
@@ -31,47 +56,24 @@ class ArticlesContainer extends Component {
         <SideBar />
 
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
-
           <div className="row">
-
             <div className="col-sm-6 col-sm-offset-1">
 
-        {this.state.articles.map((article) => {
-          return(
-              <div className="tile" key={article.id} >
-                <h1>Demo</h1>
-                <h4>{user.first_name}</h4>
-                <h4>{user.last_name}</h4>
-                <p>{user.email}</p>
-                <div className="panel panel-default">
-                  <div className="panel-heading">
-                    <h4><a href="/">News Articles</a></h4>
-                  </div>
-                  <div className="panel-body">
-                    <img src={ img[user.id] } className="img-responsive" />
-                    <p>
-                      <a href="/">Image Description</a>
-                    </p>
-                    <div className="clearfix"></div>
-                    <p>
-                      Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis pharetra varius quam sit amet vulputate.
-                      Quisque mauris augue, molestie tincidunt condimentum vitae, gravida a libero. Aenean sit amet felis
-                      dolor, in sagittis nisi. Sed ac orci quis tortor imperdiet venenatis. Duis elementum auctor accumsan.
-                      Aliquam in felis sit amet augue.
-                    </p>
-                    <hr/>
-                    <div className="list-group pull-left">
-                      <i className="fa fa-comment-o fa-lg"></i>&nbsp;
-                    </div>
+      { this.state.articles.map((article, index) => {
+          if(article.urlToImage) {
 
-                    <div className="list-group pull-right">
-                      <i className="fa fa-heart-o fa-lg" ></i>&nbsp;
-                      <i className="fa fa-bookmark-o fa-lg"></i>
-                    </div>
-                  </div>
-                </div>
-              </div>
-          )
+            return(
+                <ArticleComponent
+                  title={article.title}
+                  author={article.author}
+                  url={article.url}
+                  urlToImage={article.urlToImage}
+                  publishedAt={article.publishedAt}
+                  description={article.description}
+                  key={index}
+                />
+            )
+          }
         })}
             </div>
           </div>
@@ -80,4 +82,6 @@ class ArticlesContainer extends Component {
     )
   }
 }
+
 export default ArticlesContainer
+

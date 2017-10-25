@@ -21,6 +21,6 @@ export default (
     <IndexRoute component={Main} />
     <Route path="/stayintheloop" component={StayInTheLoop} />
     <Route path="/circles" component={Circle} />
-    <Route path="/googelapi" component={GoogleAPI} />
+    <Route path="/googleapi" component={GoogleAPI} />
   </Route>
 );
