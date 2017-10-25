@@ -23,8 +23,12 @@ module Api::V1
     # Index
 
     def index
-      @recommendations = watson("entities")
+      @recommendations = twitter_user_products(watson("ign", "entities"))
       render json: @recommendations
+    end
+
+    def product
+
     end
 
     private
@@ -55,13 +59,18 @@ module Api::V1
       GiantBomb::Search.new().query('Need for Speed').resources('game').fetch
     end
 
-    def watson(features)
-      # @text_array = []
-      # array.each do |text|
+    def twitter_user_products(body)
+      parsed_body = JSON.parse(body)
+      parsed_body["entities"].each do |product|
+        puts product["text"]
+      end
+    end
+
+    def watson(twitter_user, features)
        response = Excon.get("https://watson-api-explorer.mybluemix.net/natural-language-understanding/api/v1/analyze",
          :headers => { "Accept" => "application/json" },
          :query => { "version"        => "2017-02-27",
-                     "url"           => "https://twitter.com/ign",
+                     "url"           => "https://twitter.com/#{twitter_user}",
                      "features"       => features,
                      "language"       => "en",
                      "concepts.limit" => 8,
@@ -71,11 +80,7 @@ module Api::V1
          :user => ENV["WATSON_USERNAME"],
          :password => ENV["WATSON_PASSWORD"],
        )
-
-       response.body
-     #   @text_array.push(response.body.force_encoding(Encoding::UTF_8))
-     # end
-     # @text_array
+      response.body
     end
 
   end
