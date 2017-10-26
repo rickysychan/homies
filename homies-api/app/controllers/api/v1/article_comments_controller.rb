@@ -2,7 +2,7 @@ module Api::V1
 
   class ArticleCommentsController < ApplicationController
     def index
-      @article_comments = ArticleComment.where(api_id: params[:article_id])
+      @article_comments = ArticleComment.where(article_id: params[:article_id])
       render json: @article_comments
     end
 

@@ -16,7 +16,6 @@ class StayInTheLoopContainer extends Component {
 
     let apiUrls = [
     "http://beta.newsapi.org/v2/top-headlines?sources=ign,polygon,entertainment-weekly&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-    "http://beta.newsapi.org/v2/everything?q=netflix&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
     "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
     "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
 

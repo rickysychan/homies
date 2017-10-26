@@ -19,6 +19,14 @@ module Api::V1
       render json: @user
     end
 
+    def articles
+      # TODO: Use a current user here instead of User.first
+      @user_articles_json = User.find(params[:id]).liked_articles.includes(:article_comments)
+      # @user_articles_json = ArticleLike.where(user_id: params[:id]).as_json(include: :article_comments)
+      # @user_articles_json = ArticleLike.where(user_id: params[:id]).as_json(include: {articles: { include: { article_comments: {only: [:user_id, :content]}}}})
+      render json: @user_articles_json, include: :article_comments
+    end
+
     def article_like
       @articles = ArticleLike.where(user_id: params[:id])
       render json: @articles
