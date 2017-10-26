@@ -27,6 +27,8 @@ Rails.application.routes.draw do
         post '/likes', to: 'articles#like_create'
         delete '/likes', to: 'articles#like_destroy'
       end
+
+      resources :articles, only: [:index]
     end
   end
 end

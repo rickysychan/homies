@@ -1,6 +1,14 @@
 module Api::V1
   class ArticlesController < ApplicationController
 
+    def index
+
+      # @articles_json = Article.all.as_json(include: :article_likes)
+
+      @articles_json = Article.all.as_json(include: {article_likes: {only: :user_id}, article_comments: {only: :content}})
+      render json: @articles_json
+    end
+
     def like_destroy
       @article_likes = ArticleLike.where(api_id: params[:article_id], user_id: session[:user_id])
       @article_likes.destroy

@@ -6,7 +6,8 @@ class User < ApplicationRecord
   has_many :article_comments
   has_many :circle_users
 
-  validates :name, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 2 }
+  validates :password_digest, length: { minimum: 4 }
 end
