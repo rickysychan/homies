@@ -4,7 +4,7 @@ import TextField from 'material-ui/TextField';
 import React, { Component } from 'react'
 import axios from 'axios'
 import UploadScreen from './UploadScreen.jsx'
-
+import Cookies from 'universal-cookie';
 
 class Login extends Component {
 constructor(props){
@@ -16,6 +16,7 @@ constructor(props){
  }
 
  handleClick(event){
+  const cookies = new Cookies();
   var apiBaseUrl = "http://localhost:3001/authenticate";
   var self = this;
   var payload={
@@ -27,6 +28,7 @@ constructor(props){
     console.log("this is the response", response);
     if(response.status == 200){
       console.log("Login successfull");
+      cookies.set('token', response.data.auth_token, { path: '/' });
       var uploadScreen=[];
       uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
       self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
