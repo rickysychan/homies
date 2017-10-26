@@ -1,11 +1,7 @@
 import React, { Component } from 'react';
 import { Router, Route, Link, IndexRoute, hashHistory, browserHistory } from 'react-router'
-
-//import '../styles/App.css';
 import NavBar from './components/NavBar.jsx';
-// import ArticlesContainer from './components/ArticlesContainer.jsx';
-// import Main from './main'
-// import Loginscreen from './Loginscreen'
+import Loginscreen from './components/Loginscreen.jsx'
 
 class App extends Component {
 
@@ -16,24 +12,35 @@ class App extends Component {
       uploadScreen:[]
     }
   }
-  // componentWillMount(){
-  //   var loginPage =[];
-  //   loginPage.push(<Loginscreen parentContext={this}/>);
-  //   this.setState({
-  //                 loginPage:loginPage
-  //                   })
+
+  componentWillMount(){
+    var loginPage =[];
+    loginPage.push(<Loginscreen parentContext={this}/>);
+    this.setState({
+                  loginPage:loginPage
+                    })
+  }
+
+  // render() {
+  //   return (
+  //     <div className="App">
+  //       <div className="page-container">
+  //         <NavBar />
+
+  //         <div className="col-sm-12">
+  //           {this.props.children}
+  //         </div>
+
+  //       </div>
+  //     </div>
+  //   );
   // }
+
   render() {
     return (
       <div className="App">
-        <div className="page-container">
-          <NavBar />
-
-          <div className="col-sm-12">
-            {this.props.children}
-          </div>
-
-        </div>
+        {this.state.loginPage}
+        {this.state.uploadScreen}
       </div>
     );
   }

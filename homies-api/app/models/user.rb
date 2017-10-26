@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_secure_password
+
   has_many :posts
   has_many :post_comments
   has_many :product_interests
@@ -6,7 +8,19 @@ class User < ApplicationRecord
   has_many :article_comments
   has_many :circle_users
 
-  validates :name, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
   validates :email, presence: true, uniqueness: { case_sensitive: false }
-  validates :password, length: { minimum: 2 }
+
+
+  # def self.authenticate_with_credentials(email, password)
+  #   strippedEmail = email.strip
+  #   emailToLowerCase = strippedEmail.downcase
+  #   user = User.find_by_email(emailToLowerCase)
+  #   if user && user.authenticate(password)
+  #       user
+  #   else
+  #       nil
+  #   end
+  # end
 end

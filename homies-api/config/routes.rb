@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
+  post 'authenticate', to: 'authentication#authenticate'
   # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+
   namespace :api do
     namespace :v1 do
 
@@ -7,6 +9,8 @@ Rails.application.routes.draw do
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
         get '/users/:id/recommendations', to: 'recommendations#index'
+        post '/users/login', to: 'sessions#create'
+        get '/users/login', to: 'users#destroy'
 
       resources :circles, only: [:create, :show, :update, :destroy] do
         resources :circle_users, except: [:update]

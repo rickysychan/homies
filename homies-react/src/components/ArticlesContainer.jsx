@@ -9,6 +9,7 @@ class ArticlesContainer extends Component {
     super(props)
     this.state = {
       articles: [],
+      users:[]
     }
   }
 
@@ -16,21 +17,11 @@ class ArticlesContainer extends Component {
     axios.get('http://localhost:3001/api/v1/users.json')
     .then(response => {
       console.log(response)
-      this.setState({articles: response.data})
+      this.setState({users: response.data})
     })
     .catch(error => console.log(error))
   }
 
-  componentDidMount() {
-    fetch(`https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13`)
-    .then(res => res.json())  
-    .then(res => {
-        console.log(res)
-        this.setState({ articles: res.articles });
-        console.log(this.state.posts)
-      })
-      .catch(error => console.log(error))
-  }
 
   render() {
     let img = ["",
