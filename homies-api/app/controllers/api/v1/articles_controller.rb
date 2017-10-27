@@ -6,6 +6,16 @@ module Api::V1
       render json: @articles_json
     end
 
+    def create
+      @article = Article.new(article_params)
+      @article.save
+      render json: @article
+    end
+
+    def url_filter
+      @article_url = Article.where(article_url: params[:url])
+      render json: @article_url
+    end
 
 
     def like_destroy
@@ -26,9 +36,17 @@ module Api::V1
 
     private
 
+    def article_params
+      puts params.inspect
+      params.require(:article).permit(
+        :article_url,
+        article_json: {}
+      )
+    end
+
     def article_likes_params
       params.require(:article_likes).permit(
-        :api_id,
+        :article_id,
         :user_id
       )
     end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171025225004) do
+ActiveRecord::Schema.define(version: 20171026191728) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,7 +36,7 @@ ActiveRecord::Schema.define(version: 20171025225004) do
 
   create_table "articles", force: :cascade do |t|
     t.text "article_url"
-    t.text "article_json"
+    t.jsonb "article_json"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

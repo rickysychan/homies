@@ -22,14 +22,22 @@ Rails.application.routes.draw do
         delete '/interests', to: 'products#interest_destroy'
       end
 
-      scope '/articles/:article_id', as: 'articles' do
+      # scope '/articles/:article_id', as: 'articles' do
+      #   resources :article_comments, except: [:update]
+      #   get '/likes', to: 'articles#like_number'
+      #   post '/likes', to: 'articles#like_create'
+      #   delete '/likes', to: 'articles#like_destroy'
+      # end
+
+      resources :articles, only: [:index, :create] do
         resources :article_comments, except: [:update]
+        collection do
+          get '/url_filter', to: 'articles#url_filter'
+        end
         get '/likes', to: 'articles#like_number'
         post '/likes', to: 'articles#like_create'
         delete '/likes', to: 'articles#like_destroy'
       end
-
-      resources :articles, only: [:index]
     end
   end
 end

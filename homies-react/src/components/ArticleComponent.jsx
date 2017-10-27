@@ -58,18 +58,75 @@ class ArticleComponent extends Component {
               <i className="fa fa-bookmark-o fa-lg"></i>
             </div>
           </div>
-          { this.state.show && <Comment url={ url }/> }
+          { this.state.show && <CommentInput url={url} title={title} author={author}
+                                     urlToImage={urlToImage} publishedAt={publishedAt}
+                                     description={description} />
+          }
+          { this.state.show && <Comments url={url} /> }
         </div>
+
+
       </div>
     )
   }
 }
 
-class Comment extends Component {
+class Comments extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      content: ''
+      comments: []
+    }
+  }
+  componentDidMount() {
+    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
+      params: {
+        url: this.props.url
+      }
+    })
+    .then(response => {
+      console.log(response);
+      if(response.data.length > 0) {
+        console.log("Article ID: ",response.data[0].id)
+        axios.get(`http://localhost:3001/api/v1/articles/${response.data[0].id}/article_comments`)
+          .then(response => {
+            console.log(response);
+            const comments = this.state.comments.concat(response.data)
+
+            this.setState({comments: comments});
+
+          })
+      }
+    })
+    .catch(function (error) {
+          console.log(error);
+    });
+  }
+
+  render() {
+
+    return(
+      <div className="article-commnet">
+      { this.state.comments.map((comment, index) => {
+
+        return  <div className="panel panel-success">
+                  <div className="panel-heading">User ID: { comment.user_id }</div>
+                  <div className="panel-body">
+                    { comment.content }
+                  </div>
+                </div>
+      }) }
+      </div>
+    )
+  }
+}
+
+
+class CommentInput extends Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      content: '',
     }
 
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -78,20 +135,72 @@ class Comment extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    axios.post(`http://localhost:3001/api/v1/articles/${this.props.url}/article_comments`, {
-      api_id: this.props.url,
-      user_id: 1,
-      content: this.state.content
+    const { title, author, url ,urlToImage, publishedAt, description } = this.props;
+
+    let article_json = {
+      title: title,
+      author: author,
+      url: url,
+      urlToImage: urlToImage,
+      publishedAt: publishedAt,
+      description: description
+    }
+
+    let article_id = 0;
+    let content = this.state.content;
+
+    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
+      params: {
+        url: url
+      }
     })
     .then(function (response) {
-      console.log(response);
+      console.log("Article ID is: ",response.data.length);
+      if(response.data.length > 0) {
+        article_id = response.data[0].id;
+        axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
+          article_comment: {
+            article_id: article_id,
+            user_id: 185,
+            content: content
+          }
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      } else {
+        axios.post(`http://localhost:3001/api/v1/articles`, {
+          article: {
+            article_url: url,
+            article_json: article_json
+          }
+        })
+        .then(function (response) {
+          article_id = response.data.id;
+          axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
+            article_comment: {
+              article_id: article_id,
+              user_id: 185,
+              content: content
+            }
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
+      }
     })
     .catch(function (error) {
       console.log(error);
     });
 
-    alert(JSON.stringify(this.props));
+    this.setState({content: ''});
+
   }
+
 
   handleChange(event) {
     this.setState({content: event.target.value});
