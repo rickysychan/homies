@@ -1,6 +1,7 @@
 module Api::V1
 
   class UsersController < ApplicationController
+  # skip_before_action :authenticate_request
 
     def index
       @user = User.all
@@ -24,6 +25,11 @@ module Api::V1
     def show
       @user = User.find(params[:id])
       render json: @user
+    end
+
+    def show_circles
+      @circles = User.find(params[:id]).circles
+      render json: @circles
     end
 
     def article_like

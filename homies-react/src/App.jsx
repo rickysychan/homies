@@ -21,29 +21,30 @@ class App extends Component {
                     })
   }
 
-  // render() {
-  //   return (
-  //     <div className="App">
-  //       <div className="page-container">
-  //         <NavBar />
-
-  //         <div className="col-sm-12">
-  //           {this.props.children}
-  //         </div>
-
-  //       </div>
-  //     </div>
-  //   );
-  // }
-
   render() {
     return (
       <div className="App">
-        {this.state.loginPage}
-        {this.state.uploadScreen}
+        <div className="page-container">
+          <NavBar />
+
+          <div className="col-sm-12">
+            {this.props.children}
+          </div>
+
+        </div>
       </div>
     );
   }
 }
+
+//   render() {
+//     return (
+//       <div className="App">
+//         {this.state.loginPage}
+//         {this.state.uploadScreen}
+//       </div>
+//     );
+//   }
+// }
 
 export default App;

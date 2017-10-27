@@ -34,8 +34,10 @@ class Register extends Component {
           console.log("registration successfull");
           var loginscreen=[];
           loginscreen.push(<Login parentContext={this}/>);
+          console.log(this) 
           var loginmessage = "Login to your new account!";
-          self.props.parentContext.setState({loginscreen:loginscreen,
+          self.props.parentContext.setState({
+            loginscreen:loginscreen,
             loginmessage:loginmessage,
             buttonLabel:"Register",
             isLogin:true

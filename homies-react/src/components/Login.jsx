@@ -5,13 +5,16 @@ import React, { Component } from 'react'
 import axios from 'axios'
 import UploadScreen from './UploadScreen.jsx'
 import Cookies from 'universal-cookie';
+import history from '../index.jsx';
 
 class Login extends Component {
+
 constructor(props){
   super(props);
   this.state={
   username:'',
-  password:''
+  password:'',
+  auth_token: ''
   }
  }
 
@@ -29,14 +32,14 @@ constructor(props){
     if(response.status == 200){
       console.log("Login successfull");
       cookies.set('token', response.data.auth_token, { path: '/' });
-      var uploadScreen=[];
-      uploadScreen.push(<UploadScreen appContext={self.props.appContext}/>)
-      self.props.appContext.setState({loginPage:[],uploadScreen:uploadScreen})
+      history.push('/discovery')
+      this.setState({auth_token:response.data.auth_token})
+      console.log(">>>>", this.state.auth_token)
       }
     })
       .catch(function (error) {
       console.log(error);
-      alert("Email password do not match or Email is not registered")
+      alert("Email and password do not match")
       });
       }
  
