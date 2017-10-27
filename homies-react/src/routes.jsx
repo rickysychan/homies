@@ -10,6 +10,7 @@ import Circle from './components/CircleContainer.jsx';
 import StayInTheLoop from './components/StayInTheLoopContainer.jsx';
 // TODO : delete once we finish the developement
 import GoogleAPI from './components/GoogleAPI.jsx';
+import NewCircleForm from './components/NewCircleForm.jsx';
 
 
 /**
@@ -22,5 +23,6 @@ export default (
     <Route path="/stayintheloop" component={StayInTheLoop} />
     <Route path="/circles" component={Circle} />
     <Route path="/googleapi" component={GoogleAPI} />
+    <Route path="/NewCircle" component={NewCircleForm} />
   </Route>
 );

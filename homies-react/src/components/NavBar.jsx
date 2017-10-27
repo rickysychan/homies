@@ -3,6 +3,10 @@ import { Link } from 'react-router';
 
 class NavBar extends Component {
 
+  handleClick(event){
+    alert("clicked")
+  }
+
   render() {
     return (
       <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">
@@ -55,8 +59,8 @@ class NavBar extends Component {
               </li>
               <li role="separator" className="divider"></li>
               <li>
-                <a href="/">
-                  <i className="fa fa-sign-out" aria-hidden="true"></i> Log Out
+                <a href="/" onClick={(event) => this.handleClick(event)}>
+                  <i className="fa fa-sign-out" aria-hidden="true" ></i> Log Out
                 </a>
               </li>
             </ul>

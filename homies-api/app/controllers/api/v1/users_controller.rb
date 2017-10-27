@@ -19,6 +19,12 @@ module Api::V1
       render json: @user
     end
 
+    def show_circles
+      @circles = User.find(params[:id]).circles
+      # todo make route for this
+      render json: @circles
+    end
+
     def article_like
       @articles = ArticleLike.where(user_id: params[:id])
       render json: @articles

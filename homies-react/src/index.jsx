@@ -17,3 +17,5 @@ import App from './App.jsx';
 ReactDOM.render(
   <Router routes={routes} history={history} />, document.getElementById('react-root')
 );
+
+export default history

@@ -7,8 +7,9 @@ Rails.application.routes.draw do
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
         get '/users/:id/recommendations', to: 'recommendations#index'
+        get '/users/:id/showcircles', to: 'users#show_circles'
 
-      resources :circles, only: [:create, :show, :update, :destroy] do
+      resources :circles, only: [:create, :show, :update, :destroy, :index] do
         resources :circle_users, except: [:update]
         resources :posts, except: [:update] do
           resources :post_comments, except: [:update]
