@@ -23,7 +23,7 @@ module Api::V1
     # Index
 
     def index
-      @recommendations = sort_results_by_number(submit_to_watson)
+      @recommendations = search_for_products(sort_results_by_number(submit_to_watson))
       render json: @recommendations
     end
 
@@ -37,13 +37,14 @@ module Api::V1
       @users = []
       results = @@client.search(product, result_type: "recent").take(20)
       results.each do |tweet|
-        @users.push(tweet["user"]["id"])
+        @users.push(tweet.user.id)
       end
       @users
     end
 
     def similar_users(product_array)
       @similar_users = []
+      puts "Searching for users."
       product_array.each do |product|
         users = tweet_search(product)
         users.each { |user| @similar_users.push(user) }
@@ -52,44 +53,60 @@ module Api::V1
     end
 
     def add_users_to_list(similar_users_array)
+      puts "Creating list."
       list = @@client.create_list("Homies", options = { mode: 'private'})
-      @list_id = list["id"]
+      @list_id = list.id
       @@client.add_list_members(@list_id, similar_users_array)
+      puts "Added members to list."
       @list_id
     end
 
 
     def similar_list_tweets(list_id)
       @similar_users_tweets = []
+      puts "Searching list timeline."
       @@client.list_timeline(list_id, options = { :count => 50 }).each do |tweet|
-        @similar_users_tweets.push(tweet["text"])
+        @similar_users_tweets.push(tweet.text)
       end
+      puts "Destroying List"
+      @@client.destroy_list(list_id)
+      puts "Tweets: #{@similar_users_tweets.length}"
       @similar_users_tweets
     end
 
 
     def search_all(query)
       @results = []
-      @results.push(tv_search(query))
-      @results.push(movie_search(query))
-      @results.push(game_search(query))
+      puts "Searching TV database."
+      tv_search(query).each { |show| @results.push(show) }
+      puts "Searching movie database."
+      movie_search(query).each { |movie| @results.push(movie) }
+      puts "Searching game database."
+      game_search(query).each { |game| @results.push(game) }
       @results
     end
 
     def tv_search(show)
-      Tmdb::TV.find(show)
+      shows = Tmdb::TV.find(show)
+      puts "Results: #{shows.length}"
+      shows
     end
 
     def movie_search(movie)
-      Tmdb::Movie.find(movie)
+      movies = Tmdb::Movie.find(movie)
+      puts "Results: #{movies.length}"
+      movies
     end
 
     def game_search(game)
-      GiantBomb::Search.new().query(game).resources('game').fetch
+      games = GiantBomb::Search.new().query(game).resources('game').fetch
+      puts "Results: #{games.length}"
+      games
     end
 
     def twitter_user_products(body)
       @twitter_product_list = []
+      puts "Extracting Tweet text."
       parsed_body = JSON.parse(body)
       parsed_body["entities"].each do |product|
         @twitter_product_list.push(product["text"])
@@ -111,7 +128,9 @@ module Api::V1
       @text = return_similar_user_texts(["Big Fish", "Call of Duty", "Bob's Burgers", "Dante's Peak", "Ninja Turtles"]).to_s
       while @results.empty? do
         sleep(10)
+        puts "Analyzing with Watson."
         @results = watson(@text)
+        puts "Results: #{@results.length}"
       end
       parsed_results = JSON.parse(@results)
       entities = parsed_results["entities"]
@@ -124,6 +143,16 @@ module Api::V1
     def sort_results_by_number(array)
       results_hash = array.each_with_object(Hash.new(0)) { |o, h| h[o] += 1 }
       results_hash.sort_by(&:last).to_h
+    end
+
+    def search_for_products(product_hash)
+      @search_results = []
+      product_hash.keys.each do |key|
+        results = search_all(key)
+        results = results[0]
+        @search_results.push(results) unless results.nil?
+      end
+      @search_results
     end
 
     def watson(text)
