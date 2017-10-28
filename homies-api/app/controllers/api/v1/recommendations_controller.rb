@@ -26,7 +26,7 @@ module Api::V1
     def index
       # @products = ProductInterest.where(user_id: session[:user_id])
 
-      @recommendations = final_recommendations(["Big Fish", "Call of Duty", "Bob's Burgers", "Dante's Peak", "Ninja Turtles"])
+      @recommendations = final_recommendations(["Johnny English", "Last of the Mohicans", "Ed", "Trainspotting", "God of War", "Assassin's Creed"])
       render json: @recommendations
     end
 
@@ -150,20 +150,19 @@ module Api::V1
     end
 
     def submit_to_watson(user_products_array)
-      @results = {}
       @text = return_similar_user_texts(user_products_array).to_s
-      while @results.empty? do
-        sleep(10)
-        puts "Analyzing with Watson."
-        @results = watson(@text)
-        puts "Results: #{@results.length}"
+      puts "Analyzing with Watson."
+      @results = watson(@text)
+      if @results.empty?
+        return []
+      else
+        parsed_results = JSON.parse(@results)
+        entities = parsed_results["entities"]
+        entities.map! do |entity|
+          entity["text"]
+        end
+        entities
       end
-      parsed_results = JSON.parse(@results)
-      entities = parsed_results["entities"]
-      entities.map! do |entity|
-        entity["text"]
-      end
-      entities
     end
 
     def sort_results_by_number(array)
@@ -199,7 +198,16 @@ module Api::V1
     end
 
     def final_recommendations(user_products_array)
-      search_for_products(sort_results_by_number(submit_to_watson(user_products_array)))
+      @products = submit_to_watson(user_products_array)
+      puts @products
+      while @products.empty?
+        sleep(5)
+        @products = submit_to_watson(user_products_array)
+      end
+      results = search_for_products(sort_results_by_number(@products))
+      results = results.select do |product|
+        !user_products_array.include?(product[:name])
+      end
     end
 
   end

@@ -58,7 +58,7 @@ class ArticleComponent extends Component {
       axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
         article_like: {
         article_id: article_id,
-        user_id: 185,
+        user_id: 82,
         //update this
         }
       })
@@ -97,8 +97,8 @@ class ArticleComponent extends Component {
       axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
         article_comment: {
         article_id: article_id,
-        user_id: 185,
-        // update this 
+        user_id: 82,
+        // update this
         content: content
         }
       })
