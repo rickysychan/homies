@@ -1,4 +1,6 @@
 class User < ApplicationRecord
+  has_secure_password
+
   has_many :posts
   has_many :post_comments
   has_many :product_interests
@@ -6,6 +8,7 @@ class User < ApplicationRecord
   has_many :article_likes
   has_many :article_comments
   has_many :circle_users
+  has_many :circles, through: :circle_users
 
   has_many :commented_articles, through: :article_comments, source: :article
   has_many :liked_articles, through: :article_likes, source: :article

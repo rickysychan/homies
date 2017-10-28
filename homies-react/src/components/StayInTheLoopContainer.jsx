@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import SideBar from './SideBar.jsx';
+import Login from './Login.jsx';
+import NavBar from './NavBar.jsx';
+import LoginScreen from './LoginScreen.jsx';
+import history from '../index.jsx';
 
 import ArticleComponent from './ArticleComponent.jsx'
 
@@ -8,8 +12,21 @@ class StayInTheLoopContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { articles: []};
+    this.state = { 
+      articles: [],
+      is_auth: ''
+    };
+  }
 
+  componentWillMount(){
+    
+        console.log(this.props.is_auth)
+        console.log(this.props)
+    
+        if(!this.props.is_auth){
+          const { history } = this.props
+          history.pushState(null, '/')
+        }
   }
 
   componentDidMount() {
@@ -27,8 +44,9 @@ class StayInTheLoopContainer extends Component {
   render() {
 
     return (
+      
       <div className="row row-offcanvas row-offcanvas-left">
-
+       <NavBar />
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
           <div className="row">
             <div className="col-sm-6 col-sm-offset-1">

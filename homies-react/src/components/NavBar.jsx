@@ -1,7 +1,15 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import Cookies from 'universal-cookie';
 
 class NavBar extends Component {
+
+  handleClick(event){
+    const cookies = new Cookies();
+    alert("Logged out")
+    cookies.remove('token')
+    this.props.is_auth = ''
+  }
 
   render() {
     return (
@@ -19,16 +27,13 @@ class NavBar extends Component {
       <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul className="nav navbar-nav">
           <li>
-            <Link to="/">Discover</Link>
+            <Link to="/discovery">Discover</Link>
           </li>
           <li>
             <Link to="/stayintheloop" >Stay in <i className="fa fa-superpowers"></i></Link>
           </li>
           <li>
             <Link to="/circles">Circles </Link>
-          </li>
-          <li>
-            <Link to="/googleapi">Google API </Link>
           </li>
         </ul>
 
@@ -55,8 +60,8 @@ class NavBar extends Component {
               </li>
               <li role="separator" className="divider"></li>
               <li>
-                <a href="/">
-                  <i className="fa fa-sign-out" aria-hidden="true"></i> Log Out
+                <a href="/" onClick={(event) => this.handleClick(event)}>
+                  <i className="fa fa-sign-out" aria-hidden="true" ></i> Log Out
                 </a>
               </li>
             </ul>

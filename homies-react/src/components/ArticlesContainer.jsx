@@ -1,10 +1,21 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import SideBar from './SideBar.jsx';
-
+import NavBar from './NavBar.jsx';
+import history from '../index.jsx';
 import ArticleComponent from './ArticleComponent.jsx'
 
 class ArticlesContainer extends Component {
+
+  componentWillMount() {
+
+    console.log(this.props.is_auth)
+    console.log(this.props)
+
+    if(!this.props.is_auth){
+      history.push('/');
+    }
+  }
 
   constructor(props) {
     super(props);
@@ -52,6 +63,7 @@ class ArticlesContainer extends Component {
 
     return (
       <div className="row row-offcanvas row-offcanvas-left">
+        <NavBar />
         <SideBar />
 
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">

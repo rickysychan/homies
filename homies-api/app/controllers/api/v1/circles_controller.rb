@@ -1,19 +1,24 @@
 module Api::V1
-    
+
     class CirclesController < ApplicationController
         respond_to :json
 
-        def show
-            @circle = Circle.find(params[:id])
+        def index
+            @circle = Circle.all
             render json: @circle
+        end
+
+        def show
+            @users = Circle.find(params[:id]).users
+            render json: @users
         end
 
         def create
             @circle = Circle.new(circle_params)
             if @circle.save!
-                render json: {status: "success"}, status: :successful
+                render status: 200
             else
-                render json: {status: "error"}, status: :unprocessable_entity
+                render status: 500
             end
         end
 

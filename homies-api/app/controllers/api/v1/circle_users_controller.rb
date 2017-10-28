@@ -1,5 +1,5 @@
 module Api::V1
-    
+
     class CircleUsersController < ApplicationController
 
         def create
@@ -16,6 +16,7 @@ module Api::V1
             render json: @circleUser
         end
 
+
         def destroy
             @circleUser = CircleUser.find params[:id]
             @circleUser.destroy
@@ -23,3 +24,11 @@ module Api::V1
 
     end
 end
+
+
+
+
+    # def index
+    #   @articles_json = Article.all.as_json(include: {article_likes: {only: :user_id}, article_comments: {only: [:user_id, :content]}})
+    #   render json: @articles_json
+    # end

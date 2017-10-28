@@ -59,6 +59,7 @@ class ArticleComponent extends Component {
         article_like: {
         article_id: article_id,
         user_id: 185,
+        //update this
         }
       })
       .then(response => {
@@ -97,6 +98,7 @@ class ArticleComponent extends Component {
         article_comment: {
         article_id: article_id,
         user_id: 185,
+        // update this 
         content: content
         }
       })
