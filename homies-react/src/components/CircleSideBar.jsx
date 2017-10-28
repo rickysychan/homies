@@ -37,8 +37,6 @@ componentDidMount() {
 
     let circleUserNames = "http://localhost:3001/api/v1/circles"
     
-    // get the real token from the cookie "token"
-    // send on every axios request
     let token = cookies.get("token")
     axios.get(circleUserNames, {
         headers: {
@@ -47,10 +45,7 @@ componentDidMount() {
     })
     .then( (response) => {
         console.log("this is the response", response)
-        this.setState({ SidebarCircleUserNames: response.data.map(
-            circle => circle.first_name
-        )});
-        console.log(this.state.SidebarCircleNames)
+        // this response contains the user id!
     })
     
 }

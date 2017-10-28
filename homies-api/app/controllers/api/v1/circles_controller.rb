@@ -6,7 +6,8 @@ module Api::V1
         def index
             puts "CirclesController index"
             puts current_user.inspect
-            @user = current_user.id
+            @user = current_user
+            @userName = current_user.first_name
             render json: @user
         end
 
