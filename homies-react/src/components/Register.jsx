@@ -18,7 +18,7 @@ class Register extends Component {
 
   handleClick(event){
     console.log(">>>>> clicked!")
-    var apiBaseUrl = "http://localhost:3001/api/v1/users";
+    var apiBaseUrl = "http://localhost:3001/api/v1/users/registeration";
     console.log("values",this.state.first_name,this.state.last_name,this.state.email,this.state.password);
     //To be done:check for empty values before hitting submit
     var self = this;

@@ -32,7 +32,7 @@ componentDidMount() {
         console.log(this.state.SidebarCircleNames)
     })
 
-    let circleUserNames = "http://localhost:3001/api/v1/circles/4"
+    let circleUserNames = "http://localhost:3001/api/v1/circles"
     
     axios.get(circleUserNames)
     .then( (response) => {
@@ -59,8 +59,8 @@ componentDidMount() {
           {this.state.SidebarCircleNames.map((item, index) => (
        <li className='indent' key={index}>{item}</li>
     ))}
-            <h3> Circle users </h3>
             </ul>
+            <h3> Circle users </h3>
             <ul className="nav" id="sidebar-nav">
           {this.state.SidebarCircleUserNames.map((item, index) => (
        <li className='indent' key={index}>{item}</li>
