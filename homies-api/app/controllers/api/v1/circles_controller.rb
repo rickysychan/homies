@@ -4,8 +4,10 @@ module Api::V1
         respond_to :json
 
         def index
-            @circle = Circle.all
-            render json: @circle
+            puts "CirclesController index"
+            puts current_user.inspect
+            @user = current_user.id
+            render json: @user
         end
 
         def show

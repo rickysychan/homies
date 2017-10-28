@@ -1,26 +1,12 @@
 module Api::V1
 
   class UsersController < ApplicationController
-  # skip_before_action :authenticate_request
 
     def index
       @user = User.all
       render json: @user
     end
 
-    def create
-      user_params[:email] = user_params[:email].downcase!
-      @user = User.new(user_params)
-      puts "this is the user"
-      puts @user
-
-      if @user.save
-        session[:user_id] = @user.id
-        render :status => 200
-      else
-        render :status => 401
-      end
-    end
 
     def show
       # @user = User.find(params[:id])
@@ -32,7 +18,7 @@ module Api::V1
       @circles = User.find(params[:id]).circles
       render json: @circles
     end
-    
+
     def articles
       # TODO: Use a current user here instead of User.first
       @user_articles_json = User.find(params[:id]).liked_articles.includes(:article_comments)

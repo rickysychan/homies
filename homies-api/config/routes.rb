@@ -12,7 +12,9 @@ Rails.application.routes.draw do
         get '/users/:id/recommendations', to: 'recommendations#index'
         post '/users/login', to: 'sessions#create'
         get '/users/login', to: 'users#destroy'
+        post '/users/registeration', to: 'registrations#create'
         get '/users/:id/showcircles', to: 'users#show_circles'
+
 
 
       resources :circles, only: [:create, :show, :update, :destroy, :index] do
