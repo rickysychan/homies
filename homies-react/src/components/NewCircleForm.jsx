@@ -5,6 +5,8 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import NavBar from './NavBar.jsx';
+import history from '../index.jsx';
+import Cookies from 'universal-cookie';
 
 class NewCircleForm extends Component {
     constructor(props){
@@ -13,6 +15,17 @@ class NewCircleForm extends Component {
             name:'',
         }
     }
+
+    componentWillMount() {
+        const cookies = new Cookies();
+    
+        console.log(this.props.is_auth)
+        console.log(this.props)
+    
+        if(!this.props.is_auth){
+          history.push('/');
+        }
+      }
 
     handleClick(event){
         var apiBaseUrl = "http://localhost:3001/api/v1/circles"

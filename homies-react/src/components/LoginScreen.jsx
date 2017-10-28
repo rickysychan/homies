@@ -39,7 +39,7 @@ class Loginscreen extends Component {
     else{
       var loginscreen=[];
       loginscreen.push(<Login parentContext={this} handleLogin={this.props.handleLogin}/>);
-      loginmessage = "Not Registered yet? Go to registration";
+      loginmessage = "Register or login to your account";
       this.setState({
                      loginscreen:loginscreen,
                      loginmessage:loginmessage,
@@ -52,7 +52,7 @@ class Loginscreen extends Component {
   componentWillMount(){
     var loginscreen=[];
     loginscreen.push(<Login handleLogin={this.props.handleLogin} parentContext={this} appContext={this.props.parentContext}/>);
-    var loginmessage = "Not registered yet? Register Now!";
+    var loginmessage = "Register or login to your account";
     this.setState({
                   loginscreen:loginscreen,
                   loginmessage:loginmessage
@@ -61,6 +61,7 @@ class Loginscreen extends Component {
   render() {
     return (
       <div className="loginscreen">
+        <h1>Sign in/Register</h1>
         {this.state.loginscreen}
         <div>
           {this.state.loginmessage}

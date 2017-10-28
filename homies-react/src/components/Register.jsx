@@ -32,22 +32,11 @@ class Register extends Component {
       .then(function (response) {
         console.log(response);
           console.log("registration successfull");
-          var loginscreen=[];
-          loginscreen.push(<Login parentContext={this}/>);
-          console.log(this) 
-          var loginmessage = "Login to your new account!";
-          self.props.parentContext.setState({
-            loginscreen:loginscreen,
-            loginmessage:loginmessage,
-            buttonLabel:"Register",
-            isLogin:true
-          });
-  
-        
+          window.location.reload();   
       })
       .catch(function (error) {
         console.log(error);
-        alert("That email is already being used!")
+        alert("That email is already being used or you are missing parameters")
       });
   }
 

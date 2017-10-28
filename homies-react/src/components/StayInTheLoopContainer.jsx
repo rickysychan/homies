@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import SideBar from './SideBar.jsx';
-import Cookies from 'universal-cookie';
 import Login from './Login.jsx';
 import NavBar from './NavBar.jsx';
 import LoginScreen from './LoginScreen.jsx';
@@ -20,13 +19,13 @@ class StayInTheLoopContainer extends Component {
   }
 
   componentWillMount(){
-    const cookies = new Cookies();
     
         console.log(this.props.is_auth)
         console.log(this.props)
     
         if(!this.props.is_auth){
-          history.replaceState(null, '/');
+          const { history } = this.props
+          history.pushState(null, '/')
         }
   }
 

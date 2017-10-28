@@ -2,14 +2,12 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import SideBar from './SideBar.jsx';
 import NavBar from './NavBar.jsx';
-import Cookies from 'universal-cookie';
 import history from '../index.jsx';
 import ArticleComponent from './ArticleComponent.jsx'
 
 class ArticlesContainer extends Component {
 
   componentWillMount() {
-    const cookies = new Cookies();
 
     console.log(this.props.is_auth)
     console.log(this.props)
