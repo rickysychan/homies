@@ -5,6 +5,7 @@ import { Link } from 'react-router';
 import { withRouter } from 'react-router';
 import history from '../index.jsx';
 import axios from 'axios';
+import Cookies from 'universal-cookie';
 
 class CircleSideBar extends Component {
 
@@ -21,22 +22,31 @@ class CircleSideBar extends Component {
     }
 
 componentDidMount() {
+
+    const cookies = new Cookies();
     let circleNames = "http://localhost:3001/api/v1/users/1/showcircles"
     
-    axios.get(circleNames)
-    .then( (response) => {
-        console.log(response)
-        this.setState({ SidebarCircleNames: response.data.map(
-            circle => circle.name
-        )});
-        console.log(this.state.SidebarCircleNames)
-    })
+    // axios.get(circleNames)
+    // .then( (response) => {
+    //     console.log(response)
+    //     this.setState({ SidebarCircleNames: response.data.map(
+    //         circle => circle.name
+    //     )});
+    //     console.log(this.state.SidebarCircleNames)
+    // })
 
     let circleUserNames = "http://localhost:3001/api/v1/circles"
     
-    axios.get(circleUserNames)
+    // get the real token from the cookie "token"
+    // send on every axios request
+    let token = cookies.get("token")
+    axios.get(circleUserNames, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
     .then( (response) => {
-        console.log(response)
+        console.log("this is the response", response)
         this.setState({ SidebarCircleUserNames: response.data.map(
             circle => circle.first_name
         )});
