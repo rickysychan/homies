@@ -29,7 +29,7 @@ class App extends Component {
         <div className="page-container">
           <NavBar />
 
-          <div className="col-sm-12">
+          <div className="col-sm-12" >
             {this.props.children}
           </div>
 

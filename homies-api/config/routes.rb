@@ -4,6 +4,7 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       resources :users, only: [:index, :create, :show]
+        get '/users/:id/articles', to: 'users#articles'
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
         get '/users/:id/recommendations', to: 'recommendations#index'
@@ -21,8 +22,18 @@ Rails.application.routes.draw do
         delete '/interests', to: 'products#interest_destroy'
       end
 
-      scope '/articles/:article_id', as: 'articles' do
+      # scope '/articles/:article_id', as: 'articles' do
+      #   resources :article_comments, except: [:update]
+      #   get '/likes', to: 'articles#like_number'
+      #   post '/likes', to: 'articles#like_create'
+      #   delete '/likes', to: 'articles#like_destroy'
+      # end
+
+      resources :articles, only: [:index, :create] do
         resources :article_comments, except: [:update]
+        collection do
+          get '/url_filter', to: 'articles#url_filter'
+        end
         get '/likes', to: 'articles#like_number'
         post '/likes', to: 'articles#like_create'
         delete '/likes', to: 'articles#like_destroy'

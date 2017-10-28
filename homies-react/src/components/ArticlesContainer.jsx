@@ -15,8 +15,8 @@ class ArticlesContainer extends Component {
   componentDidMount() {
 
     let apiUrls = [
+
     "http://beta.newsapi.org/v2/top-headlines?sources=ign,polygon,entertainment-weekly&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-    "http://beta.newsapi.org/v2/everything?q=netflix&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
     "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
     "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
 
@@ -58,7 +58,7 @@ class ArticlesContainer extends Component {
           <div className="row">
             <div className="col-sm-6 col-sm-offset-1">
 
-      { this.state.articles.map((article, index) => {
+      { this.state.articles.map((article) => {
           if(article.urlToImage) {
 
             return(
@@ -69,7 +69,7 @@ class ArticlesContainer extends Component {
                   urlToImage={article.urlToImage}
                   publishedAt={article.publishedAt}
                   description={article.description}
-                  key={index}
+                  key={article.url}
                 />
             )
           }
