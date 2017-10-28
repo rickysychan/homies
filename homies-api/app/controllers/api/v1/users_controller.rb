@@ -15,7 +15,8 @@ module Api::V1
     end
 
     def show
-      @user = User.find(params[:id])
+      # @user = User.find(params[:id])
+      @user = current_user
       render json: @user
     end
 
