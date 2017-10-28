@@ -2,12 +2,24 @@ import React, { Component } from 'react'
 import CircleSideBar from './CircleSideBar.jsx';
 import NavBar from './NavBar.jsx';
 import history from '../index.jsx';
+import Cookies from 'universal-cookie';
 
 class CircleContainer extends Component {
 
-  componentWillMount() {
+  constructor(props){
+    super(props);
+    this.state={
+    hasToken: ''
+    }
+  }
 
-    if(!this.props.is_auth){
+  componentWillMount() {
+    const cookies = new Cookies();
+
+    let token = cookies.get("token")
+    this.state.hasToken = token
+
+    if(!this.state.hasToken){
       history.push('/')
     }
   }

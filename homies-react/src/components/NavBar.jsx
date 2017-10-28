@@ -21,7 +21,7 @@ class NavBar extends Component {
             <span className="icon-bar"></span>
             <span className="icon-bar"></span>
           </button>
-          <a className="navbar-brand" href="/">Homies</a>
+          <a className="navbar-brand" href="/discovery">Homies</a>
       </div>
 
       <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">

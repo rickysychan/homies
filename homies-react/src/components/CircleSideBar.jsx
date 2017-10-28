@@ -17,7 +17,6 @@ class CircleSideBar extends Component {
       }
 
     handleClick(event){
-        console.log(this.props)
         history.push('/NewCircle');
     }
 

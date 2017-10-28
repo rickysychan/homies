@@ -5,6 +5,7 @@ import Login from './Login.jsx';
 import NavBar from './NavBar.jsx';
 import LoginScreen from './LoginScreen.jsx';
 import history from '../index.jsx';
+import Cookies from 'universal-cookie';
 
 import ArticleComponent from './ArticleComponent.jsx'
 
@@ -19,14 +20,14 @@ class StayInTheLoopContainer extends Component {
   }
 
   componentWillMount(){
-    
-        console.log(this.props.is_auth)
-        console.log(this.props)
-    
-        if(!this.props.is_auth){
-          const { history } = this.props
-          history.pushState(null, '/')
-        }
+    const cookies = new Cookies();
+
+    let token = cookies.get("token")
+    this.state.hasToken = token
+
+    if(!this.state.hasToken){
+      history.push('/')
+    }
   }
 
   componentDidMount() {

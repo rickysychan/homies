@@ -4,23 +4,27 @@ import SideBar from './SideBar.jsx';
 import NavBar from './NavBar.jsx';
 import history from '../index.jsx';
 import ArticleComponent from './ArticleComponent.jsx'
+import Cookies from 'universal-cookie';
 
 class ArticlesContainer extends Component {
 
-  componentWillMount() {
-
-    console.log(this.props.is_auth)
-    console.log(this.props)
-
-    if(!this.props.is_auth){
-      history.push('/');
+  constructor(props){
+    super(props);
+    this.state={
+    hasToken: '',
+    articles: []
     }
   }
 
-  constructor(props) {
-    super(props);
-    this.state = { articles: []};
+  componentWillMount() {
+    const cookies = new Cookies();
 
+    let token = cookies.get("token")
+    this.state.hasToken = token
+
+    if(!this.state.hasToken){
+      history.push('/')
+    }
   }
 
   componentDidMount() {
