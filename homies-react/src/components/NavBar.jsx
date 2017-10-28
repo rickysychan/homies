@@ -35,9 +35,6 @@ class NavBar extends Component {
           <li>
             <Link to="/circles">Circles </Link>
           </li>
-          <li>
-            <Link to="/googleapi">Google API </Link>
-          </li>
         </ul>
 
         <ul className="nav navbar-nav navbar-right">
