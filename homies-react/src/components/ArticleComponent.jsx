@@ -24,7 +24,8 @@ class ArticleComponent extends Component {
     this._toggleLikes = this._toggleLikes.bind(this);
     this._addComment = this._addComment.bind(this);
     this._postCommentToDB = this._postCommentToDB.bind(this);
-    this._postLikeToDB = this._postLikeToDB.bind(this);
+    this._connectLikeToDB = this._connectLikeToDB.bind(this);
+    this._saveArticle = this._saveArticle.bind(this);
   }
 
   _toggleComments () {
@@ -35,33 +36,44 @@ class ArticleComponent extends Component {
   _toggleLikes () {
     const { like } = this.state;
     this.setState( { like : !like });
+    _connectLikeToDB();
   }
 
-  _postLikeToDB (article_id, url, article_json) {
-    if(article_id === null) {
-      // Add Article first and add like
-      axios.post(`http://localhost:3001/api/v1/articles`, {
-        article: {
-          article_url: url,
-          article_json: article_json
-        }
-      })
-      .then(response => {
-        let article_id = response.data.id;
-        this._postLikeToDB(article_id, null, null)
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-    // Add like
+  _connectLikeToDB (article_id) {
+    if(!like) {
+      // Add like
+      // if(articleId === null) {
+      //   axios.post(`http://localhost:3001/api/v1/articles`, {
+      //     article: {
+      //       article_url: url,
+      //       article_json: article_json
+      //     }
+      //   })
+      //   .then(response => {
+      //     let article_id = response.data.id;
+      //     this._connectLikeToDB(article_id, content, null, null)
+      //   })
+      //   .catch(function (error) {
+      //     console.log(error);
+      //   });
+
+      // }
+    //   axios.post(`http://localhost:3001/api/v1/articles${article_id}/likes`, {
+    //     article_like: {
+    //       article_id: article_id
+    //       user_id: this.state.user_id,
+    //     }
+    //   })
+    //   .then(response => {
+    //     console.log(response);
+    //   })
+    //   .catch(function (error) {
+    //     console.log(error);
+    //   });
+    // // Remove like
     } else {
 
-      axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
-        article_like: {
-        article_id: article_id,
-        user_id: this.state.user_id,
-        }
-      })
+      axios.DELETE(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.state.user_id}/likes`)
       .then(response => {
         console.log('Response is : ', response);
         // const comments = [response.data].concat(this.state.comments)
@@ -75,22 +87,29 @@ class ArticleComponent extends Component {
     }
   }
 
-  _postCommentToDB (article_id, content, url, article_json) {
-    if(article_id === null) {
-    // Add Article first and add comment
+  _saveArticle (url, article_json) {
+    return new Promise((resolve, reject) => {
       axios.post(`http://localhost:3001/api/v1/articles`, {
         article: {
           article_url: url,
           article_json: article_json
         }
       })
-      .then(response => {
-        let article_id = response.data.id;
-        this._postCommentToDB(article_id, content, null, null)
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+      .then((result) => resolve(result.data))
+      .catch((errors) => reject(errors))
+    });
+   }
+
+  _postCommentToDB (article_id, content, url, article_json) {
+    if(article_id === null) {
+    // Save article and add comment
+      this._saveArticle(url, article_json)
+        .then(response => {
+          this._postCommentToDB(response.id, content, null, null)
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     // Add comment
     } else {
 
@@ -130,8 +149,8 @@ class ArticleComponent extends Component {
 
   // Load comments of each article
   componentDidMount () {
-    // let url = this.props.url
 
+    // if article is in DB
     axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
       params: {
         url: this.props.url

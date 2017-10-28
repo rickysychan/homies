@@ -19,7 +19,7 @@ module Api::V1
 
 
     def like_destroy
-      @article_likes = ArticleLike.where(api_id: params[:article_id], user_id: session[:user_id])
+      @article_likes = ArticleLike.where(article_id: params[:article_id], user_id: params[:user_id])
       @article_likes.destroy
 
     end
