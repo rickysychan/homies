@@ -8,6 +8,7 @@ class NavBar extends Component {
     const cookies = new Cookies();
     alert("Logged out")
     cookies.remove('token')
+    this.props.is_auth = ''
   }
 
   render() {

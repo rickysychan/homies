@@ -3,6 +3,9 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import Login from './Login.jsx';
 import Register from './Register.jsx';
+import Cookies from 'universal-cookie';
+import axios from 'axios'
+import history from '../index.jsx';
 
 class Loginscreen extends Component {
   constructor(props){
@@ -13,8 +16,10 @@ class Loginscreen extends Component {
       loginscreen:[],
       loginmessage:'',
       buttonLabel:'Register',
-      isLogin:true
+      isLogin: true
     }
+
+    this.handleClick = this.handleClick.bind(this)
   }
 
   handleClick(event){
@@ -33,7 +38,7 @@ class Loginscreen extends Component {
     }
     else{
       var loginscreen=[];
-      loginscreen.push(<Login parentContext={this}/>);
+      loginscreen.push(<Login parentContext={this} handleLogin={this.props.handleLogin}/>);
       loginmessage = "Not Registered yet? Go to registration";
       this.setState({
                      loginscreen:loginscreen,
@@ -46,7 +51,7 @@ class Loginscreen extends Component {
 
   componentWillMount(){
     var loginscreen=[];
-    loginscreen.push(<Login parentContext={this} appContext={this.props.parentContext}/>);
+    loginscreen.push(<Login handleLogin={this.props.handleLogin} parentContext={this} appContext={this.props.parentContext}/>);
     var loginmessage = "Not registered yet? Register Now!";
     this.setState({
                   loginscreen:loginscreen,

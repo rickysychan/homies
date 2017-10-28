@@ -3,27 +3,34 @@ import axios from 'axios';
 import SideBar from './SideBar.jsx';
 import Cookies from 'universal-cookie';
 import Login from './Login.jsx';
+import NavBar from './NavBar.jsx';
+import LoginScreen from './LoginScreen.jsx';
+import history from '../index.jsx';
 
 import ArticleComponent from './ArticleComponent.jsx'
 
 class StayInTheLoopContainer extends Component {
 
-  
-
   constructor(props) {
     super(props);
-    this.state = { articles: []};
+    this.state = { 
+      articles: [],
+      is_auth: ''
+    };
+  }
 
+  componentWillMount(){
+    const cookies = new Cookies();
+    
+        console.log(this.props.is_auth)
+        console.log(this.props)
+    
+        if(!this.props.is_auth){
+          history.replaceState(null, '/');
+        }
   }
 
   componentDidMount() {
-    const cookies = new Cookies();
-
-    console.log(document.cookie)
-
-    if(document.cookie == "token"){
-      alert("I have a cookie")
-    }
     
     let apiUrls = [
     "http://beta.newsapi.org/v2/top-headlines?sources=ign,polygon,entertainment-weekly&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
@@ -51,7 +58,7 @@ class StayInTheLoopContainer extends Component {
             b = new Date(b.publishedAt).getTime()
             return b - a;
           })
-          console.log(sorted);
+          // console.log(sorted);
           return {articles: sorted}
         })
       })
@@ -62,8 +69,9 @@ class StayInTheLoopContainer extends Component {
   render() {
 
     return (
+      
       <div className="row row-offcanvas row-offcanvas-left">
-
+       <NavBar />
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
           <div className="row">
             <div className="col-sm-6 col-sm-offset-1">

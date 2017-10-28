@@ -12,36 +12,23 @@ class Login extends Component {
 constructor(props){
   super(props);
   this.state={
-  username:'',
-  password:'',
-  auth_token: ''
-  }
+    username:'',
+    password:''
+  };
+  this.handleClick = this.handleClick.bind(this)
  }
 
- handleClick(event){
-  const cookies = new Cookies();
-  var apiBaseUrl = "http://localhost:3001/authenticate";
+ handleClick(event) {
   var self = this;
+  console.log(this.props)
+
   var payload={
   "email":this.state.username,
   "password":this.state.password
   }
-  axios.post(apiBaseUrl, payload)
-  .then(function (response) {
-    console.log("this is the response", response);
-    if(response.status == 200){
-      console.log("Login successfull");
-      cookies.set('token', response.data.auth_token, { path: '/' });
-      history.push('/discovery')
-      this.setState({auth_token:response.data.auth_token})
-      console.log(">>>>", this.state.auth_token)
-      }
-    })
-      .catch(function (error) {
-      console.log(error);
-      alert("Email and password do not match")
-      });
-      }
+
+  this.props.handleLogin(payload);
+ }
  
 render() {
     return (

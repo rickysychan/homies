@@ -4,6 +4,7 @@ import CircleSideBar from './CircleSideBar.jsx';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
+import NavBar from './NavBar.jsx';
 
 class NewCircleForm extends Component {
     constructor(props){
@@ -38,6 +39,7 @@ class NewCircleForm extends Component {
     render() {
         return (
             <div className="row row-offcanvas row-offcanvas-left">
+            <NavBar />
             <CircleSideBar />
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
             <div className="row">
