@@ -21,6 +21,7 @@ module Api::V1
     def product_interest_params
       params.require(:product_interest).permit(
         :api_id,
+        :title,
         :api_type,
         :user_id
         )

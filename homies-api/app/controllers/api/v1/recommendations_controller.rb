@@ -3,6 +3,7 @@ require 'themoviedb'
 require 'giantbomb-api'
 require 'excon'
 require 'rubygems'
+require 'date'
 
 module Api::V1
 
@@ -23,58 +24,182 @@ module Api::V1
     # Index
 
     def index
-      @recommendations = watson
+      # @products = ProductInterest.where(user_id: session[:user_id])
+
+      @recommendations = final_recommendations(["Big Fish", "Call of Duty", "Bob's Burgers", "Dante's Peak", "Ninja Turtles"])
       render json: @recommendations
+    end
+
+    def product
+
     end
 
     private
 
-    def top_three
-      @@client.search("ghostbusters love", result_type: "recent").take(3).each do |tweet|
-        tweet.text
+    def tweet_search(product)
+      @users = []
+      results = @@client.search(product, result_type: "recent").take(20)
+      results.each do |tweet|
+        @users.push(tweet.user.id)
       end
+      @users
     end
 
-    def fringe
-      Tmdb::TV.find("fringe")
+    def similar_users(product_array)
+      @similar_users = []
+      puts "Searching for users."
+      product_array.each do |product|
+        users = tweet_search(product)
+        users.each { |user| @similar_users.push(user) }
+      end
+      @similar_users
     end
 
-    def need_for_speed
-      GiantBomb::Search.new().query('Need for Speed').resources('game').fetch
+    def add_users_to_list(similar_users_array)
+      puts "Creating list."
+      list = @@client.create_list("Homies", options = { mode: 'private'})
+      @list_id = list.id
+      @@client.add_list_members(@list_id, similar_users_array)
+      puts "Added members to list."
+      @list_id
     end
 
-    def watson
 
-      @body_text = "IBM is an American multinational technology company headquartered in Armonk, New York, United States, with operations in over 170 countries."
-        # "features": {
-        #   "entities": {
-        #     "emotion": true,
-        #     "sentiment": true,
-        #     "limit": 2
-        #   },
-        #   "keywords": {
-        #     "emotion": true,
-        #     "sentiment": true,
-        #     "limit": 2
-        #   }
-        # }
+    def similar_list_tweets(list_id)
+      @similar_users_tweets = []
+      puts "Searching list timeline."
+      @@client.list_timeline(list_id, options = { :count => 50 }).each do |tweet|
+        @similar_users_tweets.push(tweet.text)
+      end
+      puts "Destroying List"
+      @@client.destroy_list(list_id)
+      puts "Tweets: #{@similar_users_tweets.length}"
+      @similar_users_tweets
+    end
 
 
-       response = Excon.post("https://gateway.watsonplatform.net/natural-language-understanding/api/v1/analyze",
-         :body => @body_text,
-         :headers => { "Content-Type"     => "text/plain",
-                       "Content-Language" => "en",
-                       "Accept-Language"  => "en" },
+    def search_all(query)
+      @results = []
+      puts "Searching TV database."
+      tv_search(query).each { |show| @results.push(show) }
+      puts "Searching movie database."
+      movie_search(query).each { |movie| @results.push(movie) }
+      puts "Searching game database."
+      game_search(query).each { |game| @results.push(game) }
+      @results = @results.sort_by { |h| h[:date] }.reverse
+      @results
+    end
+
+    def tv_search(show)
+      shows = Tmdb::TV.find(show)
+      results = []
+      puts "Results: #{shows.length}"
+      shows.each do |show|
+        show.first_air_date = show.first_air_date.present? ? show.first_air_date : "1901-01-01"
+        year = show.first_air_date[0...4].to_i
+        show_hash = { id: show.id, name: show.original_name, date: year, type: "TV", json: show }
+        results.push(show_hash)
+      end
+      results = results.sort_by { |h| h[:date] }.reverse
+      results
+    end
+
+    def movie_search(movie)
+      movies = Tmdb::Movie.find(movie)
+      results = []
+      puts "Results: #{movies.length}"
+      movies.each do |movie|
+        year = movie.release_date[0...4].to_i
+        movie_hash = { id: movie.id, name: movie.title, date: year, type: "MOVIE", json: movie }
+        results.push(movie_hash)
+      end
+      results = results.sort_by { |h| h[:date] }.reverse
+      results
+    end
+
+    def game_search(game)
+      games = GiantBomb::Search.new().query(game).resources('game').fetch
+      results = []
+      puts "Results: #{games.length}"
+      games.each do |game|
+        year = game["date_added"][0...4].to_i
+        game_hash = { id: game["id"], name: game["name"], date: year, type: "GAME", json: game }
+        results.push(game_hash)
+      end
+      results = results.sort_by { |h| h[:date] }.reverse
+      results
+    end
+
+    def twitter_user_products(body)
+      @twitter_product_list = []
+      puts "Extracting Tweet text."
+      parsed_body = JSON.parse(body)
+      parsed_body["entities"].each do |product|
+        @twitter_product_list.push(product["text"])
+      end
+      @twitter_product_list
+    end
+
+    def return_similar_user_texts(products_array)
+      @tweet_list = []
+      while @tweet_list.empty? do
+        sleep(5)
+        @tweet_list = similar_list_tweets(add_users_to_list(similar_users(products_array)))
+      end
+      @tweet_list
+    end
+
+    def submit_to_watson(user_products_array)
+      @results = {}
+      @text = return_similar_user_texts(user_products_array).to_s
+      while @results.empty? do
+        sleep(10)
+        puts "Analyzing with Watson."
+        @results = watson(@text)
+        puts "Results: #{@results.length}"
+      end
+      parsed_results = JSON.parse(@results)
+      entities = parsed_results["entities"]
+      entities.map! do |entity|
+        entity["text"]
+      end
+      entities
+    end
+
+    def sort_results_by_number(array)
+      results_hash = array.each_with_object(Hash.new(0)) { |o, h| h[o] += 1 }
+      results_hash.sort_by(&:last).reverse.to_h
+    end
+
+    def search_for_products(product_hash)
+      @search_results = []
+      product_hash.keys.each do |key|
+        results = search_all(key)
+        results = results[0]
+        @search_results.push(results) unless results.nil?
+      end
+      @search_results
+    end
+
+    def watson(text)
+       response = Excon.get("https://watson-api-explorer.mybluemix.net/natural-language-understanding/api/v1/analyze",
+         :headers => { "Accept" => "application/json" },
+         :query => { "version"        => "2017-02-27",
+                     "text"           => text,
+                     "features"       => "entities",
+                     "language"       => "en",
+                     "concepts.limit" => 8,
+                     "entities.limit" => 50,
+                     "entities.model" => "10:949c5dac-6522-4da6-9526-890c5983ff26"
+                    },
          :user => ENV["WATSON_USERNAME"],
          :password => ENV["WATSON_PASSWORD"],
-         :query    => {
-               "raw_scores"                => true,
-               "consumption_preferences"   => true,
-               "version"                   => "2017-02-27"
-              }
        )
+      response.body
+    end
 
-       response.body
+    def final_recommendations(user_products_array)
+      search_for_products(sort_results_by_number(submit_to_watson(user_products_array)))
     end
 
   end
