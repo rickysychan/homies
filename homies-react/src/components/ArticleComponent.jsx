@@ -13,6 +13,7 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
+      user_id: 191,
       comments: [],
       articleId: null,
       numOfComments: 0,
@@ -60,6 +61,8 @@ class ArticleComponent extends Component {
         article_id: article_id,
         user_id: 82,
         //update this
+        // user_id: this.state.user_id,
+
         }
       })
       .then(response => {
@@ -99,6 +102,8 @@ class ArticleComponent extends Component {
         article_id: article_id,
         user_id: 82,
         // update this
+
+        // user_id: this.state.user_id,
         content: content
         }
       })
