@@ -3,6 +3,7 @@ require 'themoviedb'
 require 'giantbomb-api'
 require 'excon'
 require 'rubygems'
+require 'date'
 
 module Api::V1
 
@@ -23,7 +24,9 @@ module Api::V1
     # Index
 
     def index
-      @recommendations = search_for_products(sort_results_by_number(submit_to_watson))
+      # @products = ProductInterest.where(user_id: session[:user_id])
+
+      @recommendations = final_recommendations(["Big Fish", "Call of Duty", "Bob's Burgers", "Dante's Peak", "Ninja Turtles"])
       render json: @recommendations
     end
 
@@ -83,25 +86,48 @@ module Api::V1
       movie_search(query).each { |movie| @results.push(movie) }
       puts "Searching game database."
       game_search(query).each { |game| @results.push(game) }
+      @results = @results.sort_by { |h| h[:date] }.reverse
       @results
     end
 
     def tv_search(show)
       shows = Tmdb::TV.find(show)
+      results = []
       puts "Results: #{shows.length}"
-      shows
+      shows.each do |show|
+        show.first_air_date = show.first_air_date.present? ? show.first_air_date : "1901-01-01"
+        year = show.first_air_date[0...4].to_i
+        show_hash = { id: show.id, name: show.original_name, date: year, type: "TV", json: show }
+        results.push(show_hash)
+      end
+      results = results.sort_by { |h| h[:date] }.reverse
+      results
     end
 
     def movie_search(movie)
       movies = Tmdb::Movie.find(movie)
+      results = []
       puts "Results: #{movies.length}"
-      movies
+      movies.each do |movie|
+        year = movie.release_date[0...4].to_i
+        movie_hash = { id: movie.id, name: movie.title, date: year, type: "MOVIE", json: movie }
+        results.push(movie_hash)
+      end
+      results = results.sort_by { |h| h[:date] }.reverse
+      results
     end
 
     def game_search(game)
       games = GiantBomb::Search.new().query(game).resources('game').fetch
+      results = []
       puts "Results: #{games.length}"
-      games
+      games.each do |game|
+        year = game["date_added"][0...4].to_i
+        game_hash = { id: game["id"], name: game["name"], date: year, type: "GAME", json: game }
+        results.push(game_hash)
+      end
+      results = results.sort_by { |h| h[:date] }.reverse
+      results
     end
 
     def twitter_user_products(body)
@@ -123,9 +149,9 @@ module Api::V1
       @tweet_list
     end
 
-    def submit_to_watson
+    def submit_to_watson(user_products_array)
       @results = {}
-      @text = return_similar_user_texts(["Big Fish", "Call of Duty", "Bob's Burgers", "Dante's Peak", "Ninja Turtles"]).to_s
+      @text = return_similar_user_texts(user_products_array).to_s
       while @results.empty? do
         sleep(10)
         puts "Analyzing with Watson."
@@ -142,7 +168,7 @@ module Api::V1
 
     def sort_results_by_number(array)
       results_hash = array.each_with_object(Hash.new(0)) { |o, h| h[o] += 1 }
-      results_hash.sort_by(&:last).to_h
+      results_hash.sort_by(&:last).reverse.to_h
     end
 
     def search_for_products(product_hash)
@@ -170,6 +196,10 @@ module Api::V1
          :password => ENV["WATSON_PASSWORD"],
        )
       response.body
+    end
+
+    def final_recommendations(user_products_array)
+      search_for_products(sort_results_by_number(submit_to_watson(user_products_array)))
     end
 
   end
