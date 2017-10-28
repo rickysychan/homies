@@ -23,13 +23,22 @@ module Api::V1
     end
 
     def show
-      @user = User.find(params[:id])
+      # @user = User.find(params[:id])
+      @user = current_user
       render json: @user
     end
 
     def show_circles
       @circles = User.find(params[:id]).circles
       render json: @circles
+    end
+    
+    def articles
+      # TODO: Use a current user here instead of User.first
+      @user_articles_json = User.find(params[:id]).liked_articles.includes(:article_comments)
+      # @user_articles_json = ArticleLike.where(user_id: params[:id]).as_json(include: :article_comments)
+      # @user_articles_json = ArticleLike.where(user_id: params[:id]).as_json(include: {articles: { include: { article_comments: {only: [:user_id, :content]}}}})
+      render json: @user_articles_json, include: :article_comments
     end
 
     def article_like

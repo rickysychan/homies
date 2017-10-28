@@ -1,8 +1,9 @@
 module Api::V1
 
   class ArticleCommentsController < ApplicationController
+
     def index
-      @article_comments = ArticleComment.where(api_id: params[:article_id])
+      @article_comments = ArticleComment.where(article_id: params[:article_id]).order(created_at: :desc)
       render json: @article_comments
     end
 
@@ -13,7 +14,8 @@ module Api::V1
 
     def create
       @article_comment = ArticleComment.new(article_comment_params)
-      @article_comment.save
+      @article_comment.save!
+      render json: @article_comment
     end
 
     def destroy
@@ -26,11 +28,10 @@ module Api::V1
 
     def article_comment_params
       params.require(:article_comment).permit(
-        :api_id,
+        :article_id,
         :user_id,
         :content
       )
     end
-
   end
 end
