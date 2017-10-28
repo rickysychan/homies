@@ -13,6 +13,7 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
+      user_id: 191,
       comments: [],
       articleId: null,
       numOfComments: 0,
@@ -58,8 +59,7 @@ class ArticleComponent extends Component {
       axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
         article_like: {
         article_id: article_id,
-        user_id: 185,
-        //update this
+        user_id: this.state.user_id,
         }
       })
       .then(response => {
@@ -97,8 +97,7 @@ class ArticleComponent extends Component {
       axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
         article_comment: {
         article_id: article_id,
-        user_id: 185,
-        // update this 
+        user_id: this.state.user_id,
         content: content
         }
       })
