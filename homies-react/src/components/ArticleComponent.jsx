@@ -23,6 +23,7 @@ class ArticleComponent extends Component {
     this._toggleLikes = this._toggleLikes.bind(this);
     this._addComment = this._addComment.bind(this);
     this._postCommentToDB = this._postCommentToDB.bind(this);
+    this._postLikeToDB = this._postLikeToDB.bind(this);
   }
 
   _toggleComments () {
@@ -33,6 +34,44 @@ class ArticleComponent extends Component {
   _toggleLikes () {
     const { like } = this.state;
     this.setState( { like : !like });
+  }
+
+  _postLikeToDB (article_id, url, article_json) {
+    if(article_id === null) {
+      // Add Article first and add like
+      axios.post(`http://localhost:3001/api/v1/articles`, {
+        article: {
+          article_url: url,
+          article_json: article_json
+        }
+      })
+      .then(response => {
+        let article_id = response.data.id;
+        this._postLikeToDB(article_id, null, null)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    // Add like
+    } else {
+
+      axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
+        article_like: {
+        article_id: article_id,
+        user_id: 185,
+        }
+      })
+      .then(response => {
+        console.log('Response is : ', response);
+        // const comments = [response.data].concat(this.state.comments)
+        // this.setState({comments: comments});
+        // this.setState({numOfComments: this.state.comments.length});
+
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+    }
   }
 
   _postCommentToDB (article_id, content, url, article_json) {
@@ -60,7 +99,8 @@ class ArticleComponent extends Component {
         user_id: 185,
         content: content
         }
-      }).then(response => {
+      })
+      .then(response => {
         const comments = [response.data].concat(this.state.comments)
         this.setState({comments: comments});
         this.setState({numOfComments: this.state.comments.length});
@@ -75,7 +115,7 @@ class ArticleComponent extends Component {
 
   _addComment (content, article_json) {
 
-    // Article already have some comments
+  // Article already have some comments
     if(this.state.articleId) {
 
       let article_id = this.state.articleId;
@@ -125,7 +165,6 @@ class ArticleComponent extends Component {
           console.log(error);
     });
   }
-
 
 
   render() {

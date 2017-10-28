@@ -13,13 +13,11 @@ class CommentsContainer extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log("NextPros :", nextProps)
     this.setState({url: nextProps.url, comments: nextProps.comments})
   }
 
   render() {
 
-    console.log("In CommentsContainer: ",this.state);
     return(
       <div className="article-commnet">
       { this.state.comments.map((comment, index) => {

@@ -25,7 +25,7 @@ module Api::V1
     end
 
     def like_create
-      @article_likes = ArticleLike.new(article_likes_params)
+      @article_likes = ArticleLike.new(article_like_params)
       @article_likes.save
     end
 
@@ -44,8 +44,8 @@ module Api::V1
       )
     end
 
-    def article_likes_params
-      params.require(:article_likes).permit(
+    def article_like_params
+      params.require(:article_like).permit(
         :article_id,
         :user_id
       )
