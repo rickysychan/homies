@@ -18,8 +18,10 @@ class NavBar extends Component {
   }
 
   handleSubmit(event) {
-    alert('A name was submitted: ' + this.state.value);
     event.preventDefault();
+    if (window.location.pathname == "/search") {
+      this.props.searchOnPage(this.state.value)
+    }
     history.push({
       pathname: '/search',
       state: { query: this.state.value } }

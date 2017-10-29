@@ -10,12 +10,15 @@ class SearchResultsContainer extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      results: []
+      results: [],
+      query: this.props.location.state.query
     }
+
+    this.searchOnPage = this.searchOnPage.bind(this);
   }
 
   componentDidMount() {
-    let searchResults = "http://localhost:3001/api/v1/search/batman"
+    let searchResults = `http://localhost:3001/api/v1/search/${this.state.query}`
 
     axios.get(searchResults)
     .then( (response) => {
@@ -26,15 +29,25 @@ class SearchResultsContainer extends Component {
 
   }
 
+  searchOnPage(query) {
+    let searchResults = `http://localhost:3001/api/v1/search/${query}`
+    axios.get(searchResults)
+    .then( (response) => {
+      let responseJson = response.data
+      this.setState({ results: responseJson
+      });
+    })
+  }
+
   render() {
 
     return(
 
       <div className="row row-offcanvas row-offcanvas-left">
-        <NavBar />
+        <NavBar searchOnPage={this.searchOnPage} />
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
           <div className="row">
-          <h1 className="search-results-title">Search Results:  {this.props.location.state.query}</h1>
+          <h1 className="search-results-title">Search Results:</h1>
 
             { this.state.results.map((result) => {
 
