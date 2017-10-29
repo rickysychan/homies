@@ -1,3 +1,9 @@
+// variables
+
+$search-text-color: black;
+
+// styles
+
 .search-result {
   display: flex;
   padding: 10px;
@@ -8,17 +14,29 @@
 }
 
 .search-image-container {
-  height: 150px;
-  width: 150px;
+  height: auto;
+  width: 120px;
+  display: flex;
 
   img {
-    width: auto;
-    height: 100%;
+    width: 100%;
+    height: auto;
+    align-self: center;
   }
 }
 
 .search-text {
-  margin-left: 100px;
+  margin-left: 60px;
   color: black;
-  width: 40%;
+  width: 60%;
+}
+
+.entertainment-type {
+  font-size: 0.6em;
+  color: lighten($search-text-color, 50%)
+}
+
+.search-results-title {
+  margin: 20px;
+  margin-left: 40px;
 }

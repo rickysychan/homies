@@ -1,8 +1,30 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import history from '../index.jsx';
 import Cookies from 'universal-cookie';
 
 class NavBar extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    alert('A name was submitted: ' + this.state.value);
+    event.preventDefault();
+    history.push({
+      pathname: '/search',
+      state: { query: this.state.value } }
+    )
+  }
 
   handleClick(event){
     const cookies = new Cookies();
@@ -12,6 +34,7 @@ class NavBar extends Component {
   }
 
   render() {
+
     return (
       <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div className="navbar-header">
@@ -38,9 +61,9 @@ class NavBar extends Component {
         </ul>
 
         <ul className="nav navbar-nav navbar-right">
-          <form className="navbar-form navbar-left">
+          <form className="navbar-form navbar-left" onSubmit={this.handleSubmit}>
             <div className="form-group">
-              <input type="text" className="form-control" placeholder="Search" />
+              <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder="Search" />
             </div>
             <button type="submit" className="btn btn-success">
               <i className="fa fa-search" aria-hidden="true"></i>

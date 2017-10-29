@@ -34,6 +34,7 @@ class SearchResultsContainer extends Component {
         <NavBar />
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
           <div className="row">
+          <h1 className="search-results-title">Search Results:  {this.props.location.state.query}</h1>
 
             { this.state.results.map((result) => {
 
@@ -44,6 +45,7 @@ class SearchResultsContainer extends Component {
                         name={result.name}
                         date={result.date}
                         type={result.type}
+                        overview={result.overview}
                         json={result.json}
                       />
                   )
