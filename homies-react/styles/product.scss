@@ -1,0 +1,22 @@
+.product-container {
+  display: flex;
+  justify-content: center;
+  margin: 20px;
+}
+
+.product-info-container {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  width: 80%;
+  color: black;
+}
+
+.product-columns {
+  display: flex;
+}
+
+.product-text {
+  display: flex;
+  flex-direction: column;
+}

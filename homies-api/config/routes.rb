@@ -24,7 +24,10 @@ Rails.application.routes.draw do
         end
       end
 
-      get '/search/:query', to: 'recommendations#search'
+      get '/search/all/:query', to: 'recommendations#search'
+      get '/search/GAME/:query', to: 'recommendations#game_find'
+      get '/search/TV/:query', to: 'recommendations#tv_find'
+      get '/search/MOVIE/:query', to: 'recommendations#movie_find'
 
       scope '/products/:product_id', as: 'products' do
         get '/interests', to: 'products#interest_number'

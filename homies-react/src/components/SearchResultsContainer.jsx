@@ -18,7 +18,7 @@ class SearchResultsContainer extends Component {
   }
 
   componentDidMount() {
-    let searchResults = `http://localhost:3001/api/v1/search/${this.state.query}`
+    let searchResults = `http://localhost:3001/api/v1/search/all/${this.state.query}`
 
     axios.get(searchResults)
     .then( (response) => {
@@ -54,6 +54,7 @@ class SearchResultsContainer extends Component {
                   return(
                       <SearchResultComponent
                         key={result.id}
+                        id={result.id}
                         image={result.image}
                         name={result.name}
                         date={result.date}

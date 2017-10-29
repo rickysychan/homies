@@ -1,9 +1,11 @@
 import React, { Component } from 'react'
+// import { Link, BrowserRouter as Router,
+//   Route, } from 'react-router-dom'
 
 class SearchResultComponent extends Component {
 
   render() {
-    const { image, name, date, type, overview, json } = this.props;
+    const { id, image, name, date, type, overview, json } = this.props;
 
     let releaseDate = null;
     if (date != "1901") {
@@ -17,7 +19,7 @@ class SearchResultComponent extends Component {
           <img src={image} alt="Image" />
         </div>
         <div className="search-text">
-          <h3>{name} <span className="entertainment-type">({type}) - {releaseDate}</span></h3>
+          <h3><a href={"/products/" + type + "/" + id }>{name}</a> <span className="entertainment-type">({type}) - {releaseDate}</span></h3>
           <div>
             <hr/>
             <p>{overview}</p>
