@@ -13,7 +13,7 @@ class StayInTheLoopContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       articles: [],
       is_auth: ''
     };
@@ -45,7 +45,7 @@ class StayInTheLoopContainer extends Component {
   render() {
 
     return (
-      
+
       <div className="row row-offcanvas row-offcanvas-left">
        <NavBar />
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
@@ -64,7 +64,7 @@ class StayInTheLoopContainer extends Component {
                   urlToImage={article.article_json.urlToImage}
                   publishedAt={article.article_json.publishedAt}
                   description={article.article_json.description}
-                  key={article.article_json.url}
+                  key={article.id}
                 />
             )
           }

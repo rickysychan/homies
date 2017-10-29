@@ -35,9 +35,6 @@ class ArticlesContainer extends Component {
     "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
     "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
 
-      // "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-      // "https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-      // "https://newsapi.org/v1/articles?source=entertainment-weekly&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
     ];
 
     Promise.all(apiUrls.map(

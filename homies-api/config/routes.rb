@@ -6,6 +6,7 @@ Rails.application.routes.draw do
     namespace :v1 do
 
       resources :users, only: [:index, :create, :show]
+        get '/users/current', to: 'users#current'
         get '/users/:id/articles', to: 'users#articles'
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
@@ -42,9 +43,10 @@ Rails.application.routes.draw do
         collection do
           get '/url_filter', to: 'articles#url_filter'
         end
+        get '/users/:user_id/likes', to: 'articles#like_show'
         get '/likes', to: 'articles#like_number'
         post '/likes', to: 'articles#like_create'
-        delete 'users/:user_id/likes', to: 'articles#like_destroy'
+        delete '/likes', to: 'articles#like_destroy'
       end
     end
   end

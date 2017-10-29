@@ -13,7 +13,7 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
-      user_id: 191,
+      user_id: 182,
       comments: [],
       articleId: null,
       numOfComments: 0,
@@ -24,7 +24,9 @@ class ArticleComponent extends Component {
     this._toggleLikes = this._toggleLikes.bind(this);
     this._addComment = this._addComment.bind(this);
     this._postCommentToDB = this._postCommentToDB.bind(this);
-    this._connectLikeToDB = this._connectLikeToDB.bind(this);
+    this._isLiked = this._isLiked.bind(this);
+    this._addLikes = this._addLikes.bind(this);
+    this._deleteLikes = this._deleteLikes.bind(this);
     this._saveArticle = this._saveArticle.bind(this);
   }
 
@@ -34,76 +36,79 @@ class ArticleComponent extends Component {
   }
 
   _toggleLikes () {
+
+    if ( this.state.articleId === null ) {
+      this._saveArticle ()
+      .then(response => {
+        this._addLikes(response.id);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+    } else {
+      this._addLikes(this.state.articleId);
+    }
     const { like } = this.state;
+
+    if( like === false ) {
+      this.setState( { numOfLikes : this.state.numOfLikes + 1 });
+    } else {
+      this.setState( { numOfLikes : this.state.numOfLikes - 1 });
+    }
     this.setState( { like : !like });
-    _connectLikeToDB();
   }
 
-  _connectLikeToDB (article_id) {
-    if(!like) {
-      // Add like
-      // if(articleId === null) {
-      //   axios.post(`http://localhost:3001/api/v1/articles`, {
-      //     article: {
-      //       article_url: url,
-      //       article_json: article_json
-      //     }
-      //   })
-      //   .then(response => {
-      //     let article_id = response.data.id;
-      //     this._connectLikeToDB(article_id, content, null, null)
-      //   })
-      //   .catch(function (error) {
-      //     console.log(error);
-      //   });
+  _isLiked (article_id) {
+    return new Promise((resolve, reject) => {
+      axios.get(`http://localhost:3001/api/v1/articles/${article_id}/likes`)
+      .then((result) => resolve(result.data))
+      // .catch((errors) => reject(errors))
+    });
+  }
 
-      // }
-    //   axios.post(`http://localhost:3001/api/v1/articles${article_id}/likes`, {
-    //     article_like: {
-    //       article_id: article_id
-    //       user_id: this.state.user_id,
-    //     }
-    //   })
-    //   .then(response => {
-    //     console.log(response);
-    //   })
-    //   .catch(function (error) {
-    //     console.log(error);
-    //   });
-    // // Remove like
-//     } else {
+  _addLikes (article_id) {
+    axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
+      article_like: {
+        article_id: article_id,
+        user_id: this.state.user_id
+      }
+    })
+    .then(response => {
+      console.log(response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 
-// <<<<<<< HEAD
-//       axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
-//         article_like: {
-//         article_id: article_id,
-//         user_id: 82,
-//         //update this
-//         // user_id: this.state.user_id,
+  _deleteLikes (article_id) {
+    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
+      params: { article_id: article_id, user_id: this.state.user_id}
+    })
+    .then(response => {
+      console.log('Response is : ', response);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
+  }
 
-//         }
-//       })
-// =======
-//       axios.DELETE(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.state.user_id}/likes`)
-// >>>>>>> react-likes
-//       .then(response => {
-//         console.log('Response is : ', response);
-//         // const comments = [response.data].concat(this.state.comments)
-//         // this.setState({comments: comments});
-//         // this.setState({numOfComments: this.state.comments.length});
+  // Save article to database
+  _saveArticle () {
 
-//       })
-//       .catch(function (error) {
-//         console.log(error);
-//       });
-//     }
-}
+    let article_json = {
+      title: this.props.title,
+      author: this.props.author,
+      url: this.props.url,
+      urlToImage: this.props.urlToImage,
+      publishedAt: this.props.publishedAt,
+      description: this.props.description
+    }
 
-  _saveArticle (url, article_json) {
     return new Promise((resolve, reject) => {
       axios.post(`http://localhost:3001/api/v1/articles`, {
         article: {
-          article_url: url,
+          article_url: this.props.url,
           article_json: article_json
         }
       })
@@ -112,85 +117,86 @@ class ArticleComponent extends Component {
     });
    }
 
-  _postCommentToDB (article_id, content, url, article_json) {
-    if(article_id === null) {
-    // Save article and add comment
-      this._saveArticle(url, article_json)
-        .then(response => {
-          this._postCommentToDB(response.id, content, null, null)
-        })
-        .catch(function (error) {
-          console.log(error);
-        });
-    // Add comment
-    } else {
+  // Save comment to database
+  _postCommentToDB (article_id, content) {
 
       axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
         article_comment: {
-        article_id: article_id,
-        user_id: this.state.user_id,
-        content: content
+          article_id: article_id,
+          user_id: this.state.user_id,
+          content: content
         }
       })
       .then(response => {
         const comments = [response.data].concat(this.state.comments)
         this.setState({comments: comments});
         this.setState({numOfComments: this.state.comments.length});
-
       })
       .catch(function (error) {
         console.log(error);
       });
-    }
   }
 
 
-  _addComment (content, article_json) {
+  _addComment (content) {
 
   // Article already have some comments
     if(this.state.articleId) {
 
-      let article_id = this.state.articleId;
-      this._postCommentToDB(article_id, content, null, null);
+      this._postCommentToDB(this.state.articleId, content);
 
   // Article does not have any comment
     } else {
-      this._postCommentToDB(null, content, this.props.url, article_json);
+      this._saveArticle()
+        .then(response => {
+          console.log("My response is", response);
+          this._postCommentToDB(response.id, content);
+        })
+        .catch(function (error) {
+          console.log(error);
+        });
     }
   }
 
-  // Load comments of each article
   componentDidMount () {
-
-    // if article is in DB
+    // Check if ther article is in our database
     axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
       params: {
         url: this.props.url
       }
     })
     .then(response => {
-      // console.log(response);
       if(response.data.length > 0) {
 
         let id = response.data[0].id;
         this.setState({articleId: id});
 
+        // Load all comments of this article
         axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`)
           .then(response => {
-            // console.log(response);
             if (response.data.length > 0) {
               this.setState({numOfComments: response.data.length});
-
-              const comments = response.data
-
-              this.setState({comments: comments});
-              // console.log("after this.state.comments ", this.state.comments);
+              this.setState({comments: response.data});
             }
-
           })
           .catch(error => {
             console.error(error);
           })
+
+        // Check if current user liked this article
+        // this._isLiked (id)
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`)
+        .then(response => {
+          if (response.data.length > 0) {
+            this.setState({numOflikes: response.data.length});
+            this.setState({like: true});
+            console.log("response is ", response.data.length);
+          }
+        })
+        .catch(error => {
+          console.error(error);
+        })
+
       }
     })
     .catch(function (error) {
@@ -201,7 +207,7 @@ class ArticleComponent extends Component {
 
   render() {
     const { title, author, url ,urlToImage, publishedAt, description } = this.props;
-
+    let likes = this.state.numOflikes + ' ' + 'likes';
     return (
       <div className="tile" >
         <h2> { title } </h2>
@@ -225,15 +231,14 @@ class ArticleComponent extends Component {
             </div>
 
             <div className="list-group pull-right">
+              { this.state.numOflikes > 0 && likes }&nbsp;
               <i className={ this.state.like ? 'fa fa-heart fa-lg' : 'fa fa-heart-o fa-lg' }
                   onClick={ this._toggleLikes } >
               </i>&nbsp;
               <i className="fa fa-bookmark-o fa-lg"></i>
             </div>
           </div>
-          { this.state.show && <CommentInput url={url} title={title} author={author}
-                                     urlToImage={urlToImage} publishedAt={publishedAt}
-                                     description={description} _addComment={this._addComment}/>
+          { this.state.show && <CommentInput _addComment={this._addComment}/>
           }
           { this.state.show && <CommentsContainer
                                     url={url}

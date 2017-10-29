@@ -30,8 +30,13 @@ module Api::V1
     end
 
     def like_number
-      @article_likes = ArticleLike.where(api_id: params[:article_id])
-      render json: @article_likes.length
+      @article_likes = ArticleLike.where(article_id: params[:article_id])
+      render json: @article_likes
+    end
+
+    def like_show
+      @article_like = ArticleLike.where(article_id: params[:article_id], user_id: params[:user_id])
+      render json: @article_like
     end
 
     private
