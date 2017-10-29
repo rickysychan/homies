@@ -1,7 +1,7 @@
 module Api::V1
 
     class RegistrationsController < ApplicationController
-      skip_before_action :authenticate_request
+      # skip_before_action :authenticate_request
 
         def create
           user_params[:email] = user_params[:email].downcase!

@@ -24,6 +24,8 @@ Rails.application.routes.draw do
         end
       end
 
+      get '/search/:query', to: 'recommendations#search'
+
       scope '/products/:product_id', as: 'products' do
         get '/interests', to: 'products#interest_number'
         post '/interests', to: 'products#interest_create'

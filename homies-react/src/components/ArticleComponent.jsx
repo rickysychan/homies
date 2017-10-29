@@ -13,7 +13,7 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
-      user_id: 191,
+      user_id: 82,
       comments: [],
       articleId: null,
       numOfComments: 0,
@@ -96,7 +96,7 @@ class ArticleComponent extends Component {
 //       .catch(function (error) {
 //         console.log(error);
 //       });
-//     }
+    }
 }
 
   _saveArticle (url, article_json) {
