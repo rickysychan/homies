@@ -26,14 +26,20 @@ componentDidMount() {
     const cookies = new Cookies();
     let circleNames = "http://localhost:3001/api/v1/users/1/showcircles"
     
-    // axios.get(circleNames)
-    // .then( (response) => {
-    //     console.log(response)
-    //     this.setState({ SidebarCircleNames: response.data.map(
-    //         circle => circle.name
-    //     )});
-    //     console.log(this.state.SidebarCircleNames)
-    // })
+    axios.get(circleNames, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
+    .then( (response) => {
+        console.log("this is the props", this.props)
+        this.setState({ SidebarCircleNames: response.data.map(
+            circle => circle.name
+        )});
+        console.log(this.state.SidebarCircleNames)
+    })
+
+    // the above shows the circles of a particlur user
 
     let circleUserNames = "http://localhost:3001/api/v1/circles"
     
@@ -46,9 +52,10 @@ componentDidMount() {
     .then( (response) => {
         console.log("this is the response", response)
         // this response contains the user id!
-    })
-    
+    })   
 }
+
+// this is jsut for testing puproses to see if ID is available 
 
   render() {
     return (

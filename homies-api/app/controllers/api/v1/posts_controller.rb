@@ -1,7 +1,7 @@
 module Api::V1
 
   class PostsController < ApplicationController
-    before_action :validate_current_user
+    # before_action :validate_current_user
 
     def validate_current_user
       if !current_user

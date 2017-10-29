@@ -8,9 +8,12 @@ module Api::V1
     end
 
 
-    def show
+    def current
       # @user = User.find(params[:id])
-      @user = current_user
+      @user = '54'
+
+      puts "This is the user"
+      puts @user
       render json: @user
     end
 

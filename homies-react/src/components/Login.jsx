@@ -3,7 +3,6 @@ import RaisedButton from 'material-ui/RaisedButton';
 import TextField from 'material-ui/TextField';
 import React, { Component } from 'react'
 import axios from 'axios'
-import UploadScreen from './UploadScreen.jsx'
 import Cookies from 'universal-cookie';
 import history from '../index.jsx';
 

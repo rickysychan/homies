@@ -5,7 +5,8 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
 
-      resources :users, only: [:index, :create, :show]
+      resources :users, only: [:index, :create]
+        get '/users/current', to: 'users#current'
         get '/users/:id/articles', to: 'users#articles'
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
