@@ -15,7 +15,8 @@ class StayInTheLoopContainer extends Component {
     super(props);
     this.state = { 
       articles: [],
-      is_auth: ''
+      hasToken: '',
+      user_id: ''
     };
   }
 
@@ -32,7 +33,28 @@ class StayInTheLoopContainer extends Component {
 
   componentDidMount() {
 
-    axios.get(`http://localhost:3001/api/v1/articles`)
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    let UserName = "http://localhost:3001/api/v1/users/current"
+    
+    axios.get(UserName, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
+    .then( (response) => {
+      console.log("this is the response", response)
+      this.setState({user_id: response.data.id})
+      console.log("this is the userId", this.state.user_id)
+      // this response contains the user id!
+  })
+
+    axios.get(`http://localhost:3001/api/v1/articles`, {       
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
      .then(response => {
        this.setState({ articles: this.state.articles.concat(response.data) });
      })

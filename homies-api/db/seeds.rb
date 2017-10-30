@@ -43,7 +43,8 @@ Circle.destroy_all
 5.times do
 
     Circle.create!({
-        name: Faker::Team.name
+        name: Faker::Team.name,
+        moderator: User.all[Random.new.rand(0..9)].id
     })
 end
 
@@ -56,7 +57,6 @@ CircleUser.destroy_all
     CircleUser.create!({
         circle_id: Circle.all[Random.new.rand(0..4)].id,
         user_id: User.all[Random.new.rand(0..9)].id,
-        moderator: false
     })
 end
 

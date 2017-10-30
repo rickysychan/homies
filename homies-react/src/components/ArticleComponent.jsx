@@ -3,6 +3,7 @@ import axios from 'axios';
 import CommentsContainer from './CommentsContainer.jsx'
 import CommentInput from './CommentInput.jsx'
 import Resource from '../models/resource.jsx'
+import Cookies from 'universal-cookie';
 
 
 
@@ -133,7 +134,14 @@ class ArticleComponent extends Component {
   componentDidMount () {
     // let url = this.props.url
 
-    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, 
+      { 
+      headers: { Authorization: "Bearer " + token } 
+        },
+    {
       params: {
         url: this.props.url
       }
@@ -145,7 +153,10 @@ class ArticleComponent extends Component {
         let id = response.data[0].id;
         this.setState({articleId: id});
 
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`)
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`),
+        { 
+          headers: { Authorization: "Bearer " + token } 
+            }
           .then(response => {
             // console.log(response);
             if (response.data.length > 0) {

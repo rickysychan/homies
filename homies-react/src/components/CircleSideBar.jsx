@@ -6,6 +6,10 @@ import { withRouter } from 'react-router';
 import history from '../index.jsx';
 import axios from 'axios';
 import Cookies from 'universal-cookie';
+import TextField from 'material-ui/TextField';
+import { Button, Form, FormGroup, Label, Input, FormText } from 'reactstrap';
+
+
 
 class CircleSideBar extends Component {
 
@@ -13,18 +17,59 @@ class CircleSideBar extends Component {
         super(props);
         this.state = { 
             SidebarCircleUserNames: [],
-            SidebarCircleNames: []
+            SidebarCircleNames: [],
+            CircleName: '',
+            UserName: ''
         };
+        this.handleChange = this.handleChange.bind(this);
+        this.handleChangeCircle = this.handleChangeCircle.bind(this);
       }
 
-    handleClick(event){
-        history.push('/NewCircle');
+      handleClickCircle(event){
+        const cookies = new Cookies();
+        let token = cookies.get("token")
+        
+        var apiBaseUrl = "http://localhost:3001/api/v1/circles"
+        //To be done:check for empty values before hitting submit
+        var self = this;
+        var payload={
+        "name": this.state.CircleName,
+        }
+
+        axios.post(apiBaseUrl, payload, 
+            { 
+            headers: { Authorization: "Bearer " + token } 
+              })
+       .then(function (response) {
+         console.log(response);
+         if(response.status == 200){
+          //  console.log("registration successfull");
+          alert("Yay! circle created!")
+         }
+       })
+       .catch(function (error) {
+         alert("That circle name has been taken or you did not enter a name")
+       });
     }
 
+    
+    handleClickUser(event){
+        alert(this.state.UserName)
+    }
+
+    handleChange(event) {
+        this.setState({UserName: event.target.value});
+      }
+    handleChangeCircle(event) {
+    this.setState({CircleName: event.target.value});
+    }
+    
 componentDidMount() {
 
     const cookies = new Cookies();
-    let circleNames = "http://localhost:3001/api/v1/users/1/showcircles"
+    let token = cookies.get("token")
+
+    let circleNames = "http://localhost:3001/api/v1/users/20/showcircles"
     
     axios.get(circleNames, {
         headers: {
@@ -32,7 +77,6 @@ componentDidMount() {
         }
     })
     .then( (response) => {
-        console.log("this is the props", this.props)
         this.setState({ SidebarCircleNames: response.data.map(
             circle => circle.name
         )});
@@ -41,18 +85,20 @@ componentDidMount() {
 
     // the above shows the circles of a particlur user
 
-    let circleUserNames = "http://localhost:3001/api/v1/circles"
+    let circleUserNames = "http://localhost:3001/api/v1/circles/9"
     
-    let token = cookies.get("token")
     axios.get(circleUserNames, {
         headers: {
             Authorization: "Bearer " + token
         }
     })
     .then( (response) => {
-        console.log("this is the response", response)
-        // this response contains the user id!
-    })   
+        console.log(">>>>", response)
+        this.setState({ SidebarCircleUserNames: response.data.map(
+            user => user.first_name
+        )});
+        console.log(this.state.SidebarCircleUserNames)
+    })
 }
 
 // this is jsut for testing puproses to see if ID is available 
@@ -61,23 +107,39 @@ componentDidMount() {
     return (
         <div className="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
           <div className="affix-top" data-spy="affix" data-offset-top="45" data-offset-bottom="90">
-            <MuiThemeProvider>
-            <div>
-               <RaisedButton label={'+ Circle'} primary={true} style={style} onClick={this.handleClick.bind(this)}/>
-           </div>
-          </MuiThemeProvider>
-            <h3> Your circles </h3>
+              
+            <h3 id="sidebarLabels"> Your circles </h3>
             <ul className="nav" id="sidebar-nav">
           {this.state.SidebarCircleNames.map((item, index) => (
        <li className='indent' key={index}>{item}</li>
     ))}
             </ul>
-            <h3> Circle users </h3>
+            <br/>
+            <Form>
+            <FormGroup>
+              <Label for="exampleEmail">New Circle Name</Label>
+              <Input type="text" name="Circle Name" id="circleName" placeholder="Circle Name"
+              value={this.state.CircleName} onChange={this.handleChangeCircle} 
+               />
+            </FormGroup>
+            <Button onClick={(event) => this.handleClickCircle(event)}>Add User</Button>
+            </Form>
+            <h3 id="sidebarLabels"> Circle users </h3>
             <ul className="nav" id="sidebar-nav">
           {this.state.SidebarCircleUserNames.map((item, index) => (
        <li className='indent' key={index}>{item}</li>
     ))}
+    <br/>
             </ul>
+            <Form>
+            <FormGroup>
+              <Label for="exampleEmail">Add User by Email</Label>
+              <Input type="email" name="email" id="exampleEmail" placeholder="Email"
+              value={this.state.UserName} onChange={this.handleChange} 
+               />
+            </FormGroup>
+            <Button onClick={(event) => this.handleClickUser(event)}>Add User</Button>
+            </Form>
           </div>
         </div>
     );
