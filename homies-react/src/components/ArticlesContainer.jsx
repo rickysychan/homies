@@ -52,7 +52,7 @@ class ArticlesContainer extends Component {
             b = new Date(b.publishedAt).getTime()
             return b - a;
           })
-          console.log(sorted);
+          // console.log(sorted);
           return {articles: sorted}
         })
       })

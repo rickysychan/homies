@@ -17,7 +17,8 @@ class ArticleComponent extends Component {
       comments: [],
       articleId: null,
       numOfComments: 0,
-      numOfLikes: 0
+      numOfLikes: 0,
+      isInTheLoop: false
     }
 
     this._toggleComments = this._toggleComments.bind(this);
@@ -72,7 +73,8 @@ class ArticleComponent extends Component {
       this.setState( { numOfLikes : this.state.numOfLikes + 1 }, () => {
         console.log("Number of likes: ", this.state.numOfLikes);
       });
-
+      // Save to the loop if it is not in the loop
+      if(this.state.isInTheLoop === false) { this._saveToLoop(article_id) };
       this.setState({like: true});
     })
     .catch(function (error) {
@@ -131,8 +133,7 @@ class ArticleComponent extends Component {
       .catch(error => {
         console.log(error);
       })
-
-   }
+    }
 
   // Save comment to database
   _postCommentToDB (article_id, content) {
@@ -159,6 +160,10 @@ class ArticleComponent extends Component {
   // Article already have some comments
     if(this.state.articleId) {
       this._postCommentToDB(this.state.articleId, content);
+      // Save to the loop if it is not in the loop
+      if(this.state.isInTheLoop === false) {
+        this._saveToLoop(this.state.articleId)
+      }
 
   // Article does not have any comment
     } else {
@@ -166,7 +171,8 @@ class ArticleComponent extends Component {
         .then(response => {
           let article_id = response.id;
           this._postCommentToDB(article_id, content);
-          this._saveToLoop(article_id)
+          // Save to the loop if it is not in the loop
+          if(this.state.isInTheLoop === false) { this._saveToLoop(article_id) }
         })
         .catch(function (error) {
           console.log(error);
@@ -187,6 +193,15 @@ class ArticleComponent extends Component {
         let id = response.data[0].id;
         this.setState({articleId: id});
 
+        // Check if this article is in the loop
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.state.user_id}/loop`)
+          .then(result => {
+            if(result.data.length > 0) {
+              this.setState({isInTheLoop: true})
+            }
+          })
+          .catch((errors) => reject(errors));
+
         // Load all comments of each article
         axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`)
           .then(response => {
@@ -197,7 +212,7 @@ class ArticleComponent extends Component {
           })
           .catch(error => {
             console.error(error);
-          })
+          });
 
         // Numbers of likes of each article
         axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`)
@@ -212,7 +227,7 @@ class ArticleComponent extends Component {
         })
         .catch(error => {
           console.error(error);
-        })
+        });
       }
     })
     .catch(function (error) {

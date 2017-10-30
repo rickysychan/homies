@@ -50,6 +50,7 @@ Rails.application.routes.draw do
         post '/likes', to: 'articles#like_create'
         delete '/users/:user_id/likes', to: 'articles#like_destroy'
 
+        get '/users/:user_id/loop', to: 'articles#loop_show'
         delete '/users/:user_id/loop', to: 'articles#loop_destroy'
       end
 

@@ -46,6 +46,11 @@ module Api::V1
       render json: @article_users
     end
 
+    def loop_show
+      @article_users = ArticleUser.where(article_id: params[:article_id], user_id: params[:user_id])
+      render json: @article_users
+    end
+
     def loop_destroy
       @article_users = ArticleUser.where(article_id: params[:article_id], user_id: params[:user_id])
       @article_users[0].destroy
