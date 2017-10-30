@@ -19,10 +19,12 @@ class CircleSideBar extends Component {
             SidebarCircleUserNames: [],
             SidebarCircleNames: [],
             CircleName: '',
-            UserName: ''
+            UserName: '',
+            user_id:''
         };
         this.handleChange = this.handleChange.bind(this);
         this.handleChangeCircle = this.handleChangeCircle.bind(this);
+        this.handleClickCircle = this.handleClickCircle.bind(this);
       }
 
       handleClickCircle(event){
@@ -30,7 +32,6 @@ class CircleSideBar extends Component {
         let token = cookies.get("token")
         
         var apiBaseUrl = "http://localhost:3001/api/v1/circles"
-        //To be done:check for empty values before hitting submit
         var self = this;
         var payload={
         "name": this.state.CircleName,
@@ -41,10 +42,12 @@ class CircleSideBar extends Component {
             headers: { Authorization: "Bearer " + token } 
               })
        .then(function (response) {
-         console.log(response);
+        
          if(response.status == 200){
           //  console.log("registration successfull");
           alert("Yay! circle created!")
+          window.location.reload(); 
+
          }
        })
        .catch(function (error) {
@@ -63,25 +66,46 @@ class CircleSideBar extends Component {
     handleChangeCircle(event) {
     this.setState({CircleName: event.target.value});
     }
+
     
 componentDidMount() {
 
     const cookies = new Cookies();
     let token = cookies.get("token")
+    this.state.hasToken = token
 
-    let circleNames = "http://localhost:3001/api/v1/users/20/showcircles"
+    let UserName = "http://localhost:3001/api/v1/users/current"
     
-    axios.get(circleNames, {
+    axios.get(UserName, {
         headers: {
             Authorization: "Bearer " + token
         }
     })
     .then( (response) => {
-        this.setState({ SidebarCircleNames: response.data.map(
-            circle => circle.name
-        )});
-        console.log(this.state.SidebarCircleNames)
+        this.setState({user_id: response.data.id})
+        console.log("this is the Sidebar userId", this.state.user_id)
+        // this response contains the user id!
+    })   
+    .then((result) => {
+        console.log("this is the user ID STATE>>>>>>>")
+        console.log(this.state.user_id, "<<< supposed to be here")
+    
+        let user_id = this.state.user_id
+        let circleNames = `http://localhost:3001/api/v1/users/${user_id}/showcircles`
+        axios.get(circleNames, {
+            headers: {
+                Authorization: "Bearer " + token
+            },
+        })
+        .then( (response) => {
+            this.setState({ SidebarCircleNames: response.data.map(
+                circle => circle.name
+            )});
+            console.log(this.state.SidebarCircleNames)
+        })
     })
+    
+
 
     // the above shows the circles of a particlur user
 
@@ -122,7 +146,7 @@ componentDidMount() {
               value={this.state.CircleName} onChange={this.handleChangeCircle} 
                />
             </FormGroup>
-            <Button onClick={(event) => this.handleClickCircle(event)}>Add User</Button>
+            <Button onClick={(event) => this.handleClickCircle(event)}>Create Circle</Button>
             </Form>
             <h3 id="sidebarLabels"> Circle users </h3>
             <ul className="nav" id="sidebar-nav">
