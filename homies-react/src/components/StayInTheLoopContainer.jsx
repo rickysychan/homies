@@ -15,7 +15,7 @@ class StayInTheLoopContainer extends Component {
     super(props);
     this.state = {
       articles: [],
-      user_id: 196
+      user_id: 1
     };
   }
 

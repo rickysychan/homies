@@ -13,7 +13,7 @@ class ArticlesContainer extends Component {
     this.state={
       hasToken: '',
       articles: [],
-      user_id: 196
+      user_id: 1
     }
   }
 
