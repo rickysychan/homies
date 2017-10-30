@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20171026191728) do
+ActiveRecord::Schema.define(version: 20171029214215) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -34,6 +34,13 @@ ActiveRecord::Schema.define(version: 20171026191728) do
     t.index ["article_id"], name: "index_article_likes_on_article_id"
   end
 
+  create_table "article_users", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "articles", force: :cascade do |t|
     t.text "article_url"
     t.jsonb "article_json"
@@ -51,6 +58,13 @@ ActiveRecord::Schema.define(version: 20171026191728) do
 
   create_table "circles", force: :cascade do |t|
     t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "loops", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end

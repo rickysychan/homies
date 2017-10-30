@@ -42,6 +42,12 @@ module Api::V1
       render json: @products
     end
 
+    def loops
+      @articles_json = User.find(params[:id]).articles
+      render json: @articles_json
+    end
+
+
     private
 
     def user_params

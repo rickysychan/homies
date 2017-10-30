@@ -24,10 +24,10 @@ class ArticleComponent extends Component {
     this._toggleLikes = this._toggleLikes.bind(this);
     this._addComment = this._addComment.bind(this);
     this._postCommentToDB = this._postCommentToDB.bind(this);
-    this._isLiked = this._isLiked.bind(this);
     this._addLikes = this._addLikes.bind(this);
     this._deleteLikes = this._deleteLikes.bind(this);
     this._saveArticle = this._saveArticle.bind(this);
+    this._saveToLoop = this._saveToLoop.bind(this);
   }
 
   _toggleComments () {
@@ -37,33 +37,27 @@ class ArticleComponent extends Component {
 
   _toggleLikes () {
 
-    if ( this.state.articleId === null ) {
-      this._saveArticle ()
-      .then(response => {
-        this._addLikes(response.id);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-    } else {
-      this._addLikes(this.state.articleId);
-    }
     const { like } = this.state;
-
+    // Add like
     if( like === false ) {
-      this.setState( { numOfLikes : this.state.numOfLikes + 1 });
-    } else {
-      this.setState( { numOfLikes : this.state.numOfLikes - 1 });
-    }
-    this.setState( { like : !like });
-  }
+      // For new article, save article first and save like
+      if ( this.state.articleId === null ) {
+        this._saveArticle ()
+        .then(response => {
+          this._addLikes(response.id);
+        })
+        .catch(error => {
+          console.log(error);
+        });
+      // Save like
+      } else {
+        this._addLikes(this.state.articleId);
+      }
 
-  _isLiked (article_id) {
-    return new Promise((resolve, reject) => {
-      axios.get(`http://localhost:3001/api/v1/articles/${article_id}/likes`)
-      .then((result) => resolve(result.data))
-      // .catch((errors) => reject(errors))
-    });
+    // Remove like
+    } else {
+      this._deleteLikes(this.state.articleId);
+    }
   }
 
   _addLikes (article_id) {
@@ -74,7 +68,12 @@ class ArticleComponent extends Component {
       }
     })
     .then(response => {
-      console.log(response);
+      // console.log("I am in Add like", response);
+      this.setState( { numOfLikes : this.state.numOfLikes + 1 }, () => {
+        console.log("Number of likes: ", this.state.numOfLikes);
+      });
+
+      this.setState({like: true});
     })
     .catch(function (error) {
       console.log(error);
@@ -82,11 +81,13 @@ class ArticleComponent extends Component {
   }
 
   _deleteLikes (article_id) {
-    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
-      params: { article_id: article_id, user_id: this.state.user_id}
-    })
+    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.state.user_id}/likes`)
     .then(response => {
-      console.log('Response is : ', response);
+      console.log("I am in Delete like", response.data);
+
+      this.setState( { numOfLikes : this.state.numOfLikes - 1});
+      console.log("I am in Delete like", this.state.numOfLikes);
+      this.setState({like: false});
     })
     .catch(function (error) {
       console.log(error);
@@ -117,6 +118,22 @@ class ArticleComponent extends Component {
     });
    }
 
+   _saveToLoop (article_id) {
+      axios.post(`http://localhost:3001/api/v1/articles/loop`, {
+          article_user: {
+            article_id: article_id,
+            user_id: this.state.user_id
+          }
+      })
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+
+   }
+
   // Save comment to database
   _postCommentToDB (article_id, content) {
 
@@ -132,25 +149,24 @@ class ArticleComponent extends Component {
         this.setState({comments: comments});
         this.setState({numOfComments: this.state.comments.length});
       })
-      .catch(function (error) {
+      .catch(error => {
         console.log(error);
       });
   }
-
 
   _addComment (content) {
 
   // Article already have some comments
     if(this.state.articleId) {
-
       this._postCommentToDB(this.state.articleId, content);
 
   // Article does not have any comment
     } else {
       this._saveArticle()
         .then(response => {
-          console.log("My response is", response);
-          this._postCommentToDB(response.id, content);
+          let article_id = response.id;
+          this._postCommentToDB(article_id, content);
+          this._saveToLoop(article_id)
         })
         .catch(function (error) {
           console.log(error);
@@ -171,7 +187,7 @@ class ArticleComponent extends Component {
         let id = response.data[0].id;
         this.setState({articleId: id});
 
-        // Load all comments of this article
+        // Load all comments of each article
         axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`)
           .then(response => {
             if (response.data.length > 0) {
@@ -183,20 +199,20 @@ class ArticleComponent extends Component {
             console.error(error);
           })
 
-        // Check if current user liked this article
-        // this._isLiked (id)
+        // Numbers of likes of each article
         axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`)
         .then(response => {
+          // Set number of likes
           if (response.data.length > 0) {
             this.setState({numOflikes: response.data.length});
             this.setState({like: true});
-            console.log("response is ", response.data.length);
+          } else {
+            this.setState({like: false});
           }
         })
         .catch(error => {
           console.error(error);
         })
-
       }
     })
     .catch(function (error) {
@@ -207,7 +223,10 @@ class ArticleComponent extends Component {
 
   render() {
     const { title, author, url ,urlToImage, publishedAt, description } = this.props;
+
+    let comments = this.state.numOfComments + ' ' + 'comments';
     let likes = this.state.numOflikes + ' ' + 'likes';
+
     return (
       <div className="tile" >
         <h2> { title } </h2>
@@ -227,7 +246,7 @@ class ArticleComponent extends Component {
             <div className="list-group pull-left">
               <i className={ this.state.show ? 'fa fa-comment fa-lg' : 'fa fa-comment-o fa-lg' }
                   onClick={ this._toggleComments } >
-              </i>&nbsp; { this.state.numOfComments } comments
+              </i>&nbsp; { this.state.numOfComments > 0 && comments }
             </div>
 
             <div className="list-group pull-right">

@@ -15,6 +15,7 @@ class StayInTheLoopContainer extends Component {
     super(props);
     this.state = {
       articles: [],
+      user_id: 182,
       is_auth: ''
     };
   }
@@ -32,7 +33,7 @@ class StayInTheLoopContainer extends Component {
 
   componentDidMount() {
 
-    axios.get(`http://localhost:3001/api/v1/articles`)
+    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/loops`)
      .then(response => {
        this.setState({ articles: this.state.articles.concat(response.data) });
      })
