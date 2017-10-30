@@ -43,7 +43,7 @@ module Api::V1
     end
 
     def loops
-      @articles_json = User.find(params[:id]).articles
+      @articles_json = User.find(params[:id]).articles.order(created_at: :asc)
       render json: @articles_json
     end
 

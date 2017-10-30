@@ -11,8 +11,9 @@ class ArticlesContainer extends Component {
   constructor(props){
     super(props);
     this.state={
-    hasToken: '',
-    articles: []
+      hasToken: '',
+      articles: [],
+      user_id: 196
     }
   }
 
@@ -52,7 +53,6 @@ class ArticlesContainer extends Component {
             b = new Date(b.publishedAt).getTime()
             return b - a;
           })
-          // console.log(sorted);
           return {articles: sorted}
         })
       })
@@ -71,11 +71,14 @@ class ArticlesContainer extends Component {
           <div className="row">
             <div className="col-sm-6 col-sm-offset-1">
 
+            <p>Current user id is: {this.state.user_id}</p>
+
       { this.state.articles.map((article) => {
           if(article.urlToImage) {
 
             return(
                 <ArticleComponent
+                  user_id={this.state.user_id}
                   title={article.title}
                   author={article.author}
                   url={article.url}

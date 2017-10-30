@@ -15,8 +15,7 @@ class StayInTheLoopContainer extends Component {
     super(props);
     this.state = {
       articles: [],
-      user_id: 182,
-      is_auth: ''
+      user_id: 196
     };
   }
 
@@ -47,11 +46,11 @@ class StayInTheLoopContainer extends Component {
 
     return (
 
-      <div className="row row-offcanvas row-offcanvas-left">
+      <div className="row row-offcanvas row-offcanvas-left StayInTheLoopContainer">
        <NavBar />
-        <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
-          <div className="row">
-            <div className="col-sm-6 col-sm-offset-1">
+          <div className="row ">
+            <div className="col-sm-4 col-sm-offset-3">
+              <p>Current user id is: {this.state.user_id}</p>
 
       { this.state.articles.reverse().map((article) => {
 
@@ -59,6 +58,7 @@ class StayInTheLoopContainer extends Component {
 
             return(
                 <ArticleComponent
+                  user_id={this.state.user_id}
                   title={article.article_json.title}
                   author={article.article_json.author}
                   url={article.article_json.url}
@@ -71,7 +71,6 @@ class StayInTheLoopContainer extends Component {
           }
         })}
             </div>
-          </div>
         </div>
       </div>
     )

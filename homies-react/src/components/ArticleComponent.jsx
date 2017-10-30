@@ -13,7 +13,7 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
-      user_id: 182,
+      user_id: this.props.user_id,
       comments: [],
       articleId: null,
       numOfComments: 0,
@@ -46,6 +46,7 @@ class ArticleComponent extends Component {
         this._saveArticle ()
         .then(response => {
           this._addLikes(response.id);
+          this.setState({articleId: response.id});
         })
         .catch(error => {
           console.log(error);
@@ -69,10 +70,7 @@ class ArticleComponent extends Component {
       }
     })
     .then(response => {
-      // console.log("I am in Add like", response);
-      this.setState( { numOfLikes : this.state.numOfLikes + 1 }, () => {
-        console.log("Number of likes: ", this.state.numOfLikes);
-      });
+      this.setState( { numOfLikes : this.state.numOfLikes + 1 } );
       // Save to the loop if it is not in the loop
       if(this.state.isInTheLoop === false) { this._saveToLoop(article_id) };
       this.setState({like: true});
@@ -85,10 +83,7 @@ class ArticleComponent extends Component {
   _deleteLikes (article_id) {
     axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.state.user_id}/likes`)
     .then(response => {
-      console.log("I am in Delete like", response.data);
-
       this.setState( { numOfLikes : this.state.numOfLikes - 1});
-      console.log("I am in Delete like", this.state.numOfLikes);
       this.setState({like: false});
     })
     .catch(function (error) {
@@ -211,23 +206,32 @@ class ArticleComponent extends Component {
             }
           })
           .catch(error => {
-            console.error(error);
+            console.log(error);
           });
 
         // Numbers of likes of each article
         axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`)
-        .then(response => {
-          // Set number of likes
-          if (response.data.length > 0) {
-            this.setState({numOflikes: response.data.length});
-            this.setState({like: true});
-          } else {
-            this.setState({like: false});
-          }
-        })
-        .catch(error => {
-          console.error(error);
-        });
+          .then(response => {
+            // Set number of likes
+            if (response.data.length > 0) {
+              this.setState({numOfLikes: response.data.length});
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          });
+        // Set like button
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.state.user_id}/likes`)
+          .then(response => {
+            if (response.data.length > 0) {
+              this.setState({like: true});
+            } else {
+              this.setState({like: false});
+            }
+          })
+          .catch(error => {
+            console.log(error);
+          })
       }
     })
     .catch(function (error) {
@@ -240,15 +244,18 @@ class ArticleComponent extends Component {
     const { title, author, url ,urlToImage, publishedAt, description } = this.props;
 
     let comments = this.state.numOfComments + ' ' + 'comments';
-    let likes = this.state.numOflikes + ' ' + 'likes';
+    let likes = this.state.numOfLikes + ' ' + 'likes';
+    let deleteButton = '';
+    if(this.props.type === 'stay') {
+      deleteButton = '<button className="btn btn-danger"></button>';
+    }
 
     return (
       <div className="tile" >
-        <h2> { title } </h2>
-        <p> { author } </p>
         <div className="panel panel-default">
           <div className="panel-heading">
-            <h4><a href={ url } target="_blank"> { title } </a></h4>
+            <h3><a href={ url } target="_blank"> { title } </a></h3>
+            <p> { author } </p>
           </div>
           <div className="panel-body">
             <img src={ urlToImage } className="img-responsive" />
@@ -265,11 +272,13 @@ class ArticleComponent extends Component {
             </div>
 
             <div className="list-group pull-right">
-              { this.state.numOflikes > 0 && likes }&nbsp;
+              { this.state.numOfLikes > 0 && likes }&nbsp;
               <i className={ this.state.like ? 'fa fa-heart fa-lg' : 'fa fa-heart-o fa-lg' }
                   onClick={ this._toggleLikes } >
               </i>&nbsp;
-              <i className="fa fa-bookmark-o fa-lg"></i>
+                <a data-toggle="modal" data-target="#circleList">
+                  <i className="fa fa-bookmark-o fa-lg"></i>
+                </a>
             </div>
           </div>
           { this.state.show && <CommentInput _addComment={this._addComment}/>
@@ -280,7 +289,25 @@ class ArticleComponent extends Component {
                                /> }
         </div>
 
+          <div id="circleList" className="modal fade" role="dialog">
+            <div className="modal-dialog">
+              <div className="modal-content">
+                <div className="modal-header">
+                  <button type="button" className="close" data-dismiss="modal">&times;</button>
+                  <h4 className="modal-title">Choose the circle</h4>
+                </div>
+                <div className="modal-body">
+                  <select className="form-control">
+                    <option>Hello World</option>
+                    <option>PlayStation</option>
+                    <option>Movies</option>
+                  </select>
+                </div>
 
+              </div>
+
+            </div>
+          </div>
       </div>
     )
   }

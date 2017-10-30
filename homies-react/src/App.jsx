@@ -49,10 +49,10 @@ class App extends Component {
   }
 
 
-  
+
   AuthenicationChecker(authToken) {
     this.setState({userToken: authToken})
-  }  
+  }
 
   // this is passing down a function to the children component to grab the authenticaiton token
 
@@ -67,7 +67,7 @@ class App extends Component {
 
      // this part sends the authentication token to all the other coponenets which are
      // children of app
- 
+
      return <div>{childrenWithProps}</div>
     return (
       <div className="App">
