@@ -11,8 +11,13 @@ class CircleContainer extends Component {
     super(props);
     this.state={
     hasToken: '',
-    user_id: ''
+    user_id: '',
+    circle_id: ''
     }
+  }
+
+  onCircleClick(data){
+    this.setState({circle_id: data})
   }
 
   componentWillMount() {
@@ -42,7 +47,8 @@ class CircleContainer extends Component {
         this.setState({user_id: response.data.id})
         console.log("this is the userId", this.state.user_id)
         // this response contains the user id!
-    })   
+    })
+    console.log("this is the props ******", this.props.location)   
   }
 
   render() {
@@ -50,7 +56,8 @@ class CircleContainer extends Component {
         return (
           <div className="row row-offcanvas row-offcanvas-left">
             <NavBar />
-            <CircleSideBar />
+            <CircleSideBar onCircleClick={this.onCircleClick.bind(this)}/>
+            <h1>{this.state.circle_id}</h1>
     
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
               <div className="row">

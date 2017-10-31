@@ -21,8 +21,8 @@ module Api::V1
                 @found = Circle.find(circleID)
                 @found.update(:moderator => current_user.id)
                 @userCircle = CircleUser.create(circle_id: circleID, user_id: current_user.id)
-                puts "this is the user circles"
-                puts @userCircle.inspect
+                puts "this is the circles"
+                puts @circle.inspect
 
                 render json: @circle
             else

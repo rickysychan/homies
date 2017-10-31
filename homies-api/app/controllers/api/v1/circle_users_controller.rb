@@ -3,12 +3,13 @@ module Api::V1
     class CircleUsersController < ApplicationController
 
         def create
-            @circleUser = CircleUser.new(circle_params)
-            if @circleUser.save!
-                render json: {status: "success"}, status: :successful
-            else
-                render json: {status: "error"}, status: :unprocessable_entity
-            end
+            @userCircle = params[:search]
+            @searchTerm = @userCircle
+
+            @user = User.find_by email: @searchTerm
+            puts "this is the user found"
+            puts @user.inspect
+            CircleUser.create(circle_id: 3, user_id: @user.id)
         end
 
         def index
@@ -20,6 +21,14 @@ module Api::V1
         def destroy
             @circleUser = CircleUser.find params[:id]
             @circleUser.destroy
+        end
+
+        def user_params
+            params.require(:circle_user).permit(
+                :user_id,
+                :circle_id,
+                :search
+            )
         end
 
     end
