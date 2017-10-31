@@ -11,7 +11,8 @@ class Product extends Component {
       result: {},
       interested: false,
       user_id: 82,
-      interest: []
+      interest: [],
+      game_url: false
     }
     this.handleInterest = this.handleInterest.bind(this);
     this.handleUninterest = this.handleUninterest.bind(this);
@@ -22,6 +23,9 @@ class Product extends Component {
     axios.get(product)
     .then( (response) => {
       let responseJson = response.data
+      if (responseJson.rating.charAt(0) === "h") {
+        this.setState({game_url: true})
+      }
       this.setState({ result: responseJson
       });
     })
@@ -77,11 +81,18 @@ class Product extends Component {
 
   render() {
 
-    const { image, name, overview, date, type } = this.state.result
+    const { image, name, overview, rating, date, type } = this.state.result
 
     let interestedButton = <a href="#" onClick={this.handleInterest}>This interests me!</a>
     if (this.state.interested) {
       interestedButton = <a href="#" className="black-button" onClick={this.handleUninterest}>Interested!</a>
+    }
+
+    let gameRating = null
+    if (this.state.game_url) {
+      gameRating = <p className="product-rating">Rated: Find out <a href={rating}>here!</a></p>
+    } else {
+      gameRating = <p className="product-rating">Rated: {rating}</p>
     }
 
     return(
@@ -94,6 +105,7 @@ class Product extends Component {
             </div>
             <div className="product-text">
               <h1>{name}</h1>
+              {gameRating}
               <h4>({type}) - {date}</h4>
               <div className="product-link-list">
                 {interestedButton}
