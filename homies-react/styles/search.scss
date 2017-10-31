@@ -40,3 +40,13 @@ $search-text-color: black;
   margin: 20px;
   margin-left: 40px;
 }
+
+.results-list {
+  display: flex;
+  justify-content: center;
+}
+
+.fa-spin {
+  margin-top: 30px;
+  font-size: 5vw;
+}

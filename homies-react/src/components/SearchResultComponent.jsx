@@ -19,7 +19,7 @@ class SearchResultComponent extends Component {
           <img src={image} alt="Image" />
         </div>
         <div className="search-text">
-          <h3><a href={"/products/" + type + "/" + id }>{name}</a> <span className="entertainment-type">({type}) - {releaseDate}</span></h3>
+          <h3><a href={"/products/" + type + "/" + id }>{name}</a><span className="entertainment-type">({type}) - {releaseDate}</span></h3>
           <div>
             <hr/>
             <p>{overview}</p>

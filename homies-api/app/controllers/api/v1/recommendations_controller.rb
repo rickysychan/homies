@@ -32,19 +32,19 @@ module Api::V1
 
     def movie_find
       movie = Tmdb::Movie.detail(params[:query])
-      movie_hash = { id: movie["id"], image: "https://image.tmdb.org/t/p/w300/#{movie['poster_path']}", name: movie["title"], overview: movie["overview"], date: movie["release_date"], type: "MOVIE", json: movie }
+      movie_hash = { id: movie["id"], image: "https://image.tmdb.org/t/p/w500/#{movie['poster_path']}", name: movie["title"], overview: movie["overview"], date: movie["release_date"], type: "MOVIE", json: movie }
       render json: movie_hash
     end
 
     def game_find
       game = GiantBomb::Game.detail(params[:query])
-      game_hash = { id: game.id, image: game.image["thumb_url"], name: game.name, overview: game.deck, date: game.date_added, type: "GAME", json: game }
+      game_hash = { id: game.id, image: game.image["medium_url"], name: game.name, overview: game.deck, date: game.date_added, type: "GAME", json: game }
       render json: game_hash
     end
 
     def tv_find
       show = Tmdb::TV.detail(params[:query])
-      show_hash = { id: show["id"],  image: "https://image.tmdb.org/t/p/w300/#{show['poster_path']}", name: show["original_name"], overview: show["overview"], date: show["first_air_date"], type: "TV", json: show }
+      show_hash = { id: show["id"],  image: "https://image.tmdb.org/t/p/w500/#{show['poster_path']}", name: show["original_name"], overview: show["overview"], date: show["first_air_date"], type: "TV", json: show }
       render json: show_hash
     end
 
