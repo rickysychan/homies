@@ -42,13 +42,10 @@ class CircleSideBar extends Component {
             headers: { Authorization: "Bearer " + token } 
               })
        .then(function (response) {
-        
-         if(response.status == 200){
+        console.log(">>>>>> this is the response", response)
           //  console.log("registration successfull");
           alert("Yay! circle created!")
           window.location.reload(); 
-
-         }
        })
        .catch(function (error) {
          alert("That circle name has been taken or you did not enter a name")
@@ -57,7 +54,7 @@ class CircleSideBar extends Component {
 
     
     handleClickUser(event){
-        alert(this.state.UserName)
+        alert("clicked")
     }
 
     handleChange(event) {
@@ -109,7 +106,7 @@ componentDidMount() {
 
     // the above shows the circles of a particlur user
 
-    let circleUserNames = "http://localhost:3001/api/v1/circles/9"
+    let circleUserNames = "http://localhost:3001/api/v1/circles/3"
     
     axios.get(circleUserNames, {
         headers: {
@@ -135,7 +132,7 @@ componentDidMount() {
             <h3 id="sidebarLabels"> Your circles </h3>
             <ul className="nav" id="sidebar-nav">
           {this.state.SidebarCircleNames.map((item, index) => (
-       <li className='indent' key={index}>{item}</li>
+       <li className='indent' key={index}><Link onClick={(event) => this.handleClickUser(event)}>{item}</Link></li>
     ))}
             </ul>
             <br/>

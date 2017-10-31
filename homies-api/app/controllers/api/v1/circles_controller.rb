@@ -24,7 +24,7 @@ module Api::V1
                 puts "this is the user circles"
                 puts @userCircle.inspect
 
-                render status: 200
+                render json: @circle
             else
                 render status: 402
             end

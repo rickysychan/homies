@@ -44,7 +44,6 @@ ActiveRecord::Schema.define(version: 20171030045447) do
   create_table "circle_users", force: :cascade do |t|
     t.integer "circle_id"
     t.integer "user_id"
-    t.boolean "moderator"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -53,7 +52,7 @@ ActiveRecord::Schema.define(version: 20171030045447) do
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "moderator"
+    t.boolean "moderator"
   end
 
   create_table "post_comments", force: :cascade do |t|
