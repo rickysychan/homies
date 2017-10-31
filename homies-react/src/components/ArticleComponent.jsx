@@ -13,7 +13,7 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
-      user_id: 82,
+      user_id: 21,
       comments: [],
       articleId: null,
       numOfComments: 0,

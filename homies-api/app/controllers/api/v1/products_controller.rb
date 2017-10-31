@@ -9,6 +9,7 @@ module Api::V1
     def interest_create
       @product_interest = ProductInterest.new(api_id: params["api_id"],
         api_type: params["api_type"],
+        title: params["title"],
         user_id: params["user_id"])
       @product_interest.save
     end

@@ -1,17 +1,60 @@
 import React, { Component } from 'react';
+import axios from 'axios';
+import history from '../index.jsx';
+import Cookies from 'universal-cookie';
+
+function RenderInterests(props) {
+  let linkStyles = {
+    fontSize: '0.9em',
+    color: 'white',
+    display: 'block',
+    borderTop: '1px solid white',
+    padding: '5px'
+  }
+  return(
+    <div>
+      { props.interests.map((interest) => {
+        let productUrl = `/products/${interest.api_type}/${interest.api_id}`
+        return(
+          <a key={interest.id} href={productUrl} style={linkStyles}>{interest.title}</a>
+          )
+      })}
+    </div>
+  )
+}
+
 
 class SideBar extends Component {
 
   constructor(props) {
     super(props);
     this.state = {
-      result: {},
-      user_id: 82,
-      interest: []
+      user_id: 21,
+      interests: []
     }
   }
 
+  componentDidMount() {
+    let userInterest = `http://localhost:3001/api/v1/users/${this.state.user_id}/product_interests`
+    axios.get(userInterest)
+    .then( (response) => {
+      let responseJson = response.data
+      this.setState({ interests: responseJson
+      });
+    })
+  }
+
   render() {
+
+    const hasInterests = this.state.interests.length > 0;
+
+    let interestList = null
+
+    if (hasInterests) {
+      interestList = <RenderInterests interests={this.state.interests} />
+    } else {
+      interestList = <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i>
+    }
 
     const sidebarStyle = {
       marginLeft: '15px',
@@ -19,7 +62,7 @@ class SideBar extends Component {
     }
 
     const headerStyle = {
-      fontSize: '100%',
+      fontSize: '100%'
     }
 
     return (
@@ -56,7 +99,7 @@ class SideBar extends Component {
                     </div>
                     <div id="collapseTwo" className="collapse" role="tabpanel" aria-labelledby="interests">
                       <div className="card-block">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        {interestList}
                       </div>
                     </div>
                   </div>

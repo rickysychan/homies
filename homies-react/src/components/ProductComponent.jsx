@@ -10,7 +10,7 @@ class Product extends Component {
     this.state = {
       result: {},
       interested: false,
-      user_id: 82,
+      user_id: 21,
       interest: [],
       game_url: false
     }
@@ -23,7 +23,7 @@ class Product extends Component {
     axios.get(product)
     .then( (response) => {
       let responseJson = response.data
-      if (responseJson.rating.charAt(0) === "h") {
+      if (responseJson.rating.length > 0 && responseJson.rating.charAt(0) === "h") {
         this.setState({game_url: true})
       }
       this.setState({ result: responseJson
