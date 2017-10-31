@@ -5,9 +5,11 @@ module Api::V1
 
         def index
             puts "CirclesController index"
-            puts current_user.inspect
-            @user = current_user.id
-            render json: @user
+            # puts current_user.inspect
+            # @user = current_user.id
+            # render json: @user
+            @circles = CircleUser.all
+            render json: @circles
         end
 
         def show

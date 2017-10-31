@@ -14,7 +14,7 @@ Rails.application.routes.draw do
         post '/users/login', to: 'sessions#create'
         get '/users/login', to: 'users#destroy'
         post '/users/registeration', to: 'registrations#create'
-        get '/users/:id/showcircles', to: 'users#show_circles'
+        get '/users/:id/circles', to: 'users#circles'
         get '/users/:id/loops', to: 'users#loops'
 
 

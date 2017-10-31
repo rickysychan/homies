@@ -14,6 +14,7 @@ class ArticleComponent extends Component {
       show: false,
       like: false,
       user_id: this.props.user_id,
+      circles: this.props.circles,
       comments: [],
       articleId: null,
       numOfComments: 0,
@@ -236,7 +237,8 @@ class ArticleComponent extends Component {
     })
     .catch(function (error) {
           console.log(error);
-    });
+    })
+
   }
 
 
@@ -294,14 +296,20 @@ class ArticleComponent extends Component {
               <div className="modal-content">
                 <div className="modal-header">
                   <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">Choose the circle</h4>
+                  <h4 className="modal-title">Choose your circle</h4>
                 </div>
                 <div className="modal-body">
+
                   <select className="form-control">
-                    <option>Hello World</option>
-                    <option>PlayStation</option>
-                    <option>Movies</option>
+                    <option></option>
+          { this.props.circles.map((circle) => {
+              return <option key={circle.id}> { circle.name }</option>
+            }
+          )}
                   </select>
+                </div>
+                <div className="modal-footer">
+                  <button type="submit" className="btn btn-success">Post It</button>
                 </div>
 
               </div>

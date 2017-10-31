@@ -51,7 +51,7 @@ end
 puts "Re-creating circles Users.."
 CircleUser.destroy_all
 
-10.times do
+20.times do
 
     CircleUser.create!({
         circle_id: Circle.all[Random.new.rand(0..4)].id,
@@ -85,8 +85,8 @@ PostComment.destroy_all
 end
 
 
-puts "Re-creating Article.."
-Article.destroy_all
+# puts "Re-creating Article.."
+# Article.destroy_all
 
 # 10.times do
 

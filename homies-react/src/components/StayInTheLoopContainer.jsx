@@ -15,7 +15,8 @@ class StayInTheLoopContainer extends Component {
     super(props);
     this.state = {
       articles: [],
-      user_id: 1
+      circles: [],
+      user_id: 4
     };
   }
 
@@ -40,6 +41,18 @@ class StayInTheLoopContainer extends Component {
         console.log(error)
      });
 
+    // List of circles of user
+    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`)
+      .then(response => {
+        if (response.data.length > 0) {
+          const circles = this.state.circles.concat(response.data)
+          this.setState({circles: circles});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+
   }
 
   render() {
@@ -58,6 +71,7 @@ class StayInTheLoopContainer extends Component {
 
             return(
                 <ArticleComponent
+                  circles={this.state.circles}
                   user_id={this.state.user_id}
                   title={article.article_json.title}
                   author={article.article_json.author}

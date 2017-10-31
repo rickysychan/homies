@@ -13,7 +13,8 @@ class ArticlesContainer extends Component {
     this.state={
       hasToken: '',
       articles: [],
-      user_id: 1
+      user_id: 4,
+      circles: []
     }
   }
 
@@ -57,7 +58,20 @@ class ArticlesContainer extends Component {
         })
       })
       .catch(error => console.log(error))
-    ))
+    ));
+
+    // List of circles of user
+    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`)
+      .then(response => {
+        if (response.data.length > 0) {
+          const circles = this.state.circles.concat(response.data)
+          this.setState({circles: circles});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
+
   }
 
   render() {
@@ -78,6 +92,7 @@ class ArticlesContainer extends Component {
 
             return(
                 <ArticleComponent
+                  circles={this.state.circles}
                   user_id={this.state.user_id}
                   title={article.title}
                   author={article.author}
