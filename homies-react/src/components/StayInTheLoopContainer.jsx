@@ -16,6 +16,7 @@ class StayInTheLoopContainer extends Component {
     this.state = {
       articles: [],
       hasToken: '',
+      circles: [],
       user_id: ''
     };
   }
@@ -37,7 +38,7 @@ class StayInTheLoopContainer extends Component {
     let token = cookies.get("token")
 
     let UserName = "http://localhost:3001/api/v1/users/current"
-    
+
     axios.get(UserName, {
         headers: {
             Authorization: "Bearer " + token
@@ -48,23 +49,36 @@ class StayInTheLoopContainer extends Component {
       this.setState({user_id: response.data.id})
       console.log("this is the userId", this.state.user_id)
       // this response contains the user id!
-      axios.get(`http://localhost:3001/api/v1/articles`, {       
-        headers: {
-            Authorization: "Bearer " + token
-        }
+    //   axios.get(`http://localhost:3001/api/v1/articles`, {
+    //     headers: {
+    //         Authorization: "Bearer " + token
+    //     }
+    // })
+      axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/loops`, {
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then(response => {
+           this.setState({ articles: this.state.articles.concat(response.data) });
+        })
+        .catch(error => {
+            console.log(error)
+        });
     })
-      axios.get(`http://localhost:3001/api/v1/users/${response.data.id}/loops`, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
+    .catch(error => {
+      console.log(error);
     })
-  })
-     .then(response => {
-       this.setState({ articles: this.state.articles.concat(response.data) });
-     })
-     .catch(error => {
-        console.log(error)
-     });
+
+    // List of circles of user
+    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`)
+      .then(response => {
+        if (response.data.length > 0) {
+          const circles = this.state.circles.concat(response.data)
+          this.setState({circles: circles});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
 
   }
 
@@ -72,7 +86,7 @@ class StayInTheLoopContainer extends Component {
 
     return (
 
-      <div className="row row-offcanvas row-offcanvas-left StayInTheLoopContainer">
+      <div className="row row-offcanvas row-offcanvas-left loop-bg">
        <NavBar />
           <div className="row ">
             <div className="col-sm-4 col-sm-offset-3">
@@ -84,6 +98,7 @@ class StayInTheLoopContainer extends Component {
 
             return(
                 <ArticleComponent
+                  circles={this.state.circles}
                   user_id={this.state.user_id}
                   title={article.article_json.title}
                   author={article.article_json.author}

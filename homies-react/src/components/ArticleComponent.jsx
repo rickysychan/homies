@@ -14,12 +14,21 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
-      user_id: this.props.user_id,
+      article_json: {
+        title: this.props.title,
+        author: this.props.author,
+        url: this.props.url,
+        urlToImage: this.props.urlToImage,
+        publishedAt: this.props.publishedAt,
+        description: this.props.description
+      },
       comments: [],
       articleId: null,
       numOfComments: 0,
       numOfLikes: 0,
-      isInTheLoop: false
+      isInTheLoop: false,
+      circle_id: 0,
+      notice: false
     }
 
     this._toggleComments = this._toggleComments.bind(this);
@@ -29,7 +38,10 @@ class ArticleComponent extends Component {
     this._addLikes = this._addLikes.bind(this);
     this._deleteLikes = this._deleteLikes.bind(this);
     this._saveArticle = this._saveArticle.bind(this);
-    this._saveToLoop = this._saveToLoop.bind(this);
+    this._saveArticleToTheLoop = this._saveArticleToTheLoop.bind(this);
+    this._setCircleName = this._setCircleName.bind(this);
+    this._postToCircle = this._postToCircle.bind(this);
+    this._toggleCircle = this._toggleCircle.bind(this);
   }
 
   _toggleComments () {
@@ -64,16 +76,23 @@ class ArticleComponent extends Component {
   }
 
   _addLikes (article_id) {
-    axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
-      article_like: {
-        article_id: article_id,
-        user_id: this.state.user_id
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`,
+      {
+        article_like: {
+          article_id: article_id,
+          user_id: this.props.user_id
+        }
+      }, {
+        headers: { 'Authorization': "Bearer " + token }
       }
-    })
+    )
     .then(response => {
       this.setState( { numOfLikes : this.state.numOfLikes + 1 } );
       // Save to the loop if it is not in the loop
-      if(this.state.isInTheLoop === false) { this._saveToLoop(article_id) };
+      if(this.state.isInTheLoop === false) { this._saveArticleToTheLoop(article_id) };
       this.setState({like: true});
     })
     .catch(function (error) {
@@ -82,7 +101,14 @@ class ArticleComponent extends Component {
   }
 
   _deleteLikes (article_id) {
-    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.state.user_id}/likes`)
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.props.user_id}/likes`,
+      { headers: {
+          Authorization: "Bearer " + token
+      }
+    })
     .then(response => {
       this.setState( { numOfLikes : this.state.numOfLikes - 1});
       this.setState({like: false});
@@ -94,53 +120,44 @@ class ArticleComponent extends Component {
 
   // Save article to database
   _saveArticle () {
-
-    let article_json = {
-      title: this.props.title,
-      author: this.props.author,
-      url: this.props.url,
-      urlToImage: this.props.urlToImage,
-      publishedAt: this.props.publishedAt,
-      description: this.props.description
-    }
+    const cookies = new Cookies();
+    let token = cookies.get("token")
 
     return new Promise((resolve, reject) => {
-      axios.post(`http://localhost:3001/api/v1/articles`, {
-        article: {
-          article_url: this.props.url,
-          article_json: article_json
+      axios.post(`http://localhost:3001/api/v1/articles`,
+        {
+          article: {
+            article_url: this.props.url,
+            article_json: this.state.article_json
+          }
+        },
+        {
+          headers: { 'Authorization': "Bearer " + token }
         }
-      })
+      )
       .then((result) => resolve(result.data))
       .catch((errors) => reject(errors))
     });
    }
 
-   _saveToLoop (article_id) {
-      axios.post(`http://localhost:3001/api/v1/articles/loop`, {
-          article_user: {
-            article_id: article_id,
-            user_id: this.state.user_id
-          }
-      })
-      .then(response => {
-        console.log(response);
-      })
-      .catch(error => {
-        console.log(error);
-      })
-    }
 
   // Save comment to database
   _postCommentToDB (article_id, content) {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
 
-      axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
-        article_comment: {
-          article_id: article_id,
-          user_id: this.state.user_id,
-          content: content
+      axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`,
+        {
+          article_comment: {
+            article_id: article_id,
+            user_id: this.props.user_id,
+            content: content
+          }
+        },
+        {
+          headers: { 'Authorization': "Bearer " + token }
         }
-      })
+      )
       .then(response => {
         const comments = [response.data].concat(this.state.comments)
         this.setState({comments: comments});
@@ -152,13 +169,12 @@ class ArticleComponent extends Component {
   }
 
   _addComment (content) {
-
   // Article already have some comments
     if(this.state.articleId) {
       this._postCommentToDB(this.state.articleId, content);
       // Save to the loop if it is not in the loop
       if(this.state.isInTheLoop === false) {
-        this._saveToLoop(this.state.articleId)
+        this._saveArticleToTheLoop(this.state.articleId)
       }
 
   // Article does not have any comment
@@ -168,12 +184,78 @@ class ArticleComponent extends Component {
           let article_id = response.id;
           this._postCommentToDB(article_id, content);
           // Save to the loop if it is not in the loop
-          if(this.state.isInTheLoop === false) { this._saveToLoop(article_id) }
+          if(this.state.isInTheLoop === false) { this._saveArticleToTheLoop(article_id) }
         })
         .catch(function (error) {
           console.log(error);
         });
     }
+  }
+
+  // Save article to stay in the loop page
+  _saveArticleToTheLoop (article_id) {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+      axios.post(`http://localhost:3001/api/v1/articles/loop`,
+        {
+          article_user: {
+            article_id: article_id,
+            user_id: this.props.user_id
+          }
+        },
+        {
+          headers: { Authorization: "Bearer " + token }
+        }
+      )
+      .then(response => {
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      })
+    }
+
+
+  _setCircleName(event) {
+    console.log("event target value is:",event.target.value);
+    this.setState({circle_id: event.target.value});
+  }
+
+
+  _postToCircle (event) {
+    event.preventDefault();
+
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    let circle_id = this.state.circle_id;
+    console.log("article_json is :", this.state.article_json);
+
+    axios.post(`http://localhost:3001/api/v1/circles/${circle_id}/posts`,
+      {
+        post: {
+          circle_id: circle_id,
+          user_id: this.props.user_id,
+          content: 'test',
+          article: this.state.article_json
+        }
+      },
+
+        {
+          headers: { 'Authorization': "Bearer " + token }
+        }
+      )
+      .then(response => {
+        this.setState( { notice : true });
+        console.log(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+  _toggleCircle() {
+    this.setState( { notice : false });
   }
 
   componentDidMount () {
@@ -183,31 +265,24 @@ class ArticleComponent extends Component {
     let token = cookies.get("token")
 
     // Check if ther article is in our database
-    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
-      headers: {
-          Authorization: "Bearer " + token
+    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`,
+      {
+        params: {
+          url: this.props.url
+        },
+        headers: { 'Authorization': "Bearer " + token }
       }
-  },{
-      params: {
-        url: this.props.url
-      }
-    })
+    )
     .then(response => {
       if(response.data.length > 0) {
 
         let id = response.data[0].id;
         this.setState({articleId: id});
 
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`),
-        { 
-          headers: { Authorization: "Bearer " + token } 
-            }
         // Check if this article is in the loop
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.state.user_id}/loop`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.props.user_id}/loop`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(result => {
             if(result.data.length > 0) {
               this.setState({isInTheLoop: true})
@@ -216,11 +291,9 @@ class ArticleComponent extends Component {
           .catch((errors) => reject(errors));
 
         // Load all comments of each article
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(response => {
             if (response.data.length > 0) {
               this.setState({numOfComments: response.data.length});
@@ -232,11 +305,9 @@ class ArticleComponent extends Component {
           });
 
         // Numbers of likes of each article
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(response => {
             // Set number of likes
             if (response.data.length > 0) {
@@ -247,11 +318,9 @@ class ArticleComponent extends Component {
             console.log(error);
           });
         // Set like button
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.state.user_id}/likes`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.props.user_id}/likes`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(response => {
             if (response.data.length > 0) {
               this.setState({like: true});
@@ -266,7 +335,8 @@ class ArticleComponent extends Component {
     })
     .catch(function (error) {
           console.log(error);
-    });
+    })
+
   }
 
 
@@ -296,44 +366,56 @@ class ArticleComponent extends Component {
             </p>
             <hr/>
             <div className="list-group pull-left">
-              <i className={ this.state.show ? 'fa fa-comment fa-lg' : 'fa fa-comment-o fa-lg' }
-                  onClick={ this._toggleComments } >
-              </i>&nbsp; { this.state.numOfComments > 0 && comments }
+              <i className={this.state.show ? 'fa fa-comment fa-lg' : 'fa fa-comment-o fa-lg'}
+                  onClick={this._toggleComments} >
+              </i>&nbsp; {this.state.numOfComments > 0 && comments}
             </div>
 
             <div className="list-group pull-right">
               { this.state.numOfLikes > 0 && likes }&nbsp;
               <i className={ this.state.like ? 'fa fa-heart fa-lg' : 'fa fa-heart-o fa-lg' }
-                  onClick={ this._toggleLikes } >
+                  onClick={this._toggleLikes} >
               </i>&nbsp;
                 <a data-toggle="modal" data-target="#circleList">
-                  <i className="fa fa-bookmark-o fa-lg"></i>
+                  <i className="fa fa-bookmark-o fa-lg" ></i>
                 </a>
             </div>
           </div>
-          { this.state.show && <CommentInput _addComment={this._addComment}/>
-          }
+          { this.state.show && <CommentInput _addComment={this._addComment}/> }
           { this.state.show && <CommentsContainer
                                     url={url}
                                     comments={this.state.comments}
-                               /> }
+                               />
+          }
         </div>
 
           <div id="circleList" className="modal fade" role="dialog">
             <div className="modal-dialog">
               <div className="modal-content">
                 <div className="modal-header">
-                  <button type="button" className="close" data-dismiss="modal">&times;</button>
-                  <h4 className="modal-title">Choose the circle</h4>
+              { this.state.notice &&
+                  <div className="alert alert-info">
+                    The article has been posted to your circle .
+                  </div>
+              }
+                  <button type="button" className="close" data-dismiss="modal" onClick={this._toggleCircle}>&times;</button>
+                  <h4 className="modal-title">Choose your circle</h4>
                 </div>
+              <form onSubmit={ this._postToCircle }>
                 <div className="modal-body">
-                  <select className="form-control">
-                    <option>Hello World</option>
-                    <option>PlayStation</option>
-                    <option>Movies</option>
+                  <select className="form-control" onChange={this._setCircleName} value={this.state.circle_id}>
+                    <option></option>
+          { this.props.circles.map((circle) => {
+              return <option key={circle.id} value={circle.id} > { circle.name }</option>
+            }
+          )}
                   </select>
                 </div>
-
+                <div className="modal-footer">
+                  <button type="submit" className="btn btn-primary" >Post It</button>
+                  <button className="btn btn-danger" data-dismiss="modal"  onClick={this._toggleCircle}>Close</button>
+                </div>
+              </form>
               </div>
 
             </div>

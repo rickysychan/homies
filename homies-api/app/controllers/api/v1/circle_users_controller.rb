@@ -24,6 +24,10 @@ module Api::V1
             render json: @circleUser
         end
 
+        def show
+            @circleUser = CircleUser.where(circle_id: params[:circle_id], user_id: params[:id])
+            render json: @circleUser
+        end
 
         def destroy
             @circleUser = CircleUser.find params[:id]
