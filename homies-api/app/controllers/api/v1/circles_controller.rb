@@ -4,7 +4,11 @@ module Api::V1
         respond_to :json
 
         def index
-            @circles = Circle.all
+            puts "CirclesController index"
+            # puts current_user.inspect
+            # @user = current_user.id
+            # render json: @user
+            @circles = CircleUser.all
             render json: @circles
         end
 
@@ -24,6 +28,10 @@ module Api::V1
                 render status: 402
             end
         end
+        def show
+            @circle = Circle.find(params[:id])
+            render json: @circle
+        end
 
         def show
             @users = Circle.find(params[:id]).users
@@ -40,6 +48,12 @@ module Api::V1
             @circle.destroy
         end
 
+        def users
+            @users = Circle.find(params[:circle_id]).users
+            render json: @users
+        end
+
+        private
 
         def circle_params
             params.require(:circle).permit(

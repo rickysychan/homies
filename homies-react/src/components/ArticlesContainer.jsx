@@ -11,9 +11,10 @@ class ArticlesContainer extends Component {
   constructor(props){
     super(props);
     this.state={
-    hasToken: '',
-    articles: [],
-    user_id: ''
+      hasToken: '',
+      articles: [],
+      circles: [],
+      user_id: ''
     }
   }
 
@@ -34,7 +35,7 @@ class ArticlesContainer extends Component {
     let token = cookies.get("token")
 
     let UserName = "http://localhost:3001/api/v1/users/current"
-    
+
     axios.get(UserName, {
         headers: {
             Authorization: "Bearer " + token
@@ -45,42 +46,61 @@ class ArticlesContainer extends Component {
       this.setState({user_id: response.data.id})
       console.log("this is the userId", this.state.user_id)
       // this response contains the user id!
+      
+      axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`,
+                { headers: { Authorization: "Bearer " + token }
+      })
+      .then(response => {
+        if (response.data.length > 0) {
+          const circles = this.state.circles.concat(response.data)
+          this.setState({circles: circles});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
   })
 
     let apiUrls = [
 
     "http://beta.newsapi.org/v2/top-headlines?sources=ign,polygon,entertainment-weekly&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-    "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-    "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
+    // "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+    // "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
 
     ];
 
-    Promise.all(apiUrls.map(
+    Promise.all(
+      apiUrls.map(
       (url) => fetch(url)
       .then(res => res.json())
       .then(res => {
+        // Return the articles
         const articles = this.state.articles.concat(res.articles);
 
         this.setState({ articles: articles });
       })
-      .then(() => {
-        this.setState( (currentState) => {
-          let sorted = currentState.articles.sort((a,b) => {
-            a = new Date(a.publishedAt).getTime()
-            b = new Date(b.publishedAt).getTime()
-            return b - a;
-          })
-          return {articles: sorted}
-        })
-      })
+      // .then(() => {
+      //   this.setState( (currentState) => {
+      //     let sorted = currentState.articles.sort((a,b) => {
+      //       a = new Date(a.publishedAt).getTime()
+      //       b = new Date(b.publishedAt).getTime()
+      //       return b - a;
+      //     })
+      //     return {articles: sorted}
+      //   })
+      // })
       .catch(error => console.log(error))
-    ))
+    ));
+
+    // List of circles of current_user
+    
+
   }
 
   render() {
-
+    console.log('Rendering Article List')
     return (
-      <div className="row row-offcanvas row-offcanvas-left">
+      <div className="row row-offcanvas row-offcanvas-left dicovery-bg">
         <NavBar />
         <SideBar />
 
@@ -90,11 +110,12 @@ class ArticlesContainer extends Component {
 
             <p>Current user id is: {this.state.user_id}</p>
 
-      { this.state.articles.map((article) => {
+      { this.state.articles.map((article, index) => {
           if(article.urlToImage) {
-
+            console.log('Rendering Article')
             return(
                 <ArticleComponent
+                  circles={this.state.circles}
                   user_id={this.state.user_id}
                   title={article.title}
                   author={article.author}
