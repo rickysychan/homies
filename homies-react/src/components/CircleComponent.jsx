@@ -13,10 +13,10 @@ class CircleComponent extends Component {
       user_name: ''
     }
 
-    this._getUSerName=this._getUSerName.bind(this);
+    this._getUserName=this._getUserName.bind(this);
   }
 
-  _getUSerName(user_id) {
+  _getUserName(user_id) {
     axios.get(`http://localhost:3001/api/v1/users/${user_id}`)
       .then(res => {
         let userName = res.data.first_name +' '+ res.data.last_name;
@@ -30,7 +30,7 @@ class CircleComponent extends Component {
   componentDidMount() {
     // const content_json = JSON.parse(this.props.content);
     // console.log(content_json);
-    this._getUSerName(this.props.user_id);
+    this._getUserName(this.props.user_id);
 
   }
   // <div className="panel-heading">
@@ -48,9 +48,14 @@ class CircleComponent extends Component {
   //         </div>
 
   render() {
-    console.log("article", this.props.article);
+    // console.log("article", this.props.article);
     const hello = "hello";
-    const post = <p><kbd> {this.state.user_name}</kbd>: {hello}</p>;
+    let post = '';
+    if(this.props.content) {
+      post = <p><kbd> {this.state.user_name}</kbd>: {this.props.content}</p>;
+    } else {
+      post = <p><kbd> {this.state.user_name}</kbd>: {hello}</p>;
+    }
     // const { title, author, url ,urlToImage, publishedAt, description } = JSON.parse(this.props.content_json)  ;
     return (
       <div className="tile" >

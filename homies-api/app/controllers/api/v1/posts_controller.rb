@@ -27,6 +27,8 @@ module Api::V1
       #   # respond with an error
       # end
       @post = Post.new(post_params)
+      puts "this is the post params"
+      puts post_params
       @post.save!
       render json: @post
     end
@@ -47,7 +49,8 @@ module Api::V1
       params.require(:post).permit(
         :user_id,
         :circle_id,
-        :content
+        :content,
+        article: {}
       )
     end
 

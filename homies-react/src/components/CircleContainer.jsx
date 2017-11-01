@@ -11,10 +11,46 @@ class CircleContainer extends Component {
   constructor(props){
     super(props);
     this.state={
-      circle_id: 5,
+      circle_id: 3,
+      user_id: 2,
       posts: [],
+      content: '',
       hasToken: ''
     }
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+    this._scrollToBottom = this._scrollToBottom.bind(this);
+  }
+
+  _scrollToBottom() {
+    window.scrollTo(0, document.querySelector(".post").scrollHeight);
+  }
+
+  handleChange(event) {
+    this.setState({content: event.target.value});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    axios.post(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`, {
+        post: {
+          circle_id: this.state.circle_id,
+          user_id: this.state.user_id,
+          content: this.state.content,
+          article: null
+        }
+      })
+      .then(response => {
+        this.setState( { notice : true });
+        const posts = this.state.posts.concat(response.data)
+        this.setState({posts: posts});
+        this.setState({content: ''});
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
   }
 
   componentWillMount() {
@@ -36,28 +72,24 @@ class CircleContainer extends Component {
      .catch(error => {
         console.log(error)
      });
+
+    this._scrollToBottom();
+  }
+
+  componentDidUpdate() {
+    this._scrollToBottom();
   }
 
   render() {
-
         return (
-          <div className="row row-offcanvas row-offcanvas-left">
+          <div className="row row-offcanvas row-offcanvas-left circle-bg" >
             <NavBar />
             <CircleSideBar />
 
-            <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
-              <div className="panel panel-default col-xs-9">
-                <br/><br/>
-                <div className="col-sm-9 col-sm-offset-1" name="circlePostsConteiner">
-                  <form className="form-inline">
-                    <input type="text" className="form-control" id="circleInputBar" autoFocus/>
-                    <button type="submit" className="btn btn-primary">Post</button>
-                  </form>
-                </div>
-                <br/><br/>
-                <hr/>
+            <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav" >
+              <div className="panel panel-default col-xs-9" >
 
-                <div className="col-sm-9" >
+                <div className="post col-sm-9" >
       { this.state.posts.map((post) => {
           console.log(post.content);
           return(<CircleComponent
@@ -70,9 +102,24 @@ class CircleContainer extends Component {
 
       })}
               </div>
+
+              <br/>
+               <div className="col-sm-9 col-sm-offset-1" name="circlePostsConteiner">
+                  <form className="form-inline" onSubmit={this.handleSubmit} >
+                    <input type="text" className="form-control" id="circleInputBar"
+                        value={this.state.content} onChange={this.handleChange} autoFocus/>
+                    <button type="submit" className="btn btn-primary">Post</button>
+                  </form>
+                  <br/><br/>
+                </div>
+
             </div>
           </div>
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+          <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>
+
         </div>
+
         )
       }
     }

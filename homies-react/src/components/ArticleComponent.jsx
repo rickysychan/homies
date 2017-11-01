@@ -194,7 +194,7 @@ class ArticleComponent extends Component {
         post: {
           circle_id: circle_id,
           user_id: this.state.user_id,
-          content: '',
+          content: 'test',
           article: this.state.article_json
         }
       })

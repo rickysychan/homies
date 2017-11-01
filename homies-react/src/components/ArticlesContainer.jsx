@@ -34,29 +34,31 @@ class ArticlesContainer extends Component {
     let apiUrls = [
 
     "http://beta.newsapi.org/v2/top-headlines?sources=ign,polygon,entertainment-weekly&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-    "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-    "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
+    // "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
+    // "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
 
     ];
 
-    Promise.all(apiUrls.map(
+    Promise.all(
+      apiUrls.map(
       (url) => fetch(url)
       .then(res => res.json())
       .then(res => {
+        // Return the articles
         const articles = this.state.articles.concat(res.articles);
 
         this.setState({ articles: articles });
       })
-      .then(() => {
-        this.setState( (currentState) => {
-          let sorted = currentState.articles.sort((a,b) => {
-            a = new Date(a.publishedAt).getTime()
-            b = new Date(b.publishedAt).getTime()
-            return b - a;
-          })
-          return {articles: sorted}
-        })
-      })
+      // .then(() => {
+      //   this.setState( (currentState) => {
+      //     let sorted = currentState.articles.sort((a,b) => {
+      //       a = new Date(a.publishedAt).getTime()
+      //       b = new Date(b.publishedAt).getTime()
+      //       return b - a;
+      //     })
+      //     return {articles: sorted}
+      //   })
+      // })
       .catch(error => console.log(error))
     ));
 
@@ -75,7 +77,7 @@ class ArticlesContainer extends Component {
   }
 
   render() {
-
+    console.log('Rendering Article List')
     return (
       <div className="row row-offcanvas row-offcanvas-left dicovery-bg">
         <NavBar />
@@ -87,9 +89,9 @@ class ArticlesContainer extends Component {
 
             <p>Current user id is: {this.state.user_id}</p>
 
-      { this.state.articles.map((article) => {
+      { this.state.articles.map((article, index) => {
           if(article.urlToImage) {
-
+            console.log('Rendering Article')
             return(
                 <ArticleComponent
                   circles={this.state.circles}
