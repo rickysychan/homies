@@ -99,7 +99,7 @@ class ArticlesContainer extends Component {
 
   render() {
     console.log('Rendering Article List')
-    debugger;
+
     return (
       <div className="row row-offcanvas row-offcanvas-left dicovery-bg">
         <NavBar />
