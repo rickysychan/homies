@@ -7,9 +7,12 @@ module Api::V1
             @searchTerm = @userCircle
 
             @user = User.find_by email: @searchTerm
-            puts "this is the user found"
-            puts @user.inspect
-            CircleUser.create(circle_id: 3, user_id: @user.id)
+            @trial = CircleUser.find_by_user_id_and_circle_id(@user.id, 24)
+            if @trial
+                render status: 409
+            else
+            CircleUser.create(circle_id: 24, user_id: @user.id)
+        end
         end
 
         def index

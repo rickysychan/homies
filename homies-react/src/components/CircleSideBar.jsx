@@ -44,7 +44,6 @@ class CircleSideBar extends Component {
             headers: { Authorization: "Bearer " + token } 
               })
        .then(function (response) {
-        console.log(">>>>>> this is the response", response)
           //  console.log("registration successfull");
           alert("Yay! circle created!")
           window.location.reload(); 
@@ -55,13 +54,19 @@ class CircleSideBar extends Component {
     }
 
     handleAddUser(event){
+
+        if(this.state.SidebarCircleUserNames.length >= 7){
+            alert("Your circle is Full!")
+            return
+        }
+
         const cookies = new Cookies();
         let token = cookies.get("token")
         
-        var apiBaseUrl = "http://localhost:3001/api/v1/circles/3/circle_users"
+        var apiBaseUrl = "http://localhost:3001/api/v1/circles/24/circle_users"
         var self = this;
         var payload={
-        "circle_id": 3,
+        "circle_id": 24,
         "search": this.state.UserName
         }
 
@@ -75,8 +80,14 @@ class CircleSideBar extends Component {
           alert("Yay! User added!")
           window.location.reload(); 
        })
+    
        .catch(function (error) {
+           console.log(error)
+           if(error == "Error: Request failed with status code 409"){
          alert("That user already is in the group")
+           } else {
+               alert("No emails matched, please check the email entered")
+           }
        });
     }
 
@@ -109,12 +120,9 @@ componentDidMount() {
     })
     .then( (response) => {
         this.setState({user_id: response.data.id})
-        console.log("this is the Sidebar userId", this.state.user_id)
         // this response contains the user id!
     })   
     .then((result) => {
-        console.log("this is the user ID STATE>>>>>>>")
-        console.log(this.state.user_id, "<<< supposed to be here")
     
         let user_id = this.state.user_id
         let circleNames = `http://localhost:3001/api/v1/users/${user_id}/showcircles`
@@ -130,14 +138,12 @@ componentDidMount() {
             this.setState({ SidebarCircleID: response.data.map(
                 circle => circle.id
             )});
-            console.log("this is the circle response", response)
-            console.log(this.state.SidebarCircleID)
         })
     })
     
     // the above shows the circles of a particlur user
     // let circle_id = this.state.SidebarCircleID.map()
-    let circleUserNames = `http://localhost:3001/api/v1/circles/3`
+    let circleUserNames = `http://localhost:3001/api/v1/circles/24`
     
     axios.get(circleUserNames, {
         headers: {
@@ -145,11 +151,9 @@ componentDidMount() {
         }
     })
     .then( (response) => {
-        console.log(">>>>", response)
         this.setState({ SidebarCircleUserNames: response.data.map(
             user => user.first_name
         )});
-        console.log(this.state.SidebarCircleUserNames)
     })
 }
 
