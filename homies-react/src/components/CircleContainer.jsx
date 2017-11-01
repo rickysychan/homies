@@ -95,7 +95,7 @@ class CircleContainer extends Component {
     .catch(error => {
       console.log(error);
     })
-
+if (this.state.circle_id){
     axios.get(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`,
         {
           headers: { 'Authorization': "Bearer " + token }
@@ -110,6 +110,7 @@ class CircleContainer extends Component {
 
     this._scrollToBottom();
   }
+}
 
   componentDidUpdate() {
     this._scrollToBottom();

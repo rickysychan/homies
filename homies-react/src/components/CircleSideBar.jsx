@@ -91,7 +91,7 @@ class CircleSideBar extends Component {
            if(error == "Error: Request failed with status code 409"){
                alert("That user already is in the group")
            } else {
-               alert("No emails matched, please check the email entered")
+               alert("No emails matched or no circles have been selected, please try again")
            }
        });
     }
@@ -149,7 +149,7 @@ componentDidMount() {
     .then((result) => {
 
         let user_id = this.state.user_id
-        let circleNames = `http://localhost:3001/api/v1/users/${user_id}/showcircles`
+        let circleNames = `http://localhost:3001/api/v1/users/${user_id}/circles`
         axios.get(circleNames, {
             headers: {
                 Authorization: "Bearer " + token
