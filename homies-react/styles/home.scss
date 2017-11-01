@@ -85,6 +85,7 @@ a {
   color:#ffffff;
 }
 
+
 /* collapsed sidebar styles */
 @media screen and (max-width: 767px) {
   .row-offcanvas {
@@ -176,8 +177,6 @@ a {
   border-radius:0;
 }
 
-
-
 h3,h4,h5,.panel {
    color:#3a3636;
 }
@@ -187,5 +186,18 @@ h3,h4,h5,.panel {
 .fa {
   cursor: pointer
 }
+
+#sidebarText{
+  color:black 
+}
+
+#sidebarBtn{
+  background-color:rgb(100, 113, 156) 
+}
+
+#sidebarLabels{
+  color: red
+}
+
 
 

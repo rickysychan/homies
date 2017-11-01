@@ -12,7 +12,8 @@ class ArticlesContainer extends Component {
     super(props);
     this.state={
     hasToken: '',
-    articles: []
+    articles: [],
+    user_id: ''
     }
   }
 
@@ -28,6 +29,23 @@ class ArticlesContainer extends Component {
   }
 
   componentDidMount() {
+
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    let UserName = "http://localhost:3001/api/v1/users/current"
+    
+    axios.get(UserName, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
+    .then( (response) => {
+      console.log("this is the response", response)
+      this.setState({user_id: response.data.id})
+      console.log("this is the userId", this.state.user_id)
+      // this response contains the user id!
+  })
 
     let apiUrls = [
 

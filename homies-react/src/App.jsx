@@ -13,7 +13,8 @@ class App extends Component {
     this.state={
       loginPage:[],
       userToken:[],
-      is_auth: ''
+      hasToken: '',
+      user_id: ''
     }
 
     this.handleLogin = this.handleLogin.bind(this);
@@ -29,9 +30,9 @@ class App extends Component {
       if(response.status == 200){
         console.log("Login successfull");
         cookies.set('token', response.data.auth_token, { path: '/' });
-        that.setState({is_auth: response.data.auth_token})
-        console.log(">>>>", that.state.is_auth)
-        history.push('/discovery')
+        that.setState({user_id: response.data.auth_token})
+        console.log(">>>>", that.state.user_id)
+        history.push('/circles')
         }
       })
         .catch(function (error) {
@@ -41,6 +42,16 @@ class App extends Component {
         }
 
   componentWillMount(){
+
+    const cookies = new Cookies();
+    
+    let token = cookies.get("token")
+    this.state.hasToken = token
+
+    // if(this.state.hasToken){
+    //   history.push('/discovery')
+    // }
+    
     var loginPage =[];
     loginPage.push(<Loginscreen handleLogin={this.handleLogin} parentContext={this}/>);
     this.setState({
@@ -60,7 +71,7 @@ class App extends Component {
   render() {
     const childrenWithProps = React.Children.map(this.props.children,
       (child) => React.cloneElement(child, {
-        is_auth: this.state.is_auth,
+        user_id: this.state.user_id,
         handleLogin: this.handleLogin
       })
      );

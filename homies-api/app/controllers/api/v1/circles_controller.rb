@@ -4,10 +4,8 @@ module Api::V1
         respond_to :json
 
         def index
-            puts "CirclesController index"
-            puts current_user.inspect
-            @user = current_user.id
-            render json: @user
+            @circles = Circle.all
+            render json: @circles
         end
 
         def show
@@ -17,10 +15,18 @@ module Api::V1
 
         def create
             @circle = Circle.new(circle_params)
+
             if @circle.save!
-                render status: 200
+                circleID = @circle.id
+                @found = Circle.find(circleID)
+                @found.update(:moderator => current_user.id)
+                @userCircle = CircleUser.create(circle_id: circleID, user_id: current_user.id)
+                puts "this is the circles"
+                puts @circle.inspect
+
+                render json: @circle
             else
-                render status: 500
+                render status: 402
             end
         end
 

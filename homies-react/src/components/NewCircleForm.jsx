@@ -13,21 +13,27 @@ class NewCircleForm extends Component {
         super(props);
         this.state={
             name:'',
+            hasToken:''
         }
     }
 
     componentWillMount() {
         const cookies = new Cookies();
+        let token = cookies.get("token")
+        this.state.hasToken = token
     
         console.log(this.props.is_auth)
         console.log(this.props)
     
-        if(!this.props.is_auth){
+        if(!this.state.hasToken){
           history.push('/');
         }
       }
 
     handleClick(event){
+        const cookies = new Cookies();
+        let token = cookies.get("token")
+        
         var apiBaseUrl = "http://localhost:3001/api/v1/circles"
         console.log("values",this.state.name);
         //To be done:check for empty values before hitting submit
@@ -36,7 +42,10 @@ class NewCircleForm extends Component {
         "name": this.state.name,
         }
 
-        axios.post(apiBaseUrl, payload)
+        axios.post(apiBaseUrl, payload, 
+            { 
+            headers: { Authorization: "Bearer " + token } 
+              })
        .then(function (response) {
          console.log(response);
          if(response.status == 200){
