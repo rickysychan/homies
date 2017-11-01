@@ -49,28 +49,46 @@ class SideBar extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      user_id: 21,
       interests: [],
-      recommendations: []
+      recommendations: [],
+      user_id: ''
     }
   }
 
   componentDidMount() {
-    let userInterest = `http://localhost:3001/api/v1/users/${this.state.user_id}/product_interests`
-    axios.get(userInterest)
-    .then( (response) => {
-      let responseJson = response.data
-      this.setState({ interests: responseJson
-      });
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+      let UserName = "http://localhost:3001/api/v1/users/current"
+
+      axios.get(UserName, {
+          headers: {
+              Authorization: "Bearer " + token
+          }
+      })
+      .then( (response) => {
+        console.log("this is the response", response)
+        this.setState({user_id: response.data.id})
+        console.log("this is the userId", this.state.user_id)
+
+        let userInterest = `http://localhost:3001/api/v1/users/${this.state.user_id}/product_interests`
+        axios.get(userInterest, {headers: { Authorization: "Bearer " + token }})
+        .then( (response) => {
+          let responseJson = response.data
+          this.setState({ interests: responseJson
+          });
+        })
+
+        let userRecommendations = `http://localhost:3001/api/v1/users/${this.state.user_id}/recommendations`
+        axios.get(userRecommendations, {headers: { Authorization: "Bearer " + token }})
+        .then( (response) => {
+          let responseJson = response.data
+          this.setState({ recommendations: responseJson
+          });
+        })
+        // this response contains the user id!
     })
 
-    let userRecommendations = `http://localhost:3001/api/v1/users/${this.state.user_id}/recommendations`
-    axios.get(userRecommendations)
-    .then( (response) => {
-      let responseJson = response.data
-      this.setState({ recommendations: responseJson
-      });
-    })
   }
 
   render() {

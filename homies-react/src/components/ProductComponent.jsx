@@ -10,7 +10,7 @@ class Product extends Component {
     this.state = {
       result: {},
       interested: false,
-      user_id: 21,
+      user_id: '',
       interest: [],
       game_url: false
     }
@@ -19,39 +19,61 @@ class Product extends Component {
   }
 
   componentDidMount() {
-    let product = `http://localhost:3001/api/v1/search/${this.props.params.type.toUpperCase()}/${this.props.params.id}`
-    axios.get(product)
-    .then( (response) => {
-      let responseJson = response.data
-      if (responseJson.rating.length > 0 && responseJson.rating.charAt(0) === "h") {
-        this.setState({game_url: true})
-      }
-      this.setState({ result: responseJson
-      });
-    })
-    let userInterest = `http://localhost:3001/api/v1/users/${this.state.user_id}/product_interests`
-    axios.get(userInterest)
-    .then( (response) => {
-      let responseJson = response.data
-      this.setState({ interest: responseJson
-      });
-    })
-    .then((response) => {
-      for (let interest of this.state.interest) {
-        if (interest.api_id == this.props.params.id) {
-          this.setState({interested: true})
-        }
-      }
-    })
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+      let UserName = "http://localhost:3001/api/v1/users/current"
+
+      axios.get(UserName, {
+          headers: {
+              Authorization: "Bearer " + token
+          }
+      })
+      .then( (response) => {
+        this.setState({user_id: response.data.id})
+        // this response contains the user id!
+        let product = `http://localhost:3001/api/v1/search/${this.props.params.type.toUpperCase()}/${this.props.params.id}`
+        axios.get(product, {
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then( (response) => {
+          let responseJson = response.data
+          if (responseJson.rating.length > 0 && responseJson.rating.charAt(0) === "h") {
+            this.setState({game_url: true})
+          }
+          this.setState({ result: responseJson});
+          let userInterest = `http://localhost:3001/api/v1/users/${this.state.user_id}/product_interests`
+          axios.get(userInterest, {headers: { Authorization: "Bearer " + token }} )
+          .then( (response) => {
+            let responseJson = response.data
+            this.setState({ interest: responseJson
+            });
+          })
+          .then((response) => {
+            for (let interest of this.state.interest) {
+              if (interest.api_id == this.props.params.id) {
+                this.setState({interested: true})
+              }
+            }
+          })
+        })
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+
   }
 
   handleInterest() {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
     axios.post(`http://localhost:3001/api/v1/products/${this.props.params.id}/interests`, {
       api_id: this.props.params.id,
       title: this.state.result.name,
       api_type: this.props.params.type,
       user_id: this.state.user_id
-      }
+      }, {headers: { Authorization: "Bearer " + token }}
     )
     .then(response => {
       this.setState({interested: true});
@@ -62,10 +84,12 @@ class Product extends Component {
   }
 
   handleUninterest() {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
 
-    axios({
-      method: 'delete',
-      url: `http://localhost:3001/api/v1/products/${this.props.params.id}/interests`,
+    axios.delete(`http://localhost:3001/api/v1/products/${this.props.params.id}/interests`,
+    {
+      headers: { Authorization: "Bearer " + token },
       params: {
         api_id: this.props.params.id,
         user_id: this.state.user_id

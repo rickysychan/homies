@@ -39,9 +39,12 @@ class SearchResultsContainer extends Component {
   }
 
   componentDidMount() {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
     let searchResults = `http://localhost:3001/api/v1/search/all/${this.state.query}`
 
-    axios.get(searchResults)
+    axios.get(searchResults, {headers: { Authorization: "Bearer " + token }})
     .then( (response) => {
       let responseJson = response.data
       this.setState({ results: responseJson
@@ -51,8 +54,11 @@ class SearchResultsContainer extends Component {
   }
 
   searchOnPage(query) {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
     let searchResults = `http://localhost:3001/api/v1/search/all/${query}`
-    axios.get(searchResults)
+    axios.get(searchResults, {headers: { Authorization: "Bearer " + token }})
     .then( (response) => {
       let responseJson = response.data
       this.setState({ results: responseJson

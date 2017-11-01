@@ -1,7 +1,7 @@
 module Api::V1
 
 class SessionsController < ApplicationController
-  # skip_before_action :authenticate_request
+  skip_before_action :authenticate_request
 
     def create
         # If the user exists AND the password entered is correct.
