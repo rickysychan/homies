@@ -19,25 +19,48 @@ module Api::V1
 
 
     def like_destroy
-      @article_likes = ArticleLike.where(api_id: params[:article_id], user_id: session[:user_id])
-      @article_likes.destroy
-
+      @article_likes = ArticleLike.where(article_id: params[:article_id], user_id: params[:user_id])
+      @article_likes[0].destroy
+      render json: @article_likes
     end
 
     def like_create
       @article_likes = ArticleLike.new(article_like_params)
-      @article_likes.save
+      @article_likes.save!
+      render json: @article_likes
     end
 
     def like_number
-      @article_likes = ArticleLike.where(api_id: params[:article_id])
-      render json: @article_likes.length
+      @article_likes = ArticleLike.where(article_id: params[:article_id])
+      render json: @article_likes
     end
+
+    def like_show
+      @article_like = ArticleLike.where(article_id: params[:article_id], user_id: params[:user_id])
+      render json: @article_like
+    end
+
+    def loop_create
+      @article_users = ArticleUser.new(article_user_params)
+      @article_users.save!
+      render json: @article_users
+    end
+
+    def loop_show
+      @article_users = ArticleUser.where(article_id: params[:article_id], user_id: params[:user_id])
+      render json: @article_users
+    end
+
+    def loop_destroy
+      @article_users = ArticleUser.where(article_id: params[:article_id], user_id: params[:user_id])
+      @article_users[0].destroy
+      render json: @article_users
+    end
+
 
     private
 
     def article_params
-      puts params.inspect
       params.require(:article).permit(
         :article_url,
         article_json: {}
@@ -46,6 +69,13 @@ module Api::V1
 
     def article_like_params
       params.require(:article_like).permit(
+        :article_id,
+        :user_id
+      )
+    end
+
+    def article_user_params
+      params.require(:article_user).permit(
         :article_id,
         :user_id
       )

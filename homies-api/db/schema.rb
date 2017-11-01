@@ -34,6 +34,13 @@ ActiveRecord::Schema.define(version: 20171030045447) do
     t.index ["article_id"], name: "index_article_likes_on_article_id"
   end
 
+  create_table "article_users", force: :cascade do |t|
+    t.integer "article_id"
+    t.integer "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "articles", force: :cascade do |t|
     t.text "article_url"
     t.jsonb "article_json"

@@ -53,9 +53,6 @@ class ArticlesContainer extends Component {
     "http://beta.newsapi.org/v2/everything?q=boxoffice&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
     "http://beta.newsapi.org/v2/everything?q=cineplex&language=en&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
 
-      // "https://newsapi.org/v1/articles?source=ign&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-      // "https://newsapi.org/v1/articles?source=polygon&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13",
-      // "https://newsapi.org/v1/articles?source=entertainment-weekly&sortBy=top&apiKey=ae8c13ec258c4e6e899680b6eb2a6c13"
     ];
 
     Promise.all(apiUrls.map(
@@ -73,7 +70,6 @@ class ArticlesContainer extends Component {
             b = new Date(b.publishedAt).getTime()
             return b - a;
           })
-          console.log(sorted);
           return {articles: sorted}
         })
       })
@@ -92,11 +88,14 @@ class ArticlesContainer extends Component {
           <div className="row">
             <div className="col-sm-6 col-sm-offset-1">
 
+            <p>Current user id is: {this.state.user_id}</p>
+
       { this.state.articles.map((article) => {
           if(article.urlToImage) {
 
             return(
                 <ArticleComponent
+                  user_id={this.state.user_id}
                   title={article.title}
                   author={article.author}
                   url={article.url}

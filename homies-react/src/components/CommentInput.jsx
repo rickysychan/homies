@@ -14,24 +14,9 @@ class CommentInput extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    const { title, author, url ,urlToImage, publishedAt, description } = this.props;
 
-    let article_json = {
-      title: title,
-      author: author,
-      url: url,
-      urlToImage: urlToImage,
-      publishedAt: publishedAt,
-      description: description
-    }
-
-    let article_id = 0;
-    let content = this.state.content;
-
-    this.props._addComment (this.state.content, article_json);
-
+    this.props._addComment (this.state.content);
     this.setState({content: ''});
-
   }
 
 

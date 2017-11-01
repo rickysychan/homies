@@ -13,7 +13,7 @@ class StayInTheLoopContainer extends Component {
 
   constructor(props) {
     super(props);
-    this.state = { 
+    this.state = {
       articles: [],
       hasToken: '',
       user_id: ''
@@ -48,13 +48,17 @@ class StayInTheLoopContainer extends Component {
       this.setState({user_id: response.data.id})
       console.log("this is the userId", this.state.user_id)
       // this response contains the user id!
-  })
-
-    axios.get(`http://localhost:3001/api/v1/articles`, {       
+      axios.get(`http://localhost:3001/api/v1/articles`, {       
         headers: {
             Authorization: "Bearer " + token
         }
     })
+      axios.get(`http://localhost:3001/api/v1/users/${response.data.id}/loops`, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+    })
+  })
      .then(response => {
        this.setState({ articles: this.state.articles.concat(response.data) });
      })
@@ -67,12 +71,12 @@ class StayInTheLoopContainer extends Component {
   render() {
 
     return (
-      
-      <div className="row row-offcanvas row-offcanvas-left">
+
+      <div className="row row-offcanvas row-offcanvas-left StayInTheLoopContainer">
        <NavBar />
-        <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
-          <div className="row">
-            <div className="col-sm-6 col-sm-offset-1">
+          <div className="row ">
+            <div className="col-sm-4 col-sm-offset-3">
+              <p>Current user id is: {this.state.user_id}</p>
 
       { this.state.articles.reverse().map((article) => {
 
@@ -80,19 +84,19 @@ class StayInTheLoopContainer extends Component {
 
             return(
                 <ArticleComponent
+                  user_id={this.state.user_id}
                   title={article.article_json.title}
                   author={article.article_json.author}
                   url={article.article_json.url}
                   urlToImage={article.article_json.urlToImage}
                   publishedAt={article.article_json.publishedAt}
                   description={article.article_json.description}
-                  key={article.article_json.url}
+                  key={article.id}
                 />
             )
           }
         })}
             </div>
-          </div>
         </div>
       </div>
     )

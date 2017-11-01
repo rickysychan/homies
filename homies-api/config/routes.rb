@@ -15,6 +15,7 @@ Rails.application.routes.draw do
         get '/users/login', to: 'users#destroy'
         post '/users/registeration', to: 'registrations#create'
         get '/users/:id/showcircles', to: 'users#show_circles'
+        get '/users/:id/loops', to: 'users#loops'
 
 
 
@@ -42,11 +43,17 @@ Rails.application.routes.draw do
         resources :article_comments, except: [:update]
         collection do
           get '/url_filter', to: 'articles#url_filter'
+          post '/loop', to: 'articles#loop_create'
         end
+        get '/users/:user_id/likes', to: 'articles#like_show'
         get '/likes', to: 'articles#like_number'
         post '/likes', to: 'articles#like_create'
-        delete '/likes', to: 'articles#like_destroy'
+        delete '/users/:user_id/likes', to: 'articles#like_destroy'
+
+        get '/users/:user_id/loop', to: 'articles#loop_show'
+        delete '/users/:user_id/loop', to: 'articles#loop_destroy'
       end
+
     end
   end
 end
