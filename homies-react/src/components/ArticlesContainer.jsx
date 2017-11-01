@@ -13,8 +13,8 @@ class ArticlesContainer extends Component {
     this.state={
       hasToken: '',
       articles: [],
-      user_id: 4,
-      circles: []
+      circles: [],
+      user_id: 2
     }
   }
 
@@ -60,7 +60,7 @@ class ArticlesContainer extends Component {
       .catch(error => console.log(error))
     ));
 
-    // List of circles of user
+    // List of circles of current_user
     axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`)
       .then(response => {
         if (response.data.length > 0) {
@@ -77,7 +77,7 @@ class ArticlesContainer extends Component {
   render() {
 
     return (
-      <div className="row row-offcanvas row-offcanvas-left">
+      <div className="row row-offcanvas row-offcanvas-left dicovery-bg">
         <NavBar />
         <SideBar />
 

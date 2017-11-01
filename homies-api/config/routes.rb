@@ -20,6 +20,7 @@ Rails.application.routes.draw do
 
 
       resources :circles, only: [:create, :show, :update, :destroy, :index] do
+        get '/users', to: 'circles#users'
         resources :circle_users, except: [:update]
         resources :posts, except: [:update] do
           resources :post_comments, except: [:update]

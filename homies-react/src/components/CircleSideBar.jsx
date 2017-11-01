@@ -10,7 +10,7 @@ class CircleSideBar extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             SidebarCircleUserNames: [],
             SidebarCircleNames: []
         };
@@ -21,8 +21,8 @@ class CircleSideBar extends Component {
     }
 
 componentDidMount() {
-    let circleNames = "http://localhost:3001/api/v1/users/1/showcircles"
-    
+    let circleNames = "http://localhost:3001/api/v1/users/1/circles"
+
     axios.get(circleNames)
     .then( (response) => {
         console.log(response)
@@ -33,7 +33,7 @@ componentDidMount() {
     })
 
     let circleUserNames = "http://localhost:3001/api/v1/circles"
-    
+
     axios.get(circleUserNames)
     .then( (response) => {
         console.log(response)
@@ -42,7 +42,7 @@ componentDidMount() {
         )});
         console.log(this.state.SidebarCircleNames)
     })
-    
+
 }
 
   render() {
@@ -70,7 +70,7 @@ componentDidMount() {
         </div>
     );
   }
-  
+
 }
 const style = {
     margin: 15,

@@ -16,7 +16,7 @@ class StayInTheLoopContainer extends Component {
     this.state = {
       articles: [],
       circles: [],
-      user_id: 4
+      user_id: 2
     };
   }
 
@@ -59,7 +59,7 @@ class StayInTheLoopContainer extends Component {
 
     return (
 
-      <div className="row row-offcanvas row-offcanvas-left StayInTheLoopContainer">
+      <div className="row row-offcanvas row-offcanvas-left loop-bg">
        <NavBar />
           <div className="row ">
             <div className="col-sm-4 col-sm-offset-3">

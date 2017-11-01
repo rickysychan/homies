@@ -13,8 +13,8 @@ module Api::V1
         end
 
         def show
-            @users = Circle.find(params[:id]).users
-            render json: @users
+            @circle = Circle.find(params[:id])
+            render json: @circle
         end
 
         def create
@@ -36,6 +36,12 @@ module Api::V1
             @circle.destroy
         end
 
+        def users
+            @users = Circle.find(params[:circle_id]).users
+            render json: @users
+        end
+
+        private
 
         def circle_params
             params.require(:circle).permit(

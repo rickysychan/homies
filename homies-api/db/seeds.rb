@@ -7,7 +7,6 @@
 #   Character.create(name: 'Luke', movie: movies.first)
 
 puts "Re-creating users ..."
-
 User.destroy_all
 
 10.times do
@@ -63,74 +62,18 @@ end
 puts "Re-creating Posts.."
 Post.destroy_all
 
-20.times do
-
-    Post.create!({
-        user_id: User.all[Random.new.rand(0..9)].id ,
-        circle_id: Circle.all[Random.new.rand(0..4)].id ,
-        content: Faker::Hipster.paragraph(4)
-    })
-end
 
 puts "Re-creating Posts comments.."
 PostComment.destroy_all
 
-20.times do
 
-    PostComment.create!({
-        user_id: User.all[Random.new.rand(0..9)].id,
-        post_id: Post.all[Random.new.rand(0..9)].id,
-        content: Faker::Hipster.paragraph(2),
-    })
-end
+puts "Re-creating Article.."
+Article.destroy_all
 
 
-# puts "Re-creating Article.."
-# Article.destroy_all
-
-# 10.times do
-
-#     # o = [('a'..'z'), ('A'..'Z')].map(&:to_a).flatten
-#     # @randomID = (0...50).map { o[rand(o.length)] }.join
-
-#     Article.create!({
-#         article_url: "http://ew.com/news/2017/10/25/its-on-us-lady-gaga-joe-biden/",
-#         article_json: [{ author: "Sarah Weldon", description: "#ItsOnUs", publishedAt: "2017-10-25T20:35:53Z"
-#                         source:{id: "entertainment-weekly", name: "Entertainment Weekly"},
-#                         title: "Lady Gaga and Joe Biden team up again to raise awareness about sexual assault",
-#                         url:"http://ew.com/news/2017/10/25/its-on-us-lady-gaga-joe-biden/",
-#                         urlToImage:"http://ewedit.files.wordpress.com/2017/10/lady-gaga-biden.jpg"}
-#                        }]
-#         })
-# end
+puts "Re-creating Article Like.."
+ArticleLike.destroy_all
 
 
-# puts "Re-creating Article Like.."
-# ArticleLike.destroy_all
-
-# 20.times do
-
-#     # o = [('a'..'z'), ('A'..'Z')].map(&:to_a).flatten
-#     # @randomID = (0...50).map { o[rand(o.length)] }.join
-
-#     ArticleLike.create!({
-#         article_id: Article.all[Random.new.rand(0..9)].id,
-#         user_id: User.all[Random.new.rand(0..9)].id,
-#     })
-# end
-
-# puts "Re-creating Article Comment.."
-# ArticleComment.destroy_all
-
-# 20.times do
-
-#     # o = [('a'..'z'), ('A'..'Z')].map(&:to_a).flatten
-#     # @randomID = (0...50).map { o[rand(o.length)] }.join
-
-#     ArticleComment.create!({
-#         article_id: Article.all[Random.new.rand(0..9)].id,
-#         user_id: User.all[Random.new.rand(0..9)].id,
-#         content: Faker::Hipster.paragraph(2)
-#     })
-# end
-
+puts "Re-creating Article Comment.."
+ArticleComment.destroy_all
