@@ -1,0 +1,52 @@
+// variables
+
+$search-text-color: black;
+
+// styles
+
+.search-result {
+  display: flex;
+  padding: 10px;
+  margin: 10px;
+  margin-left: 30px;
+  background-color: white;
+  width: 80%;
+}
+
+.search-image-container {
+  height: auto;
+  width: 120px;
+  display: flex;
+
+  img {
+    width: 100%;
+    height: auto;
+    align-self: center;
+  }
+}
+
+.search-text {
+  margin-left: 60px;
+  color: black;
+  width: 60%;
+}
+
+.entertainment-type {
+  font-size: 0.6em;
+  color: lighten($search-text-color, 50%)
+}
+
+.search-results-title {
+  margin: 20px;
+  margin-left: 40px;
+}
+
+.results-list {
+  display: flex;
+  justify-content: center;
+}
+
+.fa-spin {
+  margin-top: 30px;
+  font-size: 5vw;
+}

@@ -99,6 +99,7 @@ class ArticlesContainer extends Component {
 
   render() {
     console.log('Rendering Article List')
+    debugger;
     return (
       <div className="row row-offcanvas row-offcanvas-left dicovery-bg">
         <NavBar />
@@ -106,7 +107,7 @@ class ArticlesContainer extends Component {
 
         <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
           <div className="row">
-            <div className="col-sm-6 col-sm-offset-1">
+            <div className="col-sm-6 col-sm-offset-2">
 
             <p>Current user id is: {this.state.user_id}</p>
 

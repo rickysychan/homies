@@ -7,7 +7,6 @@ module Api::V1
       render json: @user
     end
 
-
     def current
       puts 'this is the current user'
       puts current_user.inspect
@@ -47,6 +46,16 @@ module Api::V1
     def loops
       @articles_json = User.find(params[:id]).articles.order(created_at: :asc)
       render json: @articles_json
+    end
+
+    def recommendations_save
+      @user = User.find(params[:id])
+      @user.update(recommendations: params["recommendations"])
+    end
+
+    def recommendations
+      @user = User.find(params[:id]).recommendations
+      render json: @user
     end
 
 
