@@ -14,7 +14,6 @@ class ArticleComponent extends Component {
     this.state = {
       show: false,
       like: false,
-      user_id: this.props.user_id,
       article_json: {
         title: this.props.title,
         author: this.props.author,
@@ -77,12 +76,19 @@ class ArticleComponent extends Component {
   }
 
   _addLikes (article_id) {
-    axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`, {
-      article_like: {
-        article_id: article_id,
-        user_id: this.state.user_id
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    axios.post(`http://localhost:3001/api/v1/articles/${article_id}/likes`,
+      {
+        article_like: {
+          article_id: article_id,
+          user_id: this.props.user_id
+        }
+      }, {
+        headers: { 'Authorization': "Bearer " + token }
       }
-    })
+    )
     .then(response => {
       this.setState( { numOfLikes : this.state.numOfLikes + 1 } );
       // Save to the loop if it is not in the loop
@@ -95,7 +101,14 @@ class ArticleComponent extends Component {
   }
 
   _deleteLikes (article_id) {
-    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.state.user_id}/likes`)
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    axios.delete(`http://localhost:3001/api/v1/articles/${article_id}/users/${this.props.user_id}/likes`,
+      { headers: {
+          Authorization: "Bearer " + token
+      }
+    })
     .then(response => {
       this.setState( { numOfLikes : this.state.numOfLikes - 1});
       this.setState({like: false});
@@ -107,13 +120,21 @@ class ArticleComponent extends Component {
 
   // Save article to database
   _saveArticle () {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
     return new Promise((resolve, reject) => {
-      axios.post(`http://localhost:3001/api/v1/articles`, {
-        article: {
-          article_url: this.props.url,
-          article_json: this.state.article_json
+      axios.post(`http://localhost:3001/api/v1/articles`,
+        {
+          article: {
+            article_url: this.props.url,
+            article_json: this.state.article_json
+          }
+        },
+        {
+          headers: { 'Authorization': "Bearer " + token }
         }
-      })
+      )
       .then((result) => resolve(result.data))
       .catch((errors) => reject(errors))
     });
@@ -122,13 +143,21 @@ class ArticleComponent extends Component {
 
   // Save comment to database
   _postCommentToDB (article_id, content) {
-      axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`, {
-        article_comment: {
-          article_id: article_id,
-          user_id: this.state.user_id,
-          content: content
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+      axios.post(`http://localhost:3001/api/v1/articles/${article_id}/article_comments`,
+        {
+          article_comment: {
+            article_id: article_id,
+            user_id: this.props.user_id,
+            content: content
+          }
+        },
+        {
+          headers: { 'Authorization': "Bearer " + token }
         }
-      })
+      )
       .then(response => {
         const comments = [response.data].concat(this.state.comments)
         this.setState({comments: comments});
@@ -165,12 +194,20 @@ class ArticleComponent extends Component {
 
   // Save article to stay in the loop page
   _saveArticleToTheLoop (article_id) {
-      axios.post(`http://localhost:3001/api/v1/articles/loop`, {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+      axios.post(`http://localhost:3001/api/v1/articles/loop`,
+        {
           article_user: {
             article_id: article_id,
-            user_id: this.state.user_id
+            user_id: this.props.user_id
           }
-      })
+        },
+        {
+          headers: { Authorization: "Bearer " + token }
+        }
+      )
       .then(response => {
         console.log(response);
       })
@@ -188,17 +225,27 @@ class ArticleComponent extends Component {
 
   _postToCircle (event) {
     event.preventDefault();
+
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
     let circle_id = this.state.circle_id;
     console.log("article_json is :", this.state.article_json);
 
-    axios.post(`http://localhost:3001/api/v1/circles/${circle_id}/posts`, {
+    axios.post(`http://localhost:3001/api/v1/circles/${circle_id}/posts`,
+      {
         post: {
           circle_id: circle_id,
-          user_id: this.state.user_id,
+          user_id: this.props.user_id,
           content: 'test',
           article: this.state.article_json
         }
-      })
+      },
+
+        {
+          headers: { 'Authorization': "Bearer " + token }
+        }
+      )
       .then(response => {
         this.setState( { notice : true });
         console.log(response);
@@ -218,31 +265,24 @@ class ArticleComponent extends Component {
     let token = cookies.get("token")
 
     // Check if ther article is in our database
-    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`, {
-      headers: {
-          Authorization: "Bearer " + token
+    axios.get(`http://localhost:3001/api/v1/articles/url_filter/`,
+      {
+        params: {
+          url: this.props.url
+        },
+        headers: { 'Authorization': "Bearer " + token }
       }
-  },{
-      params: {
-        url: this.props.url
-      }
-    })
+    )
     .then(response => {
       if(response.data.length > 0) {
 
         let id = response.data[0].id;
         this.setState({articleId: id});
 
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`),
-        { 
-          headers: { Authorization: "Bearer " + token } 
-            }
         // Check if this article is in the loop
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.state.user_id}/loop`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.props.user_id}/loop`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(result => {
             if(result.data.length > 0) {
               this.setState({isInTheLoop: true})
@@ -251,11 +291,9 @@ class ArticleComponent extends Component {
           .catch((errors) => reject(errors));
 
         // Load all comments of each article
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/article_comments`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(response => {
             if (response.data.length > 0) {
               this.setState({numOfComments: response.data.length});
@@ -267,11 +305,9 @@ class ArticleComponent extends Component {
           });
 
         // Numbers of likes of each article
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/likes`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(response => {
             // Set number of likes
             if (response.data.length > 0) {
@@ -282,11 +318,9 @@ class ArticleComponent extends Component {
             console.log(error);
           });
         // Set like button
-        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.state.user_id}/likes`, {
-          headers: {
-              Authorization: "Bearer " + token
-          }
-      })
+        axios.get(`http://localhost:3001/api/v1/articles/${id}/users/${this.props.user_id}/likes`,
+            { headers: { Authorization: "Bearer " + token }
+          })
           .then(response => {
             if (response.data.length > 0) {
               this.setState({like: true});

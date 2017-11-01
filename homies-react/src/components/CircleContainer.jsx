@@ -5,7 +5,6 @@ import CircleComponent from './CircleComponent.jsx';
 import NavBar from './NavBar.jsx';
 import history from '../index.jsx';
 import Cookies from 'universal-cookie';
-import axios from 'axios';
 
 class CircleContainer extends Component {
 
@@ -34,13 +33,21 @@ class CircleContainer extends Component {
 
   handleSubmit(event) {
     event.preventDefault();
-    axios.post(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`, {
+
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    axios.post(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`,
+      {
         post: {
           circle_id: this.state.circle_id,
           user_id: this.state.user_id,
           content: this.state.content,
           article: null
         }
+      },
+      {
+        headers: { Authorization: "Bearer " + token }
       })
       .then(response => {
         this.setState( { notice : true });
@@ -85,9 +92,15 @@ class CircleContainer extends Component {
         console.log("this is the userId", this.state.user_id)
         // this response contains the user id!
     })
-    console.log("this is the props ******", this.props.location)
+    .catch(error => {
+      console.log(error);
+    })
 
-    axios.get(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`)
+    axios.get(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`,
+        {
+          headers: { 'Authorization': "Bearer " + token }
+        }
+      )
      .then(response => {
         this.setState({ posts: this.state.posts.concat(response.data) });
      })
@@ -108,12 +121,6 @@ class CircleContainer extends Component {
             <NavBar />
             <CircleSideBar onCircleClick={this.onCircleClick.bind(this)}/>
             <h1>{this.state.circle_id}</h1>
-
-            <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav">
-              <div className="row">
-                <div className="col-sm-6 col-sm-offset-1">
-                </div>
-            <CircleSideBar />
 
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav" >
               <div className="panel panel-default col-xs-9" >

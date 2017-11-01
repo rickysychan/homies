@@ -49,23 +49,24 @@ class StayInTheLoopContainer extends Component {
       this.setState({user_id: response.data.id})
       console.log("this is the userId", this.state.user_id)
       // this response contains the user id!
-      axios.get(`http://localhost:3001/api/v1/articles`, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
+    //   axios.get(`http://localhost:3001/api/v1/articles`, {
+    //     headers: {
+    //         Authorization: "Bearer " + token
+    //     }
+    // })
+      axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/loops`, {
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then(response => {
+           this.setState({ articles: this.state.articles.concat(response.data) });
+        })
+        .catch(error => {
+            console.log(error)
+        });
     })
-      axios.get(`http://localhost:3001/api/v1/users/${response.data.id}/loops`, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
+    .catch(error => {
+      console.log(error);
     })
-  })
-     .then(response => {
-       this.setState({ articles: this.state.articles.concat(response.data) });
-     })
-     .catch(error => {
-        console.log(error)
-     });
 
     // List of circles of user
     axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`)

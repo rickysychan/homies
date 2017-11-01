@@ -20,6 +20,11 @@ module Api::V1
       render json: @circles
     end
 
+    def show_circles
+      @circles = User.find(params[:id]).circles
+      render json: @circles
+    end
+
     def articles
       # TODO: Use a current user here instead of User.first
       @user_articles_json = User.find(params[:id]).liked_articles.includes(:article_comments)

@@ -80,7 +80,9 @@ class ArticlesContainer extends Component {
     ));
 
     // List of circles of current_user
-    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`)
+    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`,
+                { headers: { Authorization: "Bearer " + token }
+      })
       .then(response => {
         if (response.data.length > 0) {
           const circles = this.state.circles.concat(response.data)

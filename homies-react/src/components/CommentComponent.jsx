@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import axios from 'axios';
-
+import Cookies from 'universal-cookie';
 
 
 class CommentComponent extends Component {
@@ -12,8 +12,14 @@ class CommentComponent extends Component {
   }
 
   componentDidMount() {
-    axios.get(`http://localhost:3001/api/v1/users/${this.props.user_id}`)
-      .then(response => {
+
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+    axios.get(`http://localhost:3001/api/v1/users/current`,
+        {
+          headers: { Authorization: "Bearer " + token }
+        })
+        .then(response => {
         let user = response.data.first_name + ' ' + response.data.last_name;
         this.setState( { user : user });
       })
