@@ -15,7 +15,7 @@ module Api::V1
       render json: @user
     end
 
-    def show_circles
+    def circles
       @circles = User.find(params[:id]).circles
       render json: @circles
     end

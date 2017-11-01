@@ -14,12 +14,13 @@ Rails.application.routes.draw do
         post '/users/login', to: 'sessions#create'
         get '/users/login', to: 'users#destroy'
         post '/users/registeration', to: 'registrations#create'
-        get '/users/:id/showcircles', to: 'users#show_circles'
+        get '/users/:id/circles', to: 'users#circles'
         get '/users/:id/loops', to: 'users#loops'
 
 
 
       resources :circles, only: [:create, :show, :update, :destroy, :index] do
+        get '/users', to: 'circles#users'
         resources :circle_users, except: [:update]
         resources :posts, except: [:update] do
           resources :post_comments, except: [:update]
