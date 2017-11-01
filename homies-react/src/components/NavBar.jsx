@@ -1,8 +1,32 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router';
+import history from '../index.jsx';
 import Cookies from 'universal-cookie';
 
 class NavBar extends Component {
+
+  constructor(props) {
+    super(props);
+    this.state = {value: ''};
+
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
+  }
+
+  handleChange(event) {
+    this.setState({value: event.target.value});
+  }
+
+  handleSubmit(event) {
+    event.preventDefault();
+    if (window.location.pathname == "/search") {
+      this.props.searchOnPage(this.state.value)
+    }
+    history.push({
+      pathname: '/search',
+      state: { query: this.state.value } }
+    )
+  }
 
   handleClick(event){
     const cookies = new Cookies();
@@ -12,6 +36,7 @@ class NavBar extends Component {
   }
 
   render() {
+
     return (
       <div className="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div className="navbar-header">
@@ -27,7 +52,7 @@ class NavBar extends Component {
       <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul className="nav navbar-nav">
           <li>
-            <Link to="/discovery">Discover</Link>
+            <a href="/discovery">Discover</a>
           </li>
           <li>
             <Link to="/stayintheloop" >Stay in <i className="fa fa-superpowers"></i></Link>
@@ -38,11 +63,11 @@ class NavBar extends Component {
         </ul>
 
         <ul className="nav navbar-nav navbar-right">
-          <form className="navbar-form navbar-left">
+          <form className="navbar-form navbar-left" onSubmit={this.handleSubmit}>
             <div className="form-group">
-              <input type="text" className="form-control" placeholder="Search" />
+              <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder="Search" />
             </div>
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="btn btn-default">
               <i className="fa fa-search" aria-hidden="true"></i>
             </button>
           </form>
@@ -53,12 +78,6 @@ class NavBar extends Component {
               &nbsp;&nbsp;&nbsp;
             </a>
             <ul className="dropdown-menu">
-              <li>
-                <a href="#">
-                  <i className="fa fa-id-card-o" aria-hidden="true"></i> Profile
-                </a>
-              </li>
-              <li role="separator" className="divider"></li>
               <li>
                 <a href="/" onClick={(event) => this.handleClick(event)}>
                   <i className="fa fa-sign-out" aria-hidden="true" ></i> Log Out

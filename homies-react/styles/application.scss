@@ -1,5 +1,8 @@
 // This is the top-level scss file. Import all other files in here.
 @import 'home';
+@import 'search';
+@import 'product';
+@import 'sign_in_register';
 
 #circleInputBar {
   bottom: 0;
@@ -24,7 +27,7 @@
 }
 
 .loginscreen {
-  padding: 150px;
+  padding: 100px;
 }
 .dicovery-bg {
   /*background-image: url("https://static.pexels.com/photos/1225/red-vintage-old-chair.jpg");*/

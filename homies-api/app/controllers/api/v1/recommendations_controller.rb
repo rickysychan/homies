@@ -24,14 +24,38 @@ module Api::V1
     # Index
 
     def index
-      # @products = ProductInterest.where(user_id: session[:user_id])
+      @products = ProductInterest.where(user_id: params[:id])
+      @products_list = []
+      @products.each do |product|
+        @products_list.push(product.title)
+      end
 
-      @recommendations = final_recommendations(["Johnny English", "Last of the Mohicans", "Ed", "Trainspotting", "God of War", "Assassin's Creed"])
+      @recommendations = final_recommendations(@products_list)
       render json: @recommendations
     end
 
-    def product
+    def movie_find
+      movie = Tmdb::Movie.detail(params[:query])
+      movie_hash = { id: movie["id"], image: "https://image.tmdb.org/t/p/w500/#{movie['poster_path']}", name: movie["title"], overview: movie["overview"], rating: movie["vote_average"], date: movie["release_date"], type: "MOVIE", json: movie }
+      render json: movie_hash
+    end
 
+    def game_find
+      game = GiantBomb::Game.detail(params[:query])
+      rating = game.reviews.present? ? game.reviews[0]["site_detail_url"] : "Sorry, no reviews."
+      game_hash = { id: game.id, image: game.image["medium_url"], name: game.name, overview: game.deck, rating: rating, date: game.date_added, type: "GAME", json: game }
+      render json: game_hash
+    end
+
+    def tv_find
+      show = Tmdb::TV.detail(params[:query])
+      show_hash = { id: show["id"],  image: "https://image.tmdb.org/t/p/w500/#{show['poster_path']}", name: show["original_name"], overview: show["overview"], rating: show["vote_average"], date: show["first_air_date"], type: "TV", json: show }
+      render json: show_hash
+    end
+
+    def search
+      @results = search_all(params[:query])
+      render json: @results
     end
 
     private
@@ -97,7 +121,7 @@ module Api::V1
       shows.each do |show|
         show.first_air_date = show.first_air_date.present? ? show.first_air_date : "1901-01-01"
         year = show.first_air_date[0...4].to_i
-        show_hash = { id: show.id, name: show.original_name, date: year, type: "TV", json: show }
+        show_hash = { id: show.id, image: "https://image.tmdb.org/t/p/w300/#{show.poster_path}", name: show.original_name, overview: show.overview, date: year, type: "TV", json: show }
         results.push(show_hash)
       end
       results = results.sort_by { |h| h[:date] }.reverse
@@ -110,7 +134,7 @@ module Api::V1
       puts "Results: #{movies.length}"
       movies.each do |movie|
         year = movie.release_date[0...4].to_i
-        movie_hash = { id: movie.id, name: movie.title, date: year, type: "MOVIE", json: movie }
+        movie_hash = { id: movie.id, image: "https://image.tmdb.org/t/p/w300/#{movie.poster_path}", name: movie.title, overview: movie.overview, date: year, type: "MOVIE", json: movie }
         results.push(movie_hash)
       end
       results = results.sort_by { |h| h[:date] }.reverse
@@ -123,7 +147,7 @@ module Api::V1
       puts "Results: #{games.length}"
       games.each do |game|
         year = game["date_added"][0...4].to_i
-        game_hash = { id: game["id"], name: game["name"], date: year, type: "GAME", json: game }
+        game_hash = { id: game["id"], image: game["image"]["thumb_url"], name: game["name"], overview: game["deck"], date: year, type: "GAME", json: game }
         results.push(game_hash)
       end
       results = results.sort_by { |h| h[:date] }.reverse
@@ -153,7 +177,7 @@ module Api::V1
       @text = return_similar_user_texts(user_products_array).to_s
       puts "Analyzing with Watson."
       @results = watson(@text)
-      if @results.empty?
+      if @results.blank?
         return []
       else
         parsed_results = JSON.parse(@results)

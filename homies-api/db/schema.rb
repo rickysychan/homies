@@ -10,6 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
+
 ActiveRecord::Schema.define(version: 20171031210820) do
 
   # These are extensions that must be enabled in order to support this database
@@ -85,6 +86,7 @@ ActiveRecord::Schema.define(version: 20171031210820) do
     t.integer "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "title"
   end
 
   create_table "users", force: :cascade do |t|
@@ -95,6 +97,7 @@ ActiveRecord::Schema.define(version: 20171031210820) do
     t.string "pic_link"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.text "recommendations"
   end
 
 end
