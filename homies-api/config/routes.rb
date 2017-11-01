@@ -10,6 +10,8 @@ Rails.application.routes.draw do
         get '/users/:id/article_likes', to: 'users#article_like'
         get '/users/:id/product_interests', to: 'users#product_interest'
         get '/users/:id/recommendations', to: 'recommendations#index'
+        get '/users/:id/saved_recommendations', to: 'users#recommendations'
+        post '/users/:id/saved_recommendations', to: 'users#recommendations_save'
         post '/users/login', to: 'sessions#create'
         get '/users/login', to: 'users#destroy'
         post '/users/registeration', to: 'registrations#create'

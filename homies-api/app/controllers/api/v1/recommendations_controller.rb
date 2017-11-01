@@ -24,9 +24,13 @@ module Api::V1
     # Index
 
     def index
-      # @products = ProductInterest.where(user_id: session[:user_id])
+      @products = ProductInterest.where(user_id: params[:id])
+      @products_list = []
+      @products.each do |product|
+        @products_list.push(product.title)
+      end
 
-      @recommendations = final_recommendations(["Johnny English", "Last of the Mohicans", "Ed", "Trainspotting", "God of War", "Assassin's Creed"])
+      @recommendations = final_recommendations(@products_list)
       render json: @recommendations
     end
 
@@ -173,7 +177,7 @@ module Api::V1
       @text = return_similar_user_texts(user_products_array).to_s
       puts "Analyzing with Watson."
       @results = watson(@text)
-      if @results.empty?
+      if @results.blank?
         return []
       else
         parsed_results = JSON.parse(@results)

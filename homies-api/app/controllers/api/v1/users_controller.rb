@@ -9,8 +9,7 @@ module Api::V1
 
 
     def show
-      # @user = User.find(params[:id])
-      @user = current_user
+      @user = User.find(params[:id])
       render json: @user
     end
 
@@ -36,6 +35,16 @@ module Api::V1
       @products = ProductInterest.where(user_id: params[:id])
       puts @products
       render json: @products
+    end
+
+    def recommendations_save
+      @user = User.find(params[:id])
+      @user.update(recommendations: params["recommendations"])
+    end
+
+    def recommendations
+      @user = User.find(params[:id]).recommendations
+      render json: @user
     end
 
     private

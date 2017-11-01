@@ -23,6 +23,26 @@ function RenderInterests(props) {
   )
 }
 
+function RenderRecommendations(props) {
+  let linkStyles = {
+    fontSize: '0.9em',
+    color: 'white',
+    display: 'block',
+    borderTop: '1px solid white',
+    padding: '5px'
+  }
+  return(
+    <div>
+      { props.recommendations.map((recommendation) => {
+        let productUrl = `/products/${recommendation.type}/${recommendation.id}`
+        return(
+          <a key={recommendation.id} href={productUrl} style={linkStyles}>{recommendation.name}</a>
+          )
+      })}
+    </div>
+  )
+}
+
 
 class SideBar extends Component {
 
@@ -30,7 +50,8 @@ class SideBar extends Component {
     super(props);
     this.state = {
       user_id: 21,
-      interests: []
+      interests: [],
+      recommendations: []
     }
   }
 
@@ -40,6 +61,14 @@ class SideBar extends Component {
     .then( (response) => {
       let responseJson = response.data
       this.setState({ interests: responseJson
+      });
+    })
+
+    let userRecommendations = `http://localhost:3001/api/v1/users/${this.state.user_id}/recommendations`
+    axios.get(userRecommendations)
+    .then( (response) => {
+      let responseJson = response.data
+      this.setState({ recommendations: responseJson
       });
     })
   }
@@ -55,6 +84,17 @@ class SideBar extends Component {
     } else {
       interestList = <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i>
     }
+
+    const hasRecommendations = this.state.recommendations.length > 0;
+
+    let recommendationList = null
+
+    if (hasRecommendations) {
+      recommendationList = <RenderRecommendations recommendations={this.state.recommendations} />
+    } else {
+      recommendationList = <i className="fa fa-circle-o-notch fa-spin" aria-hidden="true"></i>
+    }
+
 
     const sidebarStyle = {
       marginLeft: '15px',
@@ -82,7 +122,7 @@ class SideBar extends Component {
                     </div>
                     <div id="collapseOne" className="collapse" role="tabpanel" aria-labelledby="recommendations">
                       <div className="card-block">
-                        Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. 3 wolf moon officia aute, non cupidatat skateboard dolor brunch. Food truck quinoa nesciunt laborum eiusmod. Brunch 3 wolf moon tempor, sunt aliqua put a bird on it squid single-origin coffee nulla assumenda shoreditch et. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident. Ad vegan excepteur butcher vice lomo. Leggings occaecat craft beer farm-to-table, raw denim aesthetic synth nesciunt you probably haven't heard of them accusamus labore sustainable VHS.
+                        {recommendationList}
                       </div>
                     </div>
                   </div>
