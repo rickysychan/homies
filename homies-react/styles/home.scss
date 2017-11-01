@@ -210,4 +210,15 @@ h3,h4,h5,.panel {
   cursor: pointer
 }
 
+.btn-default {
+  padding-top: 7px;
+  padding-bottom: 6px;
+}
 
+.navbar-nav {
+  li {
+    a {
+      font-size: 1.1em;
+    }
+  }
+}

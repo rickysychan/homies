@@ -52,7 +52,7 @@ class NavBar extends Component {
       <div className="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
         <ul className="nav navbar-nav">
           <li>
-            <Link to="/discovery">Discover</Link>
+            <a href="/discovery">Discover</a>
           </li>
           <li>
             <Link to="/stayintheloop" >Stay in <i className="fa fa-superpowers"></i></Link>
@@ -67,7 +67,7 @@ class NavBar extends Component {
             <div className="form-group">
               <input type="text" className="form-control" value={this.state.value} onChange={this.handleChange} placeholder="Search" />
             </div>
-            <button type="submit" className="btn btn-success">
+            <button type="submit" className="btn btn-default">
               <i className="fa fa-search" aria-hidden="true"></i>
             </button>
           </form>
@@ -78,12 +78,6 @@ class NavBar extends Component {
               &nbsp;&nbsp;&nbsp;
             </a>
             <ul className="dropdown-menu">
-              <li>
-                <a href="#">
-                  <i className="fa fa-id-card-o" aria-hidden="true"></i> Profile
-                </a>
-              </li>
-              <li role="separator" className="divider"></li>
               <li>
                 <a href="/" onClick={(event) => this.handleClick(event)}>
                   <i className="fa fa-sign-out" aria-hidden="true" ></i> Log Out
