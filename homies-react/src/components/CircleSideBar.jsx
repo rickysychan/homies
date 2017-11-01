@@ -54,6 +54,8 @@ class CircleSideBar extends Component {
     }
 
     handleAddUser(event){
+        
+        console.log("this>>>>>>>", this.state.SidebarCircleUserNames)
 
         if(this.state.SidebarCircleUserNames.length >= 7){
             alert("Your circle is Full!")
@@ -63,10 +65,10 @@ class CircleSideBar extends Component {
         const cookies = new Cookies();
         let token = cookies.get("token")
         
-        var apiBaseUrl = "http://localhost:3001/api/v1/circles/24/circle_users"
+        var apiBaseUrl = `http://localhost:3001/api/v1/circles/${this.state.CurrentCircleId}/circle_users`
         var self = this;
         var payload={
-        "circle_id": 24,
+        "circle_id": this.state.CurrentCircleId,
         "search": this.state.UserName
         }
 
@@ -74,17 +76,18 @@ class CircleSideBar extends Component {
             { 
             headers: { Authorization: "Bearer " + token } 
               })
-       .then(function (response) {
-        console.log(">>>>>> this is the response", response)
-          //  console.log("registration successfull");
+       .then( (response) => {
+        console.log(">>>>>> this is the response", response.data)
+        let SidebarNames = self.state.SidebarCircleUserNames
+        SidebarNames.push(response.data)
+        this.setState({SidebarCircleUserNames: SidebarNames})
           alert("Yay! User added!")
-          window.location.reload(); 
        })
     
        .catch(function (error) {
            console.log(error)
            if(error == "Error: Request failed with status code 409"){
-         alert("That user already is in the group")
+               alert("That user already is in the group")
            } else {
                alert("No emails matched, please check the email entered")
            }
@@ -92,9 +95,28 @@ class CircleSideBar extends Component {
     }
 
     
-    handleClickGotoCircle(event){
-        // this.setState({CurrentCircleId: *specific id*})
-        this.props.onCircleClick(this.state.SidebarCircleID)
+    handleClickGotoCircle(event, index){
+        const cookies = new Cookies();
+        let token = cookies.get("token")
+
+        this.props.onCircleClick(this.state.SidebarCircleID[index])
+        this.setState({CurrentCircleId: this.state.SidebarCircleID[index]}, () => {
+            console.log("this is the circle ID", this.state.CurrentCircleId)
+
+            let circleUserNames = `http://localhost:3001/api/v1/circles/${this.state.CurrentCircleId}`
+            
+            axios.get(circleUserNames, {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
+            .then( (response) => {
+                console.log("response data ** >>>", response.data)
+                this.setState({ SidebarCircleUserNames: response.data.map(
+                    user => user.first_name
+                )});
+            })
+        })
     }
 
     handleChange(event) {
@@ -142,19 +164,6 @@ componentDidMount() {
     })
     
     // the above shows the circles of a particlur user
-    // let circle_id = this.state.SidebarCircleID.map()
-    let circleUserNames = `http://localhost:3001/api/v1/circles/24`
-    
-    axios.get(circleUserNames, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    })
-    .then( (response) => {
-        this.setState({ SidebarCircleUserNames: response.data.map(
-            user => user.first_name
-        )});
-    })
 }
 
 // the above shows the users of a particular circle
@@ -167,7 +176,7 @@ componentDidMount() {
             <h3 id="sidebarLabels"> Your circles </h3>
             <ul className="nav" id="sidebar-nav">
           {this.state.SidebarCircleNames.map((item, index) => (
-       <li className='indent' key={index}><Link onClick={(event) => this.handleClickGotoCircle(event)}>{item}</Link></li>
+       <li className='indent' key={index}><Link onClick={(event) => this.handleClickGotoCircle(event, index)}>{item}</Link></li>
     ))}
     
             </ul>
