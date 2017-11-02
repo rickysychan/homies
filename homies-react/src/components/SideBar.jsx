@@ -11,6 +11,7 @@ function RenderInterests(props) {
     borderTop: '1px solid white',
     padding: '5px'
   }
+
   return(
     <div>
       { props.interests.map((interest) => {
@@ -129,6 +130,12 @@ class SideBar extends Component {
       fontSize: '100%'
     }
 
+    const titleStyles = {
+      fontSize: '1.2em',
+      color: 'white',
+      fontWeight: 'bold'
+    }
+
     const loadLink = {color: 'red'}
 
     return (
@@ -141,7 +148,7 @@ class SideBar extends Component {
                   <div className="card" style={sidebarStyle}>
                     <div className="card-header" role="tab" id="recommendations">
                       <h4 className="mb-0" style={headerStyle}>
-                        <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <a style={titleStyles} className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                           Your Recommendations:
                         </a>
                       </h4>
@@ -160,7 +167,7 @@ class SideBar extends Component {
                   <div className="card" style={sidebarStyle}>
                     <div className="card-header" role="tab" id="interests">
                       <h4 className="mb-0" style={headerStyle}>
-                        <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <a style={titleStyles} className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                           Your Product Interests:
                         </a>
                       </h4>

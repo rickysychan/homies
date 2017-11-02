@@ -83,7 +83,7 @@ class CircleSideBar extends Component {
         let SidebarNames = self.state.SidebarCircleUserNames
         SidebarNames.push(response.data)
         this.setState({SidebarCircleUserNames: SidebarNames})
-          alert("Yay! User added!")
+          // alert("Yay! User added!")
        })
 
        .catch(function (error) {

@@ -30,8 +30,8 @@ module Api::V1
         end
 
         def show
-            @circle = Circle.find(params[:id])
-            render json: @circle
+            @circle = Circle.where(id: params[:id])
+            render json: @circle[0]
         end
 
         # def show

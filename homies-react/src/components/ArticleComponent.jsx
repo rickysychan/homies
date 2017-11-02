@@ -219,6 +219,8 @@ class ArticleComponent extends Component {
 
   _setCircleName(event) {
     console.log("event target value is:",event.target.value);
+    console.log("article_json is :", this.state.article_json);
+
     this.setState({circle_id: event.target.value});
   }
 
@@ -255,6 +257,8 @@ class ArticleComponent extends Component {
       });
   }
   _toggleCircle() {
+    console.log("I'm in toggeleCircle article_json is :", this.state.article_json);
+
     this.setState( { notice : false });
   }
 

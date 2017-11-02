@@ -12,6 +12,7 @@ class CircleContainer extends Component {
     super(props);
     this.state={
       circle_id: '',
+      circle_name:'',
       user_id: '',
       posts: [],
       content: '',
@@ -25,7 +26,7 @@ class CircleContainer extends Component {
   }
 
   _scrollToBottom() {
-    window.scrollTo(0, document.querySelector(".post").scrollHeight);
+    // window.scrollTo(0, document.querySelector(".post").scrollHeight);
   }
 
   handleChange(event) {
@@ -62,7 +63,24 @@ class CircleContainer extends Component {
   }
 
   onCircleClick(data){
+    const cookies = new Cookies();
+    let token = cookies.get("token");
+    this.state.hasToken = token;
+
     this.setState({circle_id: data});
+
+    axios.get(`http://localhost:3001/api/v1/circles/${data}`,
+        {
+          headers: { 'Authorization': "Bearer " + token }
+        }
+      )
+     .then(response => {
+        this.setState({ circle_name: response.data.name });
+     })
+     .catch(error => {
+        console.log(error)
+     });
+
     this._loadCirclePosts(data);
   }
 
@@ -128,7 +146,7 @@ class CircleContainer extends Component {
           <div className="row row-offcanvas row-offcanvas-left circle-bg" >
             <NavBar />
             <CircleSideBar onCircleClick={this.onCircleClick.bind(this)}/>
-            <h1>Hi {this.state.circle_id}</h1>
+            <h2>&nbsp;&nbsp;&nbsp;{this.state.circle_name}</h2>
 
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav" >
               <div className="panel panel-default col-xs-9" style={containerStyle}>

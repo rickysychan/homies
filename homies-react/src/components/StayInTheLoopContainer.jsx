@@ -90,7 +90,6 @@ class StayInTheLoopContainer extends Component {
        <NavBar />
           <div className="row ">
             <div className="col-sm-4 col-sm-offset-3">
-              <p>Current user id is: {this.state.user_id}</p>
 
       { this.state.articles.reverse().map((article) => {
 
