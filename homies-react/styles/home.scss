@@ -80,7 +80,7 @@ a {
 #sidebar li {
   border:0 #1e1e1e solid;
   border-bottom-width:1px;
-  background: linear-gradient(#3E3E3E, #383838);
+  background: rgba(192,192,192,0.4);
   margin-bottom: 10px;
 }
 #sidebar li a {
@@ -88,7 +88,7 @@ a {
   padding-right: 5px;
 }
 #sidebar li:hover {
-  background-color:#222222;
+  background-color: rgba(192,192,192,0.4);
   color:#ffffff;
 }
 

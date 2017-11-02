@@ -4,14 +4,18 @@ module Api::V1
 
         def create
             @userCircle = params[:search]
+            @currentCircleId =  params[:circle_id]
             @searchTerm = @userCircle
 
             @user = User.find_by email: @searchTerm
-            @trial = CircleUser.find_by_user_id_and_circle_id(@user.id, 24)
-            if @trial
+            @searchResult = CircleUser.find_by_user_id_and_circle_id(@user.id, @currentCircleId)
+            if @searchResult
                 render status: 409
             else
-            CircleUser.create(circle_id: 24, user_id: @user.id)
+            CircleUser.create(circle_id: @currentCircleId, user_id: @user.id)
+            puts "this is the search result"
+            puts @user
+            render json: @user.first_name
         end
         end
 

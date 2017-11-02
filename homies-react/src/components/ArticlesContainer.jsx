@@ -46,6 +46,19 @@ class ArticlesContainer extends Component {
       this.setState({user_id: response.data.id})
       console.log("this is the userId", this.state.user_id)
       // this response contains the user id!
+
+      axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`,
+                { headers: { Authorization: "Bearer " + token }
+      })
+      .then(response => {
+        if (response.data.length > 0) {
+          const circles = this.state.circles.concat(response.data)
+          this.setState({circles: circles});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
   })
 
     let apiUrls = [
@@ -80,23 +93,13 @@ class ArticlesContainer extends Component {
     ));
 
     // List of circles of current_user
-    axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`,
-                { headers: { Authorization: "Bearer " + token }
-      })
-      .then(response => {
-        if (response.data.length > 0) {
-          const circles = this.state.circles.concat(response.data)
-          this.setState({circles: circles});
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
+
 
   }
 
   render() {
     console.log('Rendering Article List')
+
     return (
       <div className="row row-offcanvas row-offcanvas-left dicovery-bg">
         <NavBar />

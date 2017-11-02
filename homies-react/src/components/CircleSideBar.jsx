@@ -57,6 +57,8 @@ class CircleSideBar extends Component {
 
         console.log("this>>>>>>>", this.state.SidebarCircleUserNames)
 
+        console.log("this>>>>>>>", this.state.SidebarCircleUserNames)
+
         if(this.state.SidebarCircleUserNames.length >= 7){
             alert("Your circle is Full!")
             return
@@ -65,10 +67,10 @@ class CircleSideBar extends Component {
         const cookies = new Cookies();
         let token = cookies.get("token")
 
-        var apiBaseUrl = `http://localhost:3001/api/v1/circles/31/circle_users`
+        var apiBaseUrl = `http://localhost:3001/api/v1/circles/${this.state.CurrentCircleId}/circle_users`
         var self = this;
         var payload={
-        "circle_id": 31,
+        "circle_id": this.state.CurrentCircleId,
         "search": this.state.UserName
         }
 
@@ -76,27 +78,47 @@ class CircleSideBar extends Component {
             {
             headers: { Authorization: "Bearer " + token }
               })
-       .then(function (response) {
-        console.log(">>>>>> this is the response", response)
-          //  console.log("registration successfull");
+       .then( (response) => {
+        console.log(">>>>>> this is the response", response.data)
+        let SidebarNames = self.state.SidebarCircleUserNames
+        SidebarNames.push(response.data)
+        this.setState({SidebarCircleUserNames: SidebarNames})
           alert("Yay! User added!")
-          window.location.reload();
        })
 
        .catch(function (error) {
            console.log(error)
            if(error == "Error: Request failed with status code 409"){
-         alert("That user already is in the group")
+               alert("That user already is in the group")
            } else {
-               alert("No emails matched, please check the email entered")
+               alert("No emails matched or no circles have been selected, please try again")
            }
        });
     }
 
 
     handleClickGotoCircle(event, index){
+        const cookies = new Cookies();
+        let token = cookies.get("token")
+
         this.props.onCircleClick(this.state.SidebarCircleID[index])
-        this.setState({CurrentCircleId: this.state.SidebarCircleID[index]})
+        this.setState({CurrentCircleId: this.state.SidebarCircleID[index]}, () => {
+            console.log("this is the circle ID", this.state.CurrentCircleId)
+
+            let circleUserNames = `http://localhost:3001/api/v1/circles/${this.state.CurrentCircleId}`
+
+            axios.get(circleUserNames, {
+                headers: {
+                    Authorization: "Bearer " + token
+                }
+            })
+            .then( (response) => {
+                console.log("response data ** >>>", response.data)
+                this.setState({ SidebarCircleUserNames: response.data.map(
+                    user => user.first_name
+                )});
+            })
+        })
     }
 
     handleChange(event) {
@@ -127,7 +149,7 @@ componentDidMount() {
     .then((result) => {
 
         let user_id = this.state.user_id
-        let circleNames = `http://localhost:3001/api/v1/users/${user_id}/showcircles`
+        let circleNames = `http://localhost:3001/api/v1/users/${user_id}/circles`
         axios.get(circleNames, {
             headers: {
                 Authorization: "Bearer " + token
@@ -144,23 +166,13 @@ componentDidMount() {
     })
 
     // the above shows the circles of a particlur user
-    let circleUserNames = `http://localhost:3001/api/v1/circles/31`
-
-    axios.get(circleUserNames, {
-        headers: {
-            Authorization: "Bearer " + token
-        }
-    })
-    .then( (response) => {
-        this.setState({ SidebarCircleUserNames: response.data.map(
-            user => user.first_name
-        )});
-    })
 }
 
 // the above shows the users of a particular circle
 
   render() {
+
+    const sidebarStyles = {padding: '10px', color: 'black'}
     return (
         <div className="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
           <div className="affix-top" data-spy="affix" data-offset-top="45" data-offset-bottom="90">
@@ -185,7 +197,7 @@ componentDidMount() {
             <h3 id="sidebarLabels"> Circle users </h3>
             <ul className="nav" id="sidebar-nav">
           {this.state.SidebarCircleUserNames.map((item, index) => (
-       <li className='indent' key={index}>{item}</li>
+       <li style={sidebarStyles} className='indent' key={index}>{item}</li>
     ))}
     <br/>
             </ul>
