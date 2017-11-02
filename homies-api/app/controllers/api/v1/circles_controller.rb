@@ -28,15 +28,16 @@ module Api::V1
                 render status: 402
             end
         end
+
         def show
             @circle = Circle.find(params[:id])
             render json: @circle
         end
 
-        def show
-            @users = Circle.find(params[:id]).users
-            render json: @users
-        end
+        # def show
+        #     @users = Circle.find(params[:id]).users
+        #     render json: @users
+        # end
 
         def update
             @circle = Circle.find(params[:id])

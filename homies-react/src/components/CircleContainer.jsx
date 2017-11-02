@@ -21,6 +21,7 @@ class CircleContainer extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this._scrollToBottom = this._scrollToBottom.bind(this);
+    this._loadCirclePosts = this._loadCirclePosts.bind(this);
   }
 
   _scrollToBottom() {
@@ -62,6 +63,25 @@ class CircleContainer extends Component {
 
   onCircleClick(data){
     this.setState({circle_id: data});
+    this._loadCirclePosts(data);
+  }
+
+  _loadCirclePosts(circle_id) {
+    const cookies = new Cookies();
+    let token = cookies.get("token");
+    this.state.hasToken = token;
+
+    axios.get(`http://localhost:3001/api/v1/circles/${circle_id}/posts`,
+        {
+          headers: { 'Authorization': "Bearer " + token }
+        }
+      )
+     .then(response => {
+        this.setState({ posts: this.state.posts.concat(response.data) });
+     })
+     .catch(error => {
+        console.log(error)
+     });
   }
 
   componentWillMount() {
@@ -92,21 +112,8 @@ class CircleContainer extends Component {
     .catch(error => {
       console.log(error);
     })
-if (this.state.circle_id) {
-    axios.get(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`,
-        {
-          headers: { 'Authorization': "Bearer " + token }
-        }
-      )
-     .then(response => {
-        this.setState({ posts: this.state.posts.concat(response.data) });
-     })
-     .catch(error => {
-        console.log(error)
-     });
 
     this._scrollToBottom();
-  }
 }
 
   componentDidUpdate() {
@@ -121,12 +128,12 @@ if (this.state.circle_id) {
           <div className="row row-offcanvas row-offcanvas-left circle-bg" >
             <NavBar />
             <CircleSideBar onCircleClick={this.onCircleClick.bind(this)}/>
-            <h1>{this.state.circle_id}</h1>
+            <h1>Hi {this.state.circle_id}</h1>
 
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav" >
               <div className="panel panel-default col-xs-9" style={containerStyle}>
 
-                <div className="post col-sm-9" >
+                <div className="post col-sm-12" >
       { this.state.posts.map((post) => {
           console.log(post.content);
           return(<CircleComponent

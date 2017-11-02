@@ -10,7 +10,7 @@ module Api::V1
     end
 
     def index
-      @posts = Post.all
+      @posts = Post.where(circle_id: params[:circle_id])
       render json: @posts
     end
 
