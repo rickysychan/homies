@@ -87,15 +87,12 @@ class CircleContainer extends Component {
         }
     })
     .then( (response) => {
-        console.log("this is the response", response)
         this.setState({user_id: response.data.id})
-        console.log("this is the userId", this.state.user_id)
-        // this response contains the user id!
     })
     .catch(error => {
       console.log(error);
     })
-if (this.state.circle_id){
+if (this.state.circle_id) {
     axios.get(`http://localhost:3001/api/v1/circles/${this.state.circle_id}/posts`,
         {
           headers: { 'Authorization': "Bearer " + token }

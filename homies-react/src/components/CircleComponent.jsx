@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import Resource from '../models/resource.jsx'
+import Cookies from 'universal-cookie';
+
 
 
 class CircleComponent extends Component {
@@ -17,7 +19,14 @@ class CircleComponent extends Component {
   }
 
   _getUserName(user_id) {
-    axios.get(`http://localhost:3001/api/v1/users/${user_id}`)
+    const cookies = new Cookies();
+    let token = cookies.get("token");
+
+    axios.get(`http://localhost:3001/api/v1/users/current`, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+      })
       .then(res => {
         let userName = res.data.first_name +' '+ res.data.last_name;
         this.setState({user_name: userName});
@@ -28,8 +37,7 @@ class CircleComponent extends Component {
   }
 
   componentDidMount() {
-    // const content_json = JSON.parse(this.props.content);
-    // console.log(content_json);
+
     this._getUserName(this.props.user_id);
 
   }

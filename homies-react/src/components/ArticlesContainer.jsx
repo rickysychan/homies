@@ -42,11 +42,8 @@ class ArticlesContainer extends Component {
         }
     })
     .then( (response) => {
-      console.log("this is the response", response)
       this.setState({user_id: response.data.id})
-      console.log("this is the userId", this.state.user_id)
-      // this response contains the user id!
-      
+
       axios.get(`http://localhost:3001/api/v1/users/${this.state.user_id}/circles`,
                 { headers: { Authorization: "Bearer " + token }
       })
@@ -93,7 +90,7 @@ class ArticlesContainer extends Component {
     ));
 
     // List of circles of current_user
-    
+
 
   }
 
@@ -109,7 +106,6 @@ class ArticlesContainer extends Component {
           <div className="row">
             <div className="col-sm-6 col-sm-offset-2">
 
-            <p>Current user id is: {this.state.user_id}</p>
 
       { this.state.articles.map((article, index) => {
           if(article.urlToImage) {
