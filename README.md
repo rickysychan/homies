@@ -1,6 +1,6 @@
 # Homies Project
 
-Homies is a full stack web application built with Ruby on Rails for the backend and React on the front end. It is a social platform that acts as a content agregate that allows users to share entertainment news to their friends and family through intimate social groups. The app uses the Watson API to data mine information about user interests and make user specific recommendations. 
+Homies is a full stack web application built with Ruby on Rails for the backend and React on the front end. It is a social platform that acts as a content aggregate that allows users to share entertainment news to their friends and family through intimate social groups. The app uses the Watson API to data mine information about user interests and make user specific recommendations. 
 
 ## Final product
 
