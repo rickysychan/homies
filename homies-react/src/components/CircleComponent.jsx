@@ -1,6 +1,8 @@
 import React, { Component } from 'react'
 import axios from 'axios';
 import Resource from '../models/resource.jsx'
+import Cookies from 'universal-cookie';
+
 
 
 class CircleComponent extends Component {
@@ -17,7 +19,14 @@ class CircleComponent extends Component {
   }
 
   _getUserName(user_id) {
-    axios.get(`http://localhost:3001/api/v1/users/${user_id}`)
+    const cookies = new Cookies();
+    let token = cookies.get("token");
+
+    axios.get(`http://localhost:3001/api/v1/users/current`, {
+        headers: {
+            Authorization: "Bearer " + token
+        }
+      })
       .then(res => {
         let userName = res.data.first_name +' '+ res.data.last_name;
         this.setState({user_name: userName});
@@ -28,40 +37,46 @@ class CircleComponent extends Component {
   }
 
   componentDidMount() {
-    // const content_json = JSON.parse(this.props.content);
-    // console.log(content_json);
+
     this._getUserName(this.props.user_id);
 
   }
-  // <div className="panel-heading">
-  //           <h3><a href={ url } target="_blank"> { title } </a></h3>
-  //           <p> { author } </p>
-  //         </div>
-  //         <div className="panel-body">
-  //           <img src={ urlToImage } className="img-responsive" />
-  //           <p> { publishedAt } </p>
-  //           <div className="clearfix"></div>
-  //           <p>
-  //              { description }
-  //           </p>
-  //           <hr/>
-  //         </div>
+
 
   render() {
-    // console.log("article", this.props.article);
-    const hello = "hello";
-    let post = '';
-    if(this.props.content) {
-      post = <p><kbd> {this.state.user_name}</kbd>: {this.props.content}</p>;
+
+    if(this.props.content != '') {
+      return (
+        <div className="tile" >
+          <p><kbd> {this.state.user_name}</kbd>: {this.props.content}</p>
+        </div>
+      )
     } else {
-      post = <p><kbd> {this.state.user_name}</kbd>: {hello}</p>;
+      return (
+        <div className="tile" >
+          <table className="table">
+            <tr>
+              <td width="30%"><kbd> {this.state.user_name}</kbd>:</td>
+              <td>
+                <div className="panel-heading">
+                  <h3><a href={ this.props.article.url } target="_blank"> { this.props.article.title } </a></h3>
+                  <p> { this.props.article.author } </p>
+                </div>
+                <div className="panel-body">
+                  <img src={ this.props.article.urlToImage } className="img-responsive" />
+                  <p> { this.props.article.publishedAt } </p>
+                  <div className="clearfix"></div>
+                  <p>
+                     { this.props.article.description }
+                  </p>
+                  <hr/>
+                </div>
+              </td>
+            </tr>
+          </table>
+        </div>
+      )
     }
-    // const { title, author, url ,urlToImage, publishedAt, description } = JSON.parse(this.props.content_json)  ;
-    return (
-      <div className="tile" >
-        {post}
-      </div>
-    )
   }
 }
 

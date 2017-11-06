@@ -21,10 +21,10 @@ class NewCircleForm extends Component {
         const cookies = new Cookies();
         let token = cookies.get("token")
         this.state.hasToken = token
-    
+
         console.log(this.props.is_auth)
         console.log(this.props)
-    
+
         if(!this.state.hasToken){
           history.push('/');
         }
@@ -33,7 +33,7 @@ class NewCircleForm extends Component {
     handleClick(event){
         const cookies = new Cookies();
         let token = cookies.get("token")
-        
+
         var apiBaseUrl = "http://localhost:3001/api/v1/circles"
         console.log("values",this.state.name);
         //To be done:check for empty values before hitting submit
@@ -42,15 +42,15 @@ class NewCircleForm extends Component {
         "name": this.state.name,
         }
 
-        axios.post(apiBaseUrl, payload, 
-            { 
-            headers: { Authorization: "Bearer " + token } 
+        axios.post(apiBaseUrl, payload,
+            {
+            headers: { Authorization: "Bearer " + token }
               })
        .then(function (response) {
          console.log(response);
          if(response.status == 200){
           //  console.log("registration successfull");
-          alert("Yay! circle created!")
+          // alert("Yay! circle created!")
          }
        })
        .catch(function (error) {
@@ -89,6 +89,6 @@ class NewCircleForm extends Component {
             margin: 15,
         };
     }
-    
+
 }
 export default NewCircleForm

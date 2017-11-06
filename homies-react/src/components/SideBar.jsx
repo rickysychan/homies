@@ -11,6 +11,7 @@ function RenderInterests(props) {
     borderTop: '1px solid white',
     padding: '5px'
   }
+
   return(
     <div>
       { props.interests.map((interest) => {
@@ -53,6 +54,7 @@ class SideBar extends Component {
       recommendations: [],
       user_id: ''
     }
+    this.loadRecommendations = this.loadRecommendations.bind(this);
   }
 
   componentDidMount() {
@@ -78,17 +80,22 @@ class SideBar extends Component {
           this.setState({ interests: responseJson
           });
         })
-
-        let userRecommendations = `http://localhost:3001/api/v1/users/${this.state.user_id}/recommendations`
-        axios.get(userRecommendations, {headers: { Authorization: "Bearer " + token }})
-        .then( (response) => {
-          let responseJson = response.data
-          this.setState({ recommendations: responseJson
-          });
-        })
         // this response contains the user id!
     })
 
+  }
+
+  loadRecommendations() {
+    const cookies = new Cookies();
+    let token = cookies.get("token")
+
+    let userRecommendations = `http://localhost:3001/api/v1/users/${this.state.user_id}/recommendations`
+    axios.get(userRecommendations, {headers: { Authorization: "Bearer " + token }})
+    .then( (response) => {
+      let responseJson = response.data
+      this.setState({ recommendations: responseJson
+      });
+    })
   }
 
   render() {
@@ -123,6 +130,14 @@ class SideBar extends Component {
       fontSize: '100%'
     }
 
+    const titleStyles = {
+      fontSize: '1.2em',
+      color: 'white',
+      fontWeight: 'bold'
+    }
+
+    const loadLink = {color: 'red'}
+
     return (
         <div className="col-xs-6 col-sm-3 sidebar-offcanvas" id="sidebar" role="navigation">
           <div className="affix-top" data-spy="affix" data-offset-top="45" data-offset-bottom="90">
@@ -133,13 +148,15 @@ class SideBar extends Component {
                   <div className="card" style={sidebarStyle}>
                     <div className="card-header" role="tab" id="recommendations">
                       <h4 className="mb-0" style={headerStyle}>
-                        <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
+                        <a style={titleStyles} className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="false" aria-controls="collapseOne">
                           Your Recommendations:
                         </a>
                       </h4>
                     </div>
                     <div id="collapseOne" className="collapse" role="tabpanel" aria-labelledby="recommendations">
+                    <a href="#" style={loadLink} onClick={this.loadRecommendations}>Load Recommendations</a>
                       <div className="card-block">
+
                         {recommendationList}
                       </div>
                     </div>
@@ -150,7 +167,7 @@ class SideBar extends Component {
                   <div className="card" style={sidebarStyle}>
                     <div className="card-header" role="tab" id="interests">
                       <h4 className="mb-0" style={headerStyle}>
-                        <a className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+                        <a style={titleStyles} className="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
                           Your Product Interests:
                         </a>
                       </h4>

@@ -30,7 +30,7 @@ class NavBar extends Component {
 
   handleClick(event){
     const cookies = new Cookies();
-    alert("Logged out")
+    // alert("Logged out")
     cookies.remove('token')
     this.props.is_auth = ''
   }
