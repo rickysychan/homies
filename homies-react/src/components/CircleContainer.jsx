@@ -124,7 +124,6 @@ if (this.state.circle_id){
           <div className="row row-offcanvas row-offcanvas-left circle-bg" >
             <NavBar />
             <CircleSideBar onCircleClick={this.onCircleClick.bind(this)}/>
-            <h1>{this.state.circle_id}</h1>
 
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav" >
               <div className="panel panel-default col-xs-9" style={containerStyle}>

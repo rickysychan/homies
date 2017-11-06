@@ -109,8 +109,6 @@ class ArticlesContainer extends Component {
           <div className="row">
             <div className="col-sm-6 col-sm-offset-2">
 
-            <p>Current user id is: {this.state.user_id}</p>
-
       { this.state.articles.map((article, index) => {
           if(article.urlToImage) {
             console.log('Rendering Article')
