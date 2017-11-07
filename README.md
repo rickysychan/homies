@@ -4,10 +4,9 @@ Homies is a full stack web application built with Ruby on Rails for the backend 
 
 ## Final product
 
-![This is the home page](https://github.com/rickysychan/Homies/blob/master/docs/discovery%20page.png)
-![Registration page](https://github.com/rickysychan/mzr_foodapp/blob/master/docs/Registration.png)
-![Menu page](https://github.com/rickysychan/mzr_foodapp/blob/master/docs/Menu_page.png)
-![Confirmation page](https://github.com/rickysychan/mzr_foodapp/blob/master/docs/Confirmation_Page.png)
+![This is the discovery page](https://github.com/rickysychan/Homies/blob/master/docs/discovery%20page.png)
+![this is the circles page](https://github.com/rickysychan/Homies/blob/master/docs/Circles%20page.png)
+![search page](https://github.com/rickysychan/Homies/blob/master/docs/Search%20result.png)
 
 ## Dependencies
 
