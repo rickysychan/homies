@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+  import React, { Component } from 'react';
 import { Link } from 'react-router';
 import history from '../index.jsx';
 import Cookies from 'universal-cookie';
