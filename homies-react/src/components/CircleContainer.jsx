@@ -146,7 +146,6 @@ class CircleContainer extends Component {
           <div className="row row-offcanvas row-offcanvas-left circle-bg" >
             <NavBar />
             <CircleSideBar onCircleClick={this.onCircleClick.bind(this)}/>
-            <h2>&nbsp;&nbsp;&nbsp;{this.state.circle_name}</h2>
 
             <div className="col-xs-12 col-sm-9" data-spy="scroll" data-target="#sidebar-nav" >
               <div className="panel panel-default col-xs-9" style={containerStyle}>

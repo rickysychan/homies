@@ -106,7 +106,6 @@ class ArticlesContainer extends Component {
           <div className="row">
             <div className="col-sm-6 col-sm-offset-2">
 
-
       { this.state.articles.map((article, index) => {
           if(article.urlToImage) {
             console.log('Rendering Article')

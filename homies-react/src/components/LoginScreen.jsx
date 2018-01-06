@@ -58,6 +58,7 @@ class Loginscreen extends Component {
                   loginmessage:loginmessage
                     })
   }
+  
   render() {
     return (
       <div class="wrapper">
